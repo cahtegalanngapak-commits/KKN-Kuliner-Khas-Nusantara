@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Resto Mitra</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:20px;}
+        .box {background:white; padding:25px; border-radius:12px; max-width:420px; margin:20px auto; box-shadow:0 3px 10px rgba(0,0,0,0.1);}
+        h2 {text-align:center; color:#155724; margin-bottom:20px;}
+        .logo {text-align:center; font-size:40px; margin-bottom:10px;}
+        input {width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:8px; font-size:16px;}
+        input:focus {outline:none; border-color:#28a745;}
+        button {width:100%; padding:15px; background:#28a745; color:white; border:none; border-radius:8px; font-size:17px; font-weight:bold; cursor:pointer; margin-top:10px;}
+        button:hover {background:#218838;}
+        .info {font-size:14px; color:#666; margin-top:15px; text-align:center;}
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="logo">🍛</div>
+    <h2>PENDAFTARAN RESTO MITRA</h2>
+    <p style="text-align:center; color:#555; margin-bottom:10px;">Daftarkan Resto Anda agar muncul di aplikasi</p>
+
+    <input type="text" id="namaResto" placeholder="Nama Lengkap Resto" required>
+    <input type="tel" id="telpResto" placeholder="Nomor HP/Telepon Resto (08xx)" required>
+    <input type="text" id="alamatResto" placeholder="Alamat Lokasi Resto" required>
+
+    <button onclick="simpanDataResto()">✅ DAFTARKAN SEKARANG</button>
+
+    <div class="info">
+        Setelah terdaftar, nomor & nama Resto akan otomatis muncul di halaman pemesan
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+// PAKAI FIREBASE CONFIG YANG SAMA
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function simpanDataResto(){
+    const nama = document.getElementById('namaResto').value.trim();
+    const telp = document.getElementById('telpResto').value.trim();
+    const alamat = document.getElementById('alamatResto').value.trim();
+    
+    if(!nama || !telp || !alamat) return alert("⚠️ Lengkapi Semua Data Resto!");
+
+    db.ref("DataResto").set({
+        nama_resto: nama,
+        no_telp_resto: telp,
+        alamat_resto: alamat,
+        tanggal_daftar: new Date().toLocaleString('id-ID')
+    }).then(()=>{
+        alert("✅ BERHASIL TERDAFTAR!\n\nNama & Nomor Resto Sekarang Sudah Aktif & Bisa Dihubungi Pelanggan!");
+        window.location.reload();
+    }).catch(err => alert("❌ Gagal: " + err.message));
+}
+</script>
+</body>
+</html>
