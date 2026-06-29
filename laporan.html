@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan - Analisis Untung</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+        .header {background:#212529; color:white; padding:18px; border-radius:12px; text-align:center; margin-bottom:20px;}
+        .kotak {background:white; border-radius:12px; padding:15px; margin-bottom:15px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+        .ringkasan {display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+        .item {padding:12px; border-radius:8px; text-align:center;}
+        .hijau {background:#d4edda; color:#155724;}
+        .biru {background:#e7f3ff; color:#004085;}
+        .kuning {background:#fff3cd; color:#856404;}
+        .merah {background:#f8d7da; color:#721c24;}
+        select, button {padding:10px; border:1px solid #ddd; border-radius:8px; font-size:15px; margin:5px;}
+        button {background:#165DFF; color:white; border:none; cursor:pointer; font-weight:bold;}
+        .baris {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0f0f0;}
+        h3 {margin-bottom:10px; color:#333;}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>📊 LAPORAN KEUANGAN</h1>
+    <p>Analisis Keuntungan Harian & Bulanan</p>
+</div>
+
+<div class="kotak">
+    <h3>Pilih Periode Laporan</h3>
+    <select id="bulan">
+        <option value="1">Januari</option>
+        <option value="2">Februari</option>
+        <option value="3">Maret</option>
+        <option value="4">April</option>
+        <option value="5">Mei</option>
+        <option value="6">Juni</option>
+        <option value="7">Juli</option>
+        <option value="8">Agustus</option>
+        <option value="9">September</option>
+        <option value="10">Oktober</option>
+        <option value="11">November</option>
+        <option value="12">Desember</option>
+    </select>
+    <select id="tahun">
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+    </select>
+    <button onclick="muatLaporan()">🔍 Tampilkan Laporan</button>
+</div>
+
+<div class="kotak">
+    <h3>📈 Ringkasan Bulanan</h3>
+    <div class="ringkasan">
+        <div class="item hijau">
+            <p>Total Pendapatan Kotor</p>
+            <p style="font-size:20px; font-weight:bold;" id="kotor">Rp 0</p>
+        </div>
+        <div class="item biru">
+            <p>Total Bagian Kamu (15%)</p>
+            <p style="font-size:20px; font-weight:bold;" id="untung">Rp 0</p>
+        </div>
+        <div class="item kuning">
+            <p>Bayar Resto (60%)</p>
+            <p style="font-size:16px;" id="bayar-resto">Rp 0</p>
+        </div>
+        <div class="item merah">
+            <p>Bayar Driver (25%)</p>
+            <p style="font-size:16px;" id="bayar-driver">Rp 0</p>
+        </div>
+    </div>
+</div>
+
+<div class="kotak">
+    <h3>📋 Rincian Setiap Transaksi</h3>
+    <div id="daftar-rincian"></div>
+    <div id="kosong" style="text-align:center; color:#888; padding:20px;">Tidak ada data untuk bulan ini</div>
+</div>
+
+
+<!-- KONEKSI FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+// GANTI DATA FIREBASE KAMU
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+
+function muatLaporan() {
+    const pilihBulan = parseInt(document.getElementById('bulan').value);
+    const pilihTahun = parseInt(document.getElementById('tahun').value);
+
+    let totalKotor = 0;
+    let totalUntung = 0;
+    let totalResto = 0;
+    let totalDriver = 0;
+    let htmlRinci = "";
+
+    db.ref("PesananMasuk").once("value", snap => {
+        if(!snap.exists()) {
+            document.getElementById('kosong').style.display = "block";
+            document.getElementById('daftar-rincian').innerHTML = "";
+            return;
+        }
+
+        document.getElementById('kosong').style.display = "none";
+
+        snap.forEach(dt => {
+            const d = dt.val();
+            if(d.status !== "Pesanan Selesai") return;
+
+            // Cek bulan & tahun
+            const tgl = new Date(d.waktu);
+            const bulan = tgl.getMonth()+1;
+            const tahun = tgl.getFullYear();
+
+            if(bulan === pilihBulan && tahun === pilihTahun) {
+                totalKotor += d.total_bayar || 0;
+                totalUntung += d.bagian_pemilik || 0;
+                totalResto += d.bagian_resto || 0;
+                totalDriver += d.bagian_driver || 0;
+
+                htmlRinci += `
+                <div class="baris">
+                    <span>${d.waktu} | ${d.menu}</span>
+                    <span>Rp ${(d.bagian_pemilik || 0).toLocaleString('id-ID')}</span>
+                </div>`;
+            }
+        });
+
+        // Tampilkan angka
+        document.getElementById('kotor').textContent = "Rp " + totalKotor.toLocaleString('id-ID');
+        document.getElementById('untung').textContent = "Rp " + totalUntung.toLocaleString('id-ID');
+        document.getElementById('bayar-resto').textContent = "Rp " + totalResto.toLocaleString('id-ID');
+        document.getElementById('bayar-driver').textContent = "Rp " + totalDriver.toLocaleString('id-ID');
+        document.getElementById('daftar-rincian').innerHTML = htmlRinci;
+    });
+}
+</script>
+</body>
+</html>
