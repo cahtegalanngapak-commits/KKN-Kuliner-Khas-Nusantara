@@ -1,0 +1,9 @@
+<!-- Sambungkan Firebase kamu seperti sebelumnya -->
+<div id="daftar-pesanan"></div>
+<button onclick="terimaPesanan()">Terima Pesanan</button>
+
+<script>
+function terimaPesanan(){
+  // Ubah status di Firebase jadi "Diterima Driver"
+}
+</script>
