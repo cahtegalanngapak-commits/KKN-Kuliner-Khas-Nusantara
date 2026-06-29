@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengelola Driver - Sanksi Sesuai Aturan Hukum</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+
+        .header {background:#212529; color:white; padding:18px; border-radius:12px; text-align:center; margin-bottom:20px;}
+        .dasar-hukum {
+            background:#e2e3e5; border:1px solid #d3d4d6; border-radius:8px;
+            padding:12px; margin-bottom:15px; font-size:13px; line-height:1.7;
+        }
+        .kartu {background:white; border-radius:12px; padding:15px; margin-bottom:12px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+
+        /* ✅ KELAS WARNA STATUS YANG DIPERBAIKI */
+        .status-baik {border-left:4px solid #28a745;}
+        .status-peringatan {border-left:4px solid #ffc107;}
+        .status-suspend {border-left:4px solid #fd7e14; background:#fff8e6;}
+        .status-blokir {border-left:4px solid #dc3545; background:#fff2f2;}
+
+        .baris {display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f0f0f0; font-size:14px;}
+        .btn {padding:8px 12px; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin:3px; font-size:13px;}
+        .btn-kuning {background:#ffc107; color:#000;}
+        .btn-oranye {background:#fd7e14; color:white;}
+        .btn-merah {background:#dc3545; color:white;}
+        .btn-hijau {background:#28a745; color:white;}
+        .info {font-size:13px; color:#666; margin-top:5px; line-height:1.6;}
+        .ringkasan {background:#e7f3ff; padding:12px; border-radius:8px; margin-bottom:15px;}
+        .ringkasan.kuning {background:#fff3cd;}
+        h3, h4 {margin-bottom:5px;}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🛠️ PENGELOLA SOPIR & SANKSI</h1>
+    <p>Penerapan Aturan Sesuai Prinsip Hukum Indonesia</p>
+</div>
+
+<!-- ⚖️ DASAR HUKUM & ATURAN SANKSI -->
+<div class="dasar-hukum">
+    <h4>📌 Dasar Hukum & Ketentuan:</h4>
+    <p>• Sesuai <strong>UU No. 13 Tahun 2003 Ketenagakerjaan</strong> & Perjanjian Kerjasama</p>
+    <p>• Sanksi bertingkat: Peringatan → Suspend Sementara → Blokir Permanen</p>
+    <p>• Pelanggaran <strong>Tidak Mengantar Makanan</strong> = Merugikan hak konsumen & mitra → Sanksi Berat</p>
+    <p>• Catatan ini sah sebagai bukti administrasi & hukum</p>
+</div>
+
+<div class="ringkasan">
+    <h3>📊 Skala Pelanggaran & Sanksi Otomatis</h3>
+    <p>⚠️ <strong>1 - 2 Pelanggaran ringan</strong> → Peringatan Tertulis</p>
+    <p>⏸️ <strong>3 - 4 Pelanggaran</strong> → <strong>SUSPEND SEMENTARA</strong> (Tidak bisa kerja 7-30 hari)</p>
+    <p>🚫 <strong>≥ 5 Pelanggaran ATAU Tidak Mengantar Sekali Saja</strong> → <strong>BLOKIR PERMANEN</strong> (Tidak bisa mendaftar ulang selamanya)</p>
+</div>
+
+<!-- ✅ BAGIAN BUKTI FOTO (DIPINDAHKAN KE LUAR SCRIPT) -->
+<div class="ringkasan kuning">
+    <h3>📸 Cek Bukti Foto Pengantaran</h3>
+    <p>✅ Sopir WAJIB upload foto bukti di depan pelanggan</p>
+    <p>❌ Tanpa foto = Pesanan dianggap gagal = Sanksi Otomatis</p>
+</div>
+
+<h3 style="margin-top:20px;">🖼️ Riwayat Bukti Foto Pengantaran</h3>
+<div id="daftar-bukti-foto" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:15px;"></div>
+<!-- ✅ SELESAI BAGIAN TAMPILAN -->
+
+<h3 style="margin-top:25px;">📋 Daftar Status & Riwayat Sopir</h3>
+<div id="daftar-driver"></div>
+
+
+<!-- 🔗 KONEKSI FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+
+// 📸 TAMPILKAN SEMUA BUKTI FOTO PENGANTARAN
+db.ref("BuktiPengantaran").on("value", snap => {
+    const wadah = document.getElementById("daftar-bukti-foto");
+    if(!wadah) return;
+    wadah.innerHTML = "";
+
+    if(!snap.exists()) {
+        wadah.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#888; padding:20px;'>Belum ada bukti foto pengantaran</p>";
+        return;
+    }
+
+    snap.forEach(foto => {
+        const data = foto.val();
+        wadah.innerHTML += `
+        <div class="kartu">
+            <img src="${data.url_foto}" alt="Bukti Pengantaran" style="width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:8px;">
+            <div class="baris"><span>Nama Sopir:</span><strong>${data.nama_driver || "-"}</strong></div>
+            <div class="baris"><span>Pelanggan:</span><span>${data.nama_pelanggan || "-"}</span></div>
+            <div class="baris"><span>Waktu:</span><span>${data.waktu || "-"}</span></div>
+            <div style="font-size:13px; color:#666; margin-top:5px;">Lokasi: ${data.lokasi || "-"}</div>
+        </div>`;
+    });
+});
+
+
+// 📋 TAMPILKAN DAFTAR SOPIR & SANKSI
+db.ref("DataDriver").on("value", snap => {
+    const wadah = document.getElementById("daftar-driver");
+    wadah.innerHTML = "";
+
+    if(!snap.exists()) {
+        wadah.innerHTML = "<p style='text-align:center; color:#888; padding:20px;'>Belum ada data sopir</p>";
+        return;
+    }
+
+    snap.forEach(dt => {
+        const d = dt.val();
+        const id = dt.key;
+
+        // Hitung bobot pelanggaran
+        const batal = d.jumlah_batal || 0;
+        const tidakAntar = d.tidak_mengantar || 0;
+        const totalPoin = batal + (tidakAntar * 3); // Tidak antar = 3x bobot berat
+
+        let kelasKartu, teksStatus, keteranganStatus;
+
+        // 📌 PENETAPAN SANKSI TEGAS
+        if(tidakAntar >= 1 || totalPoin >= 5) {
+            kelasKartu = "status-blokir";
+            teksStatus = "🚫 DIBLOKIR PERMANEN";
+            keteranganStatus = "Pelanggaran berat: Tidak mengantar / Sering membatalkan";
+        } else if(totalPoin >= 3) {
+            kelasKartu = "status-suspend";
+            teksStatus = "⏸️ SUSPEND SEMENTARA";
+            keteranganStatus = "Dilarang beroperasi sementara";
+        } else if(totalPoin >= 1) {
+            kelasKartu = "status-peringatan";
+            teksStatus = "⚠️ PERINGATAN KERAS";
+            keteranganStatus = "Perbaiki kinerja segera";
+        } else {
+            kelasKartu = "status-baik";
+            teksStatus = "✅ AMAN & TERPERCAYA";
+            keteranganStatus = "Pelayanan baik";
+        }
+
+        wadah.innerHTML += `
+        <div class="kartu ${kelasKartu}">
+            <h4>${d.nama_driver || "-"} | ${d.no_hp || "-"}</h4>
+            <div class="baris"><span>Status Resmi:</span><strong>${teksStatus}</strong></div>
+            <div class="baris"><span>Jumlah Batal Pesanan:</span><span>${batal} kali</span></div>
+            <div class="baris"><span>Tidak Mengantar Makanan:</span><span>${tidakAntar} kali (Sanksi Berat)</span></div>
+            <div class="info">
+                Keterangan: ${keteranganStatus}<br>
+                Terdaftar: ${d.tanggal_daftar || "-"}
+            </div>
+
+            <hr style="margin:10px 0;">
+            <button class="btn btn-hijau" onclick="pulihkan('${id}')">✅ Pulihkan Hak</button>
+            <button class="btn btn-kuning" onclick="tambahPeringatan('${id}')">⚠️ Beri Peringatan</button>
+            <button class="btn btn-oranye" onclick="suspendSementara('${id}')">⏸️ Suspend 14 Hari</button>
+            <button class="btn btn-merah" onclick="blokirPermanen('${id}')">🚫 Blokir Permanen</button>
+        </div>`;
+    });
+});
+
+
+// 🛠️ TINDAKAN PENGELOLA YANG SAH
+function tambahPeringatan(id){
+    if(confirm("⚠️ Berikan Peringatan Resmi?\nCatatan akan tersimpan secara hukum.")){
+        db.ref("DataDriver/"+id+"/jumlah_batal").transaction(n => (n || 0) + 1);
+        db.ref("DataDriver/"+id+"/riwayat").push({
+            tindakan: "Diberi Peringatan",
+            waktu: new Date().toLocaleString('id-ID'),
+            keterangan: "Membatalkan pesanan"
+        });
+        alert("✅ Peringatan dicatat secara sah!");
+    }
+}
+
+function suspendSementara(id){
+    if(confirm("⏸️ Lakukan SUSPEND SEMENTARA?\nSopir tidak bisa bekerja selama masa hukuman.")){
+        db.ref("DataDriver/"+id).update({
+            status: "SUSPEND",
+            jumlah_batal: firebase.database.ServerValue.increment(1),
+            keterangan_sanksi: "Suspend sementara karena pelanggaran berulang",
+            tanggal_sanksi: new Date().toLocaleString('id-ID')
+        });
+        alert("⏸️ Sanksi Suspend Sementara Ditetapkan!");
+    }
+}
+
+function blokirPermanen(id){
+    if(confirm("🚫 PERINGATAN KERAS!\nYAKIN INGIN MEMBLOKIR SECARA PERMANEN?\nTindakan ini tidak bisa dibatalkan dan berlaku selamanya.")){
+        db.ref("DataDriver/"+id).update({
+            status: "DIBLOKIR PERMANEN",
+            blokir_selamanya: true,
+            alasan_blokir: "Melanggar aturan: Sering batal / Tidak mengantar makanan",
+            tanggal_blokir: new Date().toLocaleString('id-ID')
+        });
+        alert("🚫 DIBLOKIR PERMANEN!\nData tercatat sebagai bukti hukum.");
+    }
+}
+
+function pulihkan(id){
+    if(confirm("✅ Yakin memulihkan hak sopir ini?\nSemua catatan pelanggaran akan dihapus bersih.")){
+        db.ref("DataDriver/"+id).update({
+            jumlah_batal: 0,
+            tidak_mengantar: 0,
+            status: "AKTIF",
+            keterangan_sanksi: "Dipulihkan haknya setelah perbaikan"
+        });
+        alert("✅ Hak telah dipulihkan!");
+    }
+}
+</script>
+</body>
+</html>
