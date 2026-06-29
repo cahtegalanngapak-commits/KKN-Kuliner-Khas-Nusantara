@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Makanan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            color: #dc3545;
+            margin-bottom: 25px;
+        }
+        .menu-makanan {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .item-makanan {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .item-makanan:last-child {border: none;}
+        .nama-makanan {font-weight: bold;}
+        .harga {color: #28a745; font-weight: bold;}
+        .form-pesanan {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {background: #c82333;}
+        .pesan {
+            margin-top: 15px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            display: none;
+        }
+        .berhasil {background: #d4edda; color: #155724;}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🍽️ PESAN MAKANAN</h1>
+    <p>Pilih menu & isi alamat pengiriman</p>
+</div>
+
+<div class="menu-makanan">
+    <h3>Pilih Menu Makanan</h3>
+    <div class="item-makanan">
+        <span class="nama-makanan">🍛 Nasi Goreng Spesial</span>
+        <span class="harga">Rp 18.000</span>
+        <input type="radio" name="menu" value="Nasi Goreng Spesial - Rp 18.000" required>
+    </div>
+    <div class="item-makanan">
+        <span class="nama-makanan">🍜 Mie Ayam Komplit</span>
+        <span class="harga">Rp 15.000</span>
+        <input type="radio" name="menu" value="Mie Ayam Komplit - Rp 15.000">
+    </div>
+    <div class="item-makanan">
+        <span class="nama-makanan">🍗 Ayam Geprek Nasi</span>
+        <span class="harga">Rp 17.000</span>
+        <input type="radio" name="menu" value="Ayam Geprek Nasi - Rp 17.000">
+    </div>
+    <div class="item-makanan">
+        <span class="nama-makanan">🥤 Es Teh Manis</span>
+        <span class="harga">Rp 3.000</span>
+        <input type="radio" name="menu" value="Es Teh Manis - Rp 3.000">
+    </div>
+</div>
+
+<div class="form-pesanan">
+    <h3>Data Pesanan & Alamat</h3>
+    <input type="text" id="nama_pemesan" placeholder="Nama Lengkap Kamu" required>
+    <input type="tel" id="hp_pemesan" placeholder="Nomor HP / WhatsApp" required>
+    <textarea id="alamat_kirim" rows="3" placeholder="Alamat Lengkap Pengiriman (Jalan, RT/RW, Kelurahan, Kota)" required></textarea>
+    <input type="text" id="catatan" placeholder="Catatan Tambahan (Opsional: Pedas, tanpa sayur, dll)">
+
+    <button onclick="kirimPesanan()">📤 KIRIM PESANAN SEKARANG</button>
+
+    <div id="notifikasi" class="pesan berhasil"></div>
+</div>
+
+
+<!-- === SAMBUNGKAN KE FIREBASE KAMU (SAMA SEPERTI SEBELUMNYA) === -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+// GANTI DENGAN DATA FIREBASE KAMU SENDIRI
+const firebaseConfig = {
+  apiKey: "API_KEY_KAMU",
+  authDomain: "PROYEK_KAMU.firebaseapp.com",
+  databaseURL: "https://PROYEK_KAMU-default-rtdb.firebaseio.com",
+  projectId: "PROYEK_KAMU",
+  storageBucket: "PROYEK_KAMU.appspot.com",
+  messagingSenderId: "ID_KAMU",
+  appId: "APP_ID_KAMU"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+
+// FUNGSI KIRIM PESANAN
+function kirimPesanan() {
+    const menuPilihan = document.querySelector('input[name="menu"]:checked');
+    const nama = document.getElementById("nama_pemesan").value;
+    const hp = document.getElementById("hp_pemesan").value;
+    const alamat = document.getElementById("alamat_kirim").value;
+    const catatan = document.getElementById("catatan").value || "-";
+    const notif = document.getElementById("notifikasi");
+
+    if (!menuPilihan || !nama || !hp || !alamat) {
+        notif.textContent = "⚠️ Lengkapi semua data yang wajib diisi!";
+        notif.style.display = "block";
+        notif.className = "pesan gagal";
+        return;
+    }
+
+    // KIRIM KE FIREBASE
+    database.ref("PesananMasuk").push({
+        menu: menuPilihan.value,
+        nama_pemesan: nama,
+        no_hp: hp,
+        alamat: alamat,
+        catatan: catatan,
+        status: "Menunggu Driver",
+        waktu: new Date().toLocaleString("id-ID")
+    }).then(() => {
+        notif.textContent = "✅ PESANAN BERHASIL TERKIRIM! Tunggu driver datang ya!";
+        notif.style.display = "block";
+        notif.className = "pesan berhasil";
+        
+        // KOSONGKAN FORMULIR
+        document.querySelector("form").reset();
+        setTimeout(() => notif.style.display = "none", 5000);
+    }).catch(error => {
+        notif.textContent = "❌ Gagal: " + error;
+        notif.style.display = "block";
+    });
+}
+</script>
+
+</body>
+</html>
