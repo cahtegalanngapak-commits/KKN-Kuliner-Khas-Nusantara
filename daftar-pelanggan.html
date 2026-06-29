@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Pelanggan</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+        .box {background:white; border-radius:12px; padding:25px; max-width:420px; margin:30px auto; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+        h2 {text-align:center; margin-bottom:20px; color:#dc3545;}
+        input {width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:8px; font-size:15px;}
+        button {width:100%; padding:14px; background:#dc3545; color:white; border:none; border-radius:8px; font-size:16px; font-weight:bold; margin-top:10px; cursor:pointer;}
+        button:hover {background:#c82333;}
+        .link {text-align:center; margin-top:15px; color:#666; font-size:14px;}
+        .link span {color:#0d6efd; cursor:pointer; font-weight:bold;}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🛒 Daftar Akun Pembeli</h2>
+        <input type="text" id="nama" placeholder="Nama Lengkap" required>
+        <input type="tel" id="hp" placeholder="Nomor HP (08xx)" required>
+        <input type="email" id="email" placeholder="Alamat Email" required>
+        <input type="password" id="sandi" placeholder="Buat Kata Sandi" required>
+        <textarea id="alamat" rows="2" placeholder="Alamat Lengkap"></textarea>
+
+        <button onclick="daftarPelanggan()">✅ DAFTAR AKUN</button>
+        <div class="link">Sudah punya akun? <span>Masuk Sekarang</span></div>
+        <button style="background:#6c757d;" onclick="window.location.href='beranda.html'">⬅️ Kembali</button>
+    </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function daftarPelanggan(){
+    const data = {
+        nama: document.getElementById('nama').value,
+        hp: document.getElementById('hp').value,
+        email: document.getElementById('email').value,
+        sandi: document.getElementById('sandi').value,
+        alamat: document.getElementById('alamat').value,
+        status: "AKTIF",
+        tanggal_daftar: new Date().toLocaleString('id-ID')
+    };
+
+    db.ref("AkunPelanggan").push(data)
+    .then(() => {
+        alert("✅ PENDAFTARAN BERHASIL!\nSelamat berbelanja kuliner nusantara!");
+        window.location.href = "pesan.html";
+    })
+    .catch(err => alert("Gagal: " + err.message));
+}
+</script>
+</body>
+</html>
