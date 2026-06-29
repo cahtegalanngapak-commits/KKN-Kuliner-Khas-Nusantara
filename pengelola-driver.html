@@ -183,6 +183,39 @@ function pulihkan(id){
         });
         alert("✅ Hak telah dipulihkan!");
     }
+} 
+
+   <div class="ringkasan" style="background:#fff3cd;">
+    <h3>📸 Cek Bukti Foto Pengantaran</h3>
+    <p>✅ Sopir WAJIB upload foto bukti di depan pelanggan</p>
+    <p>❌ Tanpa foto = Pesanan dianggap gagal = Sanksi Otomatis</p>
+</div>
+
+<h3 style="margin-top:20px;">🖼️ Riwayat Bukti Foto Pengantaran</h3>
+<div id="daftar-bukti-foto" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:15px;"></div>
+
+// 📸 TAMPILKAN SEMUA BUKTI FOTO PENGANTARAN
+db.ref("BuktiPengantaran").on("value", snap => {
+    const wadah = document.getElementById("daftar-bukti-foto");
+    if(!wadah) return;
+    wadah.innerHTML = "";
+
+    if(!snap.exists()) {
+        wadah.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#888;'>Belum ada bukti foto pengantaran</p>";
+        return;
+    }
+
+snap.forEach(foto => {
+        const data = foto.val();
+        wadah.innerHTML += `
+        <div class="kartu">
+            <img src="${data.url_foto}" alt="Bukti Pengantaran" style="width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:8px;">
+            <div class="baris"><span>Nama Sopir:</span><strong>${data.nama_driver || "-"}</strong></div>
+            <div class="baris"><span>Pelanggan:</span><span>${data.nama_pelanggan || "-"}</span></div>
+            <div class="baris"><span>Waktu:</span><span>${data.waktu || "-"}</span></div>
+            <div style="font-size:13px; color:#666; margin-top:5px;">Lokasi: ${data.lokasi || "-"}</div>
+        </div>`;
+    });
 }
 </script>
 </body>
