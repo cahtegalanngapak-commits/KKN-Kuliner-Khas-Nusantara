@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKN Kuliner Nusantara</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+        
+        /* === HEADER UTAMA === */
+        .header-beranda {
+            background:linear-gradient(135deg, #dc3545, #c82333);
+            color:white; padding:25px; border-radius:12px; 
+            text-align:center; margin-bottom:25px;
+            box-shadow:0 3px 10px rgba(220,53,69,0.2);
+        }
+
+        /* === PILIHAN PERAN DI BERANDA === */
+        .pilihan-peran {
+            display:grid; gap:15px; max-width:450px; margin:0 auto 30px;
+        }
+        .kotak-peran {
+            background:white; padding:22px; border-radius:12px; 
+            text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.1); 
+            cursor:pointer; transition:0.3s; border-left:4px solid #dc3545;
+        }
+        .kotak-peran:hover {transform:translateY(-3px); border-left-color:#ffc107;}
+        .kotak-peran h2 {margin-bottom:6px; color:#333; font-size:19px;}
+        .kotak-peran p {color:#666; font-size:14px;}
+        .kotak-langsung {border-left-color:#28a745;}
+
+        /* === BAGIAN FORM PEMESANAN === */
+        .form-box {
+            background:white; border-radius:12px; padding:20px; 
+            box-shadow:0 2px 8px rgba(0,0,0,0.08); max-width:500px; margin:0 auto;
+        }
+        h3 {
+            color:#333; margin-bottom:12px; border-bottom:2px solid #f1f1f1; 
+            padding-bottom:6px; font-size:17px;
+        }
+        
+        /* === PILIHAN MENU & JARAK === */
+        .menu-item, .jarak-item {
+            padding:12px; margin:8px 0; background:#f8f9fa; border-radius:8px;
+            border-left:4px solid #dc3545; transition:0.2s;
+        }
+        .menu-item:hover, .jarak-item:hover {background:#fff3cd; border-left-color:#ffc107;}
+        .jarak-item {border-left-color:#0d6efd;}
+        
+        /* === KOTAK INFORMASI === */
+        .rincian {background:#e7f3ff; padding:15px; border-radius:8px; margin:15px 0;}
+        .rekening {background:#fff3cd; padding:15px; border-radius:8px; margin:15px 0; border:1px solid #ffeaa7;}
+        .hubungi-resto {background:#d4edda; padding:15px; border-radius:8px; margin:15px 0; border:1px solid #c3e6cb;}
+        .batal-pesanan {background:#fff3cd; padding:15px; border-radius:8px; margin:15px 0; border:1px solid #ffeeba;}
+        
+        /* === INPUT & TOMBOL === */
+        input, textarea, select {
+            width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; 
+            border-radius:8px; font-size:15px; transition:0.2s;
+        }
+        input:focus, textarea:focus, select:focus {outline:none; border-color:#dc3545; box-shadow:0 0 0 3px rgba(220,53,69,0.1);}
+        
+        button {
+            width:100%; padding:14px; background:#dc3545; color:white; border:none; 
+            border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; 
+            margin-top:10px; transition:0.2s;
+        }
+        button:hover {background:#c82333; transform:translateY(-1px);}
+        button:disabled {background:#ccc; cursor:not-allowed; transform:none;}
+
+        .btn-hubungi {background:#28a745; padding:10px; font-size:15px; margin-top:8px;}
+        .btn-hubungi:hover {background:#218838;}
+        .btn-peta {background:#17a2b8; padding:10px; font-size:15px; margin-top:5px;}
+        .btn-peta:hover {background:#138496;}
+        .btn-batal {background:#ffc107; color:#000; padding:12px; font-size:16px;}
+        .btn-batal:hover {background:#e0a800;}
+        .btn-kembali {background:#6c757d; margin-bottom:15px;}
+        .btn-kembali:hover {background:#5a6268;}
+        
+        /* === TEKS INFORMASI === */
+        .info-bagi {font-size:13px; color:#555; margin-top:10px; line-height:1.6;}
+        .info-bagi p {margin:4px 0;}
+        .pemisah {text-align:center; margin:25px 0; color:#888; font-weight:bold;}
+    </style>
+</head>
+<body>
+
+<!-- ======================================
+    BAGIAN 1: PILIHAN PERAN / BERANDA
+====================================== -->
+<div class="header-beranda">
+    <h1>🍛 KKN KULINER NUSANTARA</h1>
+    <p style="color:#ffebeb;">Silakan Pilih Sesuai Peran Anda</p>
+</div>
+
+<div class="pilihan-peran">
+    <div class="kotak-peran" onclick="window.location.href='daftar-pelanggan.html'">
+        <h2>🛒 Saya Pembeli</h2>
+        <p>Daftar akun untuk pesan makanan</p>
+    </div>
+    <div class="kotak-peran" onclick="window.location.href='daftar-resto.html'">
+        <h2>🏪 Saya Pemilik Resto</h2>
+        <p>Daftarkan usaha kuliner Anda</p>
+    </div>
+    <div class="kotak-peran" onclick="window.location.href='daftar-driver.html'">
+        <h2>🛵 Saya Pengemudi</h2>
+        <p>Daftar untuk mengantar pesanan</p>
+    </div>
+    <div class="kotak-peran kotak-langsung" onclick="tampilkanFormPesan()">
+        <h2>⚡ Pesan Tanpa Daftar</h2>
+        <p>Langsung pesan makanan sekarang</p>
+    </div>
+</div>
+
+<div class="pemisah" id="tanda-pemisah" style="display:none;">— — — — — — — — — — — — — — —</div>
+
+<!-- ======================================
+    BAGIAN 2: FORM PEMESANAN LANGSUNG
+====================================== -->
+<div class="form-box" id="form-pemesanan" style="display:none;">
+    <button class="btn-kembali" onclick="sembunyikanForm()">⬅️ Kembali ke Pilihan Utama</button>
+
+    <h3>🍽️ Pilih Menu Makanan</h3>
+    <div class="menu-item">
+        <label><input type="radio" name="menu" value="Nasi Jinggo" data-harga="12000"> Nasi Jinggo - Rp 12.000</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="menu" value="Ayam Betutu" data-harga="35000"> Ayam Betutu - Rp 35.000</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="menu" value="Sate Lilit" data-harga="20000"> Sate Lilit - Rp 20.000</label>
+    </div>
+
+    <h3>💰 Diskon Resto (Jika Ada)</h3>
+    <select id="diskon">
+        <option value="0">Tanpa Diskon</option>
+        <option value="5">Diskon 5%</option>
+        <option value="10">Diskon 10%</option>
+        <option value="15">Diskon 15%</option>
+        <option value="20">Diskon 20%</option>
+        <option value="50">Diskon 50% (Setengah Harga)</option>
+    </select>
+
+    <h3>🚚 Pilih Jarak Pengiriman (Maksimal 80 KM)</h3>
+    <div style="background:#e7f3ff; padding:12px; border-radius:8px; margin:10px 0;">
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="7500" data-ongkir="7500">
+            Kurang dari 2 KM - Rp 7.500
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="10000" data-ongkir="10000">
+            2 KM s.d 5 KM - Rp 10.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="15000" data-ongkir="15000">
+            5 KM s.d 10 KM - Rp 15.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="25000" data-ongkir="25000">
+            10 KM s.d 20 KM - Rp 25.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="40000" data-ongkir="40000">
+            20 KM s.d 30 KM - Rp 40.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="60000" data-ongkir="60000">
+            30 KM s.d 40 KM - Rp 60.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="85000" data-ongkir="85000">
+            40 KM s.d 50 KM - Rp 85.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="110000" data-ongkir="110000">
+            50 KM s.d 60 KM - Rp 110.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="140000" data-ongkir="140000">
+            60 KM s.d 70 KM - Rp 140.000
+        </label>
+        <label class="jarak-item">
+            <input type="radio" name="jarak" value="195000" data-ongkir="195000">
+            70 KM s.d 80 KM - Rp 195.000 ✅ (Semua Milik Driver)
+        </label>
+    </div>
+
+    <div class="rincian" id="rincian-harga" style="display:none;">
+        <h4>📋 Rincian Pembayaran</h4>
+        <p>Harga Awal: Rp <span id="harga-awal">0</span></p>
+        <p>Diskon: - Rp <span id="potong-diskon">0</span> (<span id="persen-diskon">0</span>%)</p>
+        <p>Harga Setelah Diskon: Rp <span id="harga-bersih">0</span></p>
+        <p>Biaya Antar (Penuh ke Driver): Rp <span id="ongkir">0</span></p>
+        <hr style="margin:10px 0; border-color:#b8daff;">
+        <p style="font-size:19px; font-weight:bold; color:#dc3545;">TOTAL BAYAR: Rp <span id="total-bayar">0</span></p>
+
+        <div class="info-bagi">
+            <p>📊 Pembagian Hasil:</p>
+            <p>• Resto: Sisa Harga Makanan - Rp <span id="bagi-resto">0</span></p>
+            <p>• Driver: Ongkir Penuh - Rp <span id="bagi-driver">0</span></p>
+            <p>• Biaya Layanan Resmi OJK: - Rp <span id="biaya-layanan">4.000</span></p>
+            <p>• Pemilik Aplikasi: Untung Bersih - Rp <span id="bagi-kamu">8.000</span></p>
+            <p style="font-weight:bold; margin-top:6px;">*(Kotor: Rp 12.000 → Setelah Biaya = Bersih 8.000)*</p>
+        </div>
+    </div>
+
+    <h3>👤 Data Pemesan</h3>
+    <input type="text" id="nama" placeholder="Nama Lengkap Anda" required>
+    <input type="tel" id="hp" placeholder="Nomor HP Aktif (08xx)" required>
+    <textarea id="alamat" rows="2" placeholder="Alamat Lengkap: Jalan, Nomor Rumah, RT/RW, Desa/Kecamatan" required></textarea>
+    
+    <button class="btn-peta" type="button" onclick="bukaLokasiPeta()">
+    🗺️ LIHAT LOKASI ANDA DI GOOGLE MAPS
+    </button>
+
+    <input type="text" id="tanda" placeholder="Tanda Lokasi: Contoh: Dekat Masjid / Sebelah Warung Budi">
+    <input type="text" id="catatan" placeholder="Catatan Tambahan (Misal: Pedasnya Sedang)">
+
+    <div class="rekening">
+        <h4>💳 Pembayaran Transfer</h4>
+        <p>Bank BCA</p>
+        <p style="font-size:18px; font-weight:bold;">123.456.7890</p>
+        <p>a.n. Fadli Ifansyah</p>
+        <p style="font-size:13px; color:#666; margin-top:6px;">*Uang masuk ke rekening ini, lalu terbagi otomatis ke Resto & Driver</p>
+    </div>
+
+    <div class="hubungi-resto">
+        <h4>📞 Hubungi Langsung Resto</h4>
+        <p>Jika ingin tanya menu, stok atau ketersediaan:</p>
+        <p style="font-size:18px; font-weight:bold; color:#155724;" id="nomor-resto">Memuat data Resto...</p>
+        <button class="btn-hubungi" id="btn-telpon-resto" disabled>📞 TELEPON RESTO SEKARANG</button>
+        <button class="btn-hubungi" style="background:#17a2b8;" id="btn-chat-resto" disabled onclick="bukaChat()">💬 KIRIM PESAN KE RESTO</button>
+    </div>
+
+    <div class="batal-pesanan">
+        <h4>⚠️ Batalkan Pesanan (Jika Perlu)</h4>
+        <input type="text" id="alasanBatal" placeholder="Tulis alasan pembatalan...">
+        <button class="btn-batal" onclick="batalPesanan()">❌ BATALKAN PESANAN SAYA</button>
+    </div>
+
+    <button onclick="kirimPesanan()">📤 KIRIM PESANAN SAYA</button>
+</div>
+
+
+<!-- ======================================
+    FUNGSI TAMPILAN & FIREBASE
+====================================== -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+// TAMPIL / SEMBUNYIKAN FORM PEMESANAN
+function tampilkanFormPesan(){
+    document.querySelector('.pilihan-peran').style.display = 'none';
+    document.getElementById('tanda-pemisah').style.display = 'block';
+    document.getElementById('form-pemesanan').style.display = 'block';
+    window.scrollTo(0, document.body.scrollHeight);
+}
+function sembunyikanForm(){
+    document.querySelector('.pilihan-peran').style.display = 'grid';
+    document.getElementById('tanda-pemisah').style.display = 'none';
+    document.getElementById('form-pemesanan').style.display = 'none';
+    window.scrollTo(0, 0);
+}
+
+
+// KONEKSI FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+
+// BACA DATA RESTO
+let nomorRestoAktif = "";
+db.ref("DataResto").on("value", snap => {
+    if(snap.exists()){
+        const data = snap.val();
+        nomorRestoAktif = data.no_telp_resto;
+        document.getElementById('nomor-resto').textContent = `${data.nama_resto} - ${nomorRestoAktif}`;
+        document.getElementById('btn-telpon-resto').disabled = false;
+        document.getElementById('btn-telpon-resto').setAttribute("onclick", `window.location.href='tel:${nomorRestoAktif}'`);
+        document.getElementById('btn-chat-resto').disabled = false;
+    }else{
+        document.getElementById('nomor-resto').textContent = "Menunggu Resto Terdaftar";
+    }
+});
+
+function bukaChat(){
+    if(nomorRestoAktif){
+        window.location.href = `https://wa.me/${nomorRestoAktif.replace(/^0/, '62')}?text=Halo%20Resto%2C%20saya%20ingin%20tanya%20menu`;
+    }
+}
+
+function bukaLokasiPeta(){
+    const alamat = document.getElementById('alamat').value.trim();
+    const tanda = document.getElementById('tanda').value.trim();
+    if(!alamat) return alert("⚠️ Isi Alamat Lengkap Dulu!");
+    const lokasiLengkap = alamat + (tanda ? " " + tanda : "");
+    window.location.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lokasiLengkap)}`;
+}
+
+function batalPesanan() {
+    const alasan = document.getElementById('alasanBatal').value.trim();
+    if(!alasan) return alert("⚠️ Tuliskan Alasan Pembatalan!");
+
+    db.ref("PesananMasuk").orderByChild("status").equalTo("Menunggu Driver").once("value", snap => {
+        if(snap.exists()){
+            snap.forEach(item => {
+                item.ref.update({
+                    status: "DIBATALKAN PELANGGAN",
+                    alasan_batal: alasan,
+                    waktu_batal: new Date().toLocaleString('id-ID')
+                }).then(() => {
+                    alert("✅ PESANAN DIBATALKAN!\nAlasan: " + alasan);
+                    window.location.reload();
+                });
+            });
+        }else{
+            alert("❌ Tidak Ada Pesanan Aktif Yang Bisa Dibatalkan!");
+        }
+    });
+}
+
+
+// HITUNG HARGA OTOMATIS
+document.querySelectorAll('input[name="menu"], #diskon, input[name="jarak"]').forEach(el => {
+    el.addEventListener('change', hitungHarga);
+});
+
+function hitungHarga() {
+    const menuPilih = document.querySelector('input[name="menu"]:checked');
+    const jarakPilih = document.querySelector('input[name="jarak"]:checked');
+    
+    if(!menuPilih || !jarakPilih) {
+        document.getElementById('rincian-harga').style.display = 'none';
+        return;
+    }
+
+    const hargaAwal = parseInt(menuPilih.dataset.harga);
+    const diskonPersen = parseInt(document.getElementById('diskon').value);
+    const ongkirDriver = parseInt(jarakPilih.dataset.ongkir);
+
+    const potonganDiskon = Math.round(hargaAwal * diskonPersen / 100);
+    const hargaBersih = hargaAwal - potonganDiskon;
+    const untungKotor = 12000;
+    const biayaLayanan = 4000;
+    const untungBersih = untungKotor - biayaLayanan;
+    const bagianResto = hargaBersih - untungKotor;
+    const totalBayar = hargaBersih + ongkirDriver;
+
+    document.getElementById('rincian-harga').style.display = 'block';
+    document.getElementById('harga-awal').textContent = hargaAwal.toLocaleString('id-ID');
+    document.getElementById('potong-diskon').textContent = potonganDiskon.toLocaleString('id-ID');
+    document.getElementById('persen-diskon').textContent = diskonPersen;
+    document.getElementById('harga-bersih').textContent = hargaBersih.toLocaleString('id-ID');
+    document.getElementById('ongkir').textContent = ongkirDriver.toLocaleString('id-ID');
+    document.getElementById('total-bayar').textContent = totalBayar.toLocaleString('id-ID');
+    document.getElementById('bagi-resto').textContent = bagianResto.toLocaleString('id-ID');
+    document.getElementById('bagi-driver').textContent = ongkirDriver.toLocaleString('id-ID');
+    document.getElementById('biaya-layanan').textContent = biayaLayanan.toLocaleString('id-ID');
+    document.getElementById('bagi-kamu').textContent = untungBersih.toLocaleString('id-ID');
+}
+
+
+// KIRIM PESANAN
+function kirimPesanan() {
+    const menuPilih = document.querySelector('input[name="menu"]:checked');
+    const jarakPilih = document.querySelector('input[name="jarak"]:checked');
+    
+    if(!menuPilih || !jarakPilih) {
+        alert("⚠️ Silakan Pilih Menu & Jarak Pengiriman Dulu!");
+        return;
+    }
+
+    const hargaAwal = parseInt(menuPilih.dataset.harga);
+    const diskonPersen = parseInt(document.getElementById('diskon').value);
+    const ongkirDriver = parseInt(jarakPilih.dataset.ongkir);
+
+    const potonganDiskon = Math.round(hargaAwal * diskonPersen / 100);
+    const hargaBersih = hargaAwal - potonganDiskon;
+    const untungKotor = 12000;
+    const biayaLayanan = 4000;
+    const untungBersih = untungKotor - biayaLayanan;
+    const bagianResto = hargaBersih - untungKotor;
+    const totalBayar = hargaBersih + ongkirDriver;
+
+    const dataPesanan = {
+        menu: menuPilih.value,
+        jarak: jarakPilih.parentElement.textContent.trim(),
+        nama_pemesan: document.getElementById('nama').value,
+        no_hp: document.getElementById('hp').value,
+        alamat: document.getElementById('alamat').value,
+        tanda_lokasi: document.getElementById('tanda').value || "-",
+        catatan: document.getElementById('catatan').value || "-",
+        harga_awal: hargaAwal,
+        diskon_persen: diskonPersen,
+        potongan_diskon: potonganDiskon,
+        harga_bersih: hargaBersih,
+        ongkir_driver: ongkirDriver,
+        total_bayar: totalBayar,
+        bagian_resto: bagianResto,
+        bagian_driver: ongkirDriver,
+        untung_kotor: untungKotor,
+        biaya_layanan: biayaLayanan,
+        bagian_pemilik_bersih: untungBersih,
+        status: "Menunggu Driver",
+        waktu: new Date().toLocaleString('id-ID')
+    };
+
+    db.ref("PesananMasuk").push(dataPesanan)
+    .then(() => {
+        alert(`✅ PESANAN BERHASIL TERKIRIM!\n\nTotal Bayar: Rp ${totalBayar.toLocaleString('id-ID')}\nKeuntungan Kamu Bersih: Rp ${untungBersih.toLocaleString('id-ID')}\n\nSilakan Lakukan Pembayaran!`);
+        window.location.reload();
+    })
+    .catch(err => alert("❌ Gagal Mengirim Pesanan: " + err.message));
+}
+</script>
+
+</body>
+</html>
