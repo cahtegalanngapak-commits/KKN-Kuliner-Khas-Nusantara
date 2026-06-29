@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Resto Mitra - KKN Kuliner Nusantara</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+
+        .box {
+            background:white; border-radius:12px; padding:25px; 
+            max-width:450px; margin:20px auto; 
+            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+        }
+        .logo {text-align:center; font-size:45px; margin-bottom:5px;}
+        h2 {text-align:center; color:#198754; margin-bottom:8px; font-size:20px;}
+        .deskripsi {text-align:center; color:#666; font-size:14px; margin-bottom:18px; line-height:1.5;}
+
+        .syarat {
+            background:#d4edda; border:1px solid #c3e6cb; border-radius:8px;
+            padding:12px; margin-bottom:15px; font-size:14px; line-height:1.7;
+        }
+        .syarat h4 {color:#0f5132; margin-bottom:6px;}
+        .syarat ul {padding-left:20px; color:#0f5132;}
+        .catatan {font-size:13px; font-style:italic; margin-top:6px;}
+
+        .cek-setuju {
+            display:flex; gap:8px; align-items:center; margin:12px 0;
+            font-size:14px; color:#333;
+        }
+
+        label {font-weight:bold; margin-top:12px; display:block; font-size:14px; color:#333;}
+        input, textarea, select {
+            width:100%; padding:12px; margin-top:6px; border:1px solid #ddd; 
+            border-radius:8px; font-size:15px; transition:0.2s;
+        }
+        input:focus, textarea:focus, select:focus {outline:none; border-color:#198754; box-shadow:0 0 0 3px rgba(25,135,84,0.1);}
+        input[type="file"] {padding:8px; background:#f8f9fa;}
+
+        button {
+            width:100%; padding:14px; background:#198754; color:white; border:none; 
+            border-radius:8px; font-size:16px; font-weight:bold; margin-top:18px; cursor:pointer; transition:0.2s;
+        }
+        button:hover {background:#157347; transform:translateY(-1px);}
+        button:disabled {background:#ccc; cursor:not-allowed; transform:none;}
+
+        .btn-kembali {background:#6c757d; margin-top:10px;}
+        .btn-kembali:hover {background:#5a6268;}
+        .info {font-size:13px; color:#666; margin-top:15px; text-align:center; line-height:1.5; background:#f8f9fa; padding:10px; border-radius:8px;}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="logo">🍛</div>
+        <h2>PENDAFTARAN RESTO MITRA</h2>
+        <p class="deskripsi">Daftarkan usaha kuliner asli daerahmu agar dikenal luas</p>
+
+        <!-- ✅ SYARAT ANTI FIKTIF & LENGKAP -->
+        <div class="syarat">
+            <h4>🛡️ Syarat Pendaftaran:</h4>
+            <ul>
+                <li>✅ Usaha benar-benar ada & beroperasi nyata</li>
+                <li>✅ Alamat lengkap sesuai lokasi tempat jualan</li>
+                <li>✅ Nomor pemilik usaha aktif & bisa dihubungi</li>
+                <li>✅ Menjual makanan halal & layak dikonsumsi</li>
+                <li>✅ Bersedia mengirim pesanan sesuai aturan aplikasi</li>
+                <li>✅ Foto tampak depan tempat usaha (bukti fisik usaha ada)</li>
+            </ul>
+            <p class="catatan">*Status akan aktif setelah tim kami memverifikasi kebenaran data & lokasi</p>
+        </div>
+
+        <div class="cek-setuju">
+            <input type="checkbox" id="setuju" onchange="cekTombol()">
+            <label for="setuju">Saya menyatakan data di atas BENAR & usaha benar-benar ada</label>
+        </div>
+
+        <!-- ✅ FORM ISIAN LENGKAP & TERATUR -->
+        <label>Nama Lengkap Resto / Usaha</label>
+        <input type="text" id="namaUsaha" placeholder="Contoh: Warung Makan Soto Lamongan" required>
+
+        <label>Nama Pemilik Usaha</label>
+        <input type="text" id="namaPemilik" placeholder="Nama Lengkap Pemilik" required>
+
+        <label>Nomor Telepon / HP Aktif</label>
+        <input type="tel" id="hpResto" placeholder="Contoh: 0812 3456 7890" required>
+
+        <label>Alamat Lengkap Lokasi Usaha</label>
+        <textarea id="alamatResto" rows="2" placeholder="Jalan, Nomor, RT/RW, Desa/Kecamatan, Kota" required></textarea>
+
+        <label>Kategori Jenis Kuliner</label>
+        <select id="kategori">
+            <option value="">-- Pilih Kategori --</option>
+            <option>Masakan Tradisional Daerah</option>
+            <option>Makanan Ringan & Jajanan Khas</option>
+            <option>Minuman Tradisional</option>
+            <option>Oleh-oleh & Makanan Kemasan</option>
+        </select>
+
+        <label>Buat Kata Sandi Admin Resto</label>
+        <input type="password" id="sandiResto" placeholder="Minimal 6 karakter" required>
+
+        <label>📸 Foto Tampak Depan Tempat Usaha:</label>
+        <input type="file" accept="image/*" id="fotoTempat">
+
+        <button id="btnDaftar" disabled onclick="daftarResto()">✅ KIRIM PENDAFTARAN SEKARANG</button>
+        <button class="btn-kembali" onclick="window.location.href='index.html'">⬅️ Kembali ke Halaman Utama</button>
+
+        <div class="info">
+            ℹ️ Setelah diverifikasi: Data Resto bisa mengelola menu & promosi di halaman khusus Kelola Resto.
+            <br>🔒 Data aman & hanya untuk keperluan operasional.
+        </div>
+    </div>
+
+<!-- 🔗 KONEKSI FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function cekTombol(){
+    document.getElementById('btnDaftar').disabled = !document.getElementById('setuju').checked;
+}
+
+function daftarResto(){
+    const nama = document.getElementById('namaUsaha').value.trim();
+    const pemilik = document.getElementById('namaPemilik').value.trim();
+    const hp = document.getElementById('hpResto').value.trim();
+    const alamat = document.getElementById('alamatResto').value.trim();
+    const kategori = document.getElementById('kategori').value;
+    const sandi = document.getElementById('sandiResto').value.trim();
+
+    // VALIDASI LENGKAP
+    if(!nama || !pemilik || !hp || !alamat || !kategori || !sandi){
+        return alert("⚠️ Lengkapi SEMUA data terlebih dahulu!");
+    }
+    if(hp.length < 10){
+        return alert("⚠️ Nomor HP tidak valid!");
+    }
+    if(sandi.length < 6){
+        return alert("⚠️ Kata sandi minimal harus 6 karakter!");
+    }
+
+    // SIMPAN DATA RAPI KE FIREBASE
+    const dataResto = {
+        nama_resto: nama,
+        nama_pemilik: pemilik,
+        no_telp_resto: hp,
+        alamat_resto: alamat,
+        kategori: kategori,
+        sandi_admin: sandi,
+        status: "Menunggu Verifikasi",
+        tanggal_daftar: new Date().toLocaleString('id-ID'),
+        keterangan: "Bukti fisik usaha diperiksa tim verifikasi"
+    };
+
+    db.ref("DataResto").push(dataResto)
+    .then(() => {
+        alert(`✅ PENDAFTARAN BERHASIL TERKIRIM!\n\nTerima kasih Usaha ${nama}.\nKami akan segera memeriksa data & lokasi Anda.\nSetelah disetujui, Anda bisa masuk ke halaman Kelola Resto.\nKami hubungi kembali ke nomor: ${hp}`);
+        window.location.href = "index.html";
+    })
+    .catch(err => alert("❌ Gagal: " + err.message));
+}
+</script>
+
+</body>
+</html>
