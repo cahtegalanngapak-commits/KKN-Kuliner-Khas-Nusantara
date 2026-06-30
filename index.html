@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKN Kuliner Nusantara</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+        
+        /* === HEADER UTAMA === */
+        .header-beranda {
+            background:linear-gradient(135deg, #dc3545, #c82333);
+            color:white; padding:25px; border-radius:12px; 
+            text-align:center; margin-bottom:25px;
+            box-shadow:0 3px 10px rgba(220,53,69,0.2);
+        }
+
+        /* === PILIHAN PERAN === */
+        .pilihan-peran {
+            display:grid; gap:15px; max-width:450px; margin:0 auto 30px;
+        }
+        .kotak-peran {
+            background:white; padding:22px; border-radius:12px; 
+            text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.1); 
+            cursor:pointer; transition:0.3s; border-left:4px solid #dc3545;
+        }
+        .kotak-peran:hover {transform:translateY(-3px); border-left-color:#ffc107;}
+
+        /* === BAGIAN PEMBAYARAN === */
+        .form-box {
+            background:white; border-radius:12px; padding:20px; 
+            box-shadow:0 2px 8px rgba(0,0,0,0.08); max-width:500px; margin:0 auto 20px;
+        }
+        h3 {
+            color:#333; margin-bottom:12px; border-bottom:2px solid #f1f1f1; 
+            padding-bottom:6px; font-size:17px;
+        }
+        .menu-item {
+            padding:12px; margin:8px 0; background:#f8f9fa; border-radius:8px;
+            border-left:4px solid #dc3545; transition:0.2s;
+        }
+        .menu-item:hover {background:#fff3cd; border-left-color:#ffc107;}
+        
+        button {
+            width:100%; padding:14px; background:#dc3545; color:white; border:none; 
+            border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; 
+            margin-top:10px; transition:0.2s;
+        }
+        button:hover {background:#c82333; transform:translateY(-1px);}
+        
+        .btn-bayar {background:#d63384; display:none;}
+        .btn-bayar:hover {background:#b02a6f;}
+        .pemisah {text-align:center; margin:25px 0; color:#888; font-weight:bold;}
+    </style>
+</head>
+<body>
+
+<!-- ======================================
+    BAGIAN 1: PILIHAN PERAN
+====================================== -->
+<div class="header-beranda">
+    <h1>🍛 KKN KULINER NUSANTARA</h1>
+    <p style="color:#ffebeb;">Silakan Pilih Sesuai Peran Anda</p>
+</div>
+
+<div class="pilihan-peran">
+    <div class="kotak-peran" onclick="window.location.href='daftar-pelanggan.html'">
+        <h2>🛒 Saya Pembeli</h2>
+        <p>Daftar akun untuk pesan makanan</p>
+    </div>
+
+    <div class="kotak-peran" onclick="window.location.href='daftar-resto.html'">
+        <h2>🏪 Saya Pemilik Resto</h2>
+        <p>Daftarkan usaha kuliner Anda</p>
+    </div>
+
+    <div class="kotak-peran" onclick="window.location.href='daftar-driver.html'">
+        <h2>🛵 Saya Pengemudi</h2>
+        <p>Daftar untuk mengantar pesanan</p>
+    </div>
+
+    <!-- ✅ TOMBOL PERSEIB TETAP ADA -->
+    <div class="kotak-peran" onclick="window.location.href='persib.html'" style="border-left-color:#1a237e;">
+        <h2>💙 Dukung Persib Bandung</h2>
+        <p>Halaman Kolaborasi Penggemar</p>
+    </div>
+</div>
+
+<div class="pemisah">— — — — — — — — — — — — — — —</div>
+
+<!-- ======================================
+    BAGIAN 2: PEMBAYARAN E-WALLET LENGKAP
+====================================== -->
+<div class="form-box">
+    <h3>💳 Metode Pembayaran Tersedia</h3>
+    <p style="text-align:center; margin-bottom:10px;">Pilih cara pembayaran yang Anda inginkan:</p>
+
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="DANA" onclick="tampilTombolBayar()"> 💸 DANA</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="SHOPEEPAY" onclick="tampilTombolBayar()"> 🛒 ShopeePay</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="GOPAY" onclick="tampilTombolBayar()"> 🛵 GoPay</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="OVO" onclick="tampilTombolBayar()"> 💵 OVO</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="LINKAJA" onclick="tampilTombolBayar()"> 💳 LinkAja</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="QRIS" onclick="tampilTombolBayar()"> 📱 QRIS (Semua E-Wallet)</label>
+    </div>
+
+    <button class="btn-bayar" id="btn-bayar" onclick="mulaiProsesBayar()">✅ LANJUTKAN PEMBAYARAN</button>
+</div>
+
+<!-- ======================================
+    SISTEM OTOMATIS: XENDIT & FIREBASE
+====================================== -->
+<script src="https://js.xendit.co/v1/xendit.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+// KONEKSI FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// KUNCI XENDIT (GANTI DENGAN MILIKMU)
+Xendit.setPublishableKey("KUNCI-PUBLIK-ASLI-DARI-XENDIT-KAMU");
+let metodeTerpilih = "";
+
+function tampilTombolBayar(){
+    metodeTerpilih = document.querySelector('input[name="metodeBayar"]:checked').value;
+    document.getElementById('btn-bayar').style.display = 'block';
+}
+
+function mulaiProsesBayar(){
+    if(!metodeTerpilih) return alert("⚠️ Pilih dulu metodenya!");
+
+    const nominal = 0; // Sesuaikan nominal pesanan nanti
+    const idTransaksi = "transaksi-" + Date.now();
+
+    if(metodeTerpilih === "QRIS"){
+        Xendit.QRCode.create({
+            type: "QRIS", amount: nominal, external_id: idTransaksi
+        }, (err, res) => {
+            if(res){
+                alert("✅ QRIS Dibuat! Silakan scan untuk bayar.");
+                simpanKeDatabase(idTransaksi, metodeTerpilih, nominal);
+            } else alert("❌ Gagal: " + err.message);
+        });
+    } else {
+        Xendit.EWallet.createPayment({
+            type: metodeTerpilih, amount: nominal, external_id: idTransaksi
+        }, (err, res) => {
+            if(res){
+                alert(`✅ Buka aplikasi ${metodeTerpilih} untuk bayar!`);
+                simpanKeDatabase(idTransaksi, metodeTerpilih, nominal);
+            } else alert("❌ Gagal: " + err.message);
+        });
+    }
+}
+
+// SIMPAN OTOMATIS KE RIWAYAT
+function simpanKeDatabase(id, metode, total){
+    db.ref("RiwayatPembayaran/" + id).set({
+        metode_pembayaran: metode,
+        total_bayar: total,
+        status: "Menunggu Pembayaran",
+        waktu: firebase.database.ServerValue.TIMESTAMP
+    });
+}
+</script>
+
+</body>
+</html>
