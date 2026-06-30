@@ -126,6 +126,32 @@
 <!-- ======================================
     BAGIAN 2: FORM PEMESANAN LANGSUNG
 ====================================== -->
+    <button class="btn-bayar" onclick="bayarEwallet()">💳 Lanjut Bayar DANA</button>
+<script src="https://js.xendit.co/v1/xendit.min.js"></script>
+<script>
+  // Ganti dengan kunci asli dari Xendit nanti
+  Xendit.setPublishableKey("KUNCI-ANDA-DARI-XENDIT");
+
+  function bayarEwallet() {
+    Xendit.EWallet.createPayment({
+      type: "DANA",
+      amount: 50000,
+      external_id: "pesanan-" + Date.now(), // ID otomatis unik
+    }, function(err, res) {
+      if(res) {
+        alert("✅ Silakan buka aplikasi DANA untuk bayar!");
+        // Simpan ke Firebase
+        firebase.database().ref('pesanan/' + res.external_id).update({
+          status: "Sudah Dibayar",
+          metodeBayar: "DANA"
+        });
+      } else {
+        alert("❌ Gagal: " + err.message);
+      }
+    });
+  }
+</script>
+
 <div class="form-box" id="form-pemesanan" style="display:none;">
     <button class="btn-kembali" onclick="sembunyikanForm()">⬅️ Kembali ke Pilihan Utama</button>
 
