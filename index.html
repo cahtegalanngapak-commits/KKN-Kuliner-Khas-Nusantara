@@ -144,13 +144,15 @@
         firebase.database().ref('pesanan/' + res.external_id).update({
           status: "Sudah Dibayar",
           metodeBayar: "DANA"
+          waktu:
+firebase.database.ServerValue.TimeSTAMP
         });
-      } else {
-        alert("❌ Gagal: " + err.message);
-      }
-    });
-  }
-</script>
+       } else {
+         alert("❌ Gagal memproses: " + err.message);
+       }
+     });
+   }
+ </script>
 
 <div class="form-box" id="form-pemesanan" style="display:none;">
     <button class="btn-kembali" onclick="sembunyikanForm()">⬅️ Kembali ke Pilihan Utama</button>
