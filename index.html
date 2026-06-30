@@ -423,7 +423,104 @@ function simpanKeDb(id, metode, total){
         status: "Menunggu Pembayaran",
         waktu: firebase.database.ServerValue.TIMESTAMP
     });
+}.
+// ==============================
+// ATURAN PEMBATALAN & SANKSI
+// ==============================
+const ATURAN = {
+  batasBatalHarian: 2,      // Maksimal batal sehari
+  durasiSuspendHarian: 24,  // Suspend 24 jam (jam)
+  batasBatalBulanan: 15,    // Maksimal batal sebulan
+  sanksiPermanent: true      // Aktifkan blokir selamanya
+};
+
+// FUNGSI CEK PEMBATALAN SEBELUM DIPROSES
+function cekBatasPembatalan(idDriver) {
+  const db = firebase.database();
+  const hariIni = new Date().toISOString().slice(0,10); // Format: YYYY-MM-DD
+  const bulanIni = new Date().toISOString().slice(0,7); // Format: YYYY-MM
+
+  db.ref("DataDriver/" + idDriver).once("value", snap => {
+    const data = snap.val() || {};
+    
+    // Ambil data riwayat pembatalan
+    const batalHariIni = data.batalHariIni || 0;
+    const batalBulanIni = data.batalBulanIni || 0;
+    const tglTerakhirBatal = data.tglTerakhirBatal || "";
+    const statusBlokir = data.statusBlokir || "Aktif";
+
+    // 1. Cek apakah sedang diblokir
+    if(statusBlokir !== "Aktif") {
+      alert(`AKUN DIBLOKIR!\nAlasan: ${data.alasanBlokir}\nSampai: ${data.sampaiBlokir || "PERMANEN"}`);
+      return;
+    }
+
+    // 2. Reset hitungan jika ganti hari
+    if(tglTerakhirBatal !== hariIni) {
+      db.ref("DataDriver/" + idDriver).update({
+        batalHariIni: 0,
+        tglTerakhirBatal: hariIni
+      });
+    }
+
+    // 3. Cek batas harian
+    const jumlahBatalBaru = batalHariIni + 1;
+    if(jumlahBatalBaru > ATURAN.batasBatalHarian) {
+      const waktuSelesai = new Date(Date.now() + (ATURAN.durasiSuspendHarian * 3600000));
+      db.ref("DataDriver/" + idDriver).update({
+        statusBlokir: "Suspend Sementara",
+        alasanBlokir: "Melebihi batas 2x pembatalan sehari",
+        sampaiBlokir: waktuSelesai.toLocaleString('id-ID')
+      });
+      alert(`⚠️ PERINGATAN! Anda membatalkan pesanan ke-${jumlahBatalBaru} hari ini.\nAKUN DIBLOKIR SELAMA 24 JAM!`);
+      return;
+    }
+
+    // 4. Cek batas bulanan
+    const jumlahBatalBulanBaru = batalBulanIni + 1;
+    if(jumlahBatalBulanBaru >= ATURAN.batasBatalBulanan) {
+      db.ref("DataDriver/" + idDriver).update({
+        statusBlokir: "BLOKIR PERMANEN",
+        alasanBlokir: `Mencapai ${jumlahBatalBulanBaru} kali pembatalan dalam 1 bulan`,
+        sampaiBlokir: "SELAMANYA"
+      });
+      alert(`❌ SANKSI TERBERAT!\nAnda sudah membatalkan ${jumlahBatalBulanBaru} kali dalam sebulan.\nAKUN DIBLOKIR PERMANEN!`);
+      return;
+    }
+
+    // 5. Jika aman, simpan pembatalan
+    db.ref("DataDriver/" + idDriver).update({
+      batalHariIni: jumlahBatalBaru,
+      batalBulanIni: jumlahBatalBulanBaru,
+      tglTerakhirBatal: hariIni
+    });
+
+    alert(`Pesanan berhasil dibatalkan.\nSisa batas hari ini: ${ATURAN.batasBatalHarian - jumlahBatalBaru} kali\nSisa batas bulan ini: ${ATURAN.batasBatalBulanan - jumlahBatalBulanBaru} kali`);
+  });
 }
+
+// ==============================
+// KODE ETIK & HUKUM
+// ==============================
+const KODE_ETIK = `
+📜 KODE ETIK DAN KETENTUAN HUKUM
+1. Bertindak jujur, sopan, dan bertanggung jawab
+2. Dilarang meminta biaya tambahan di luar ketentuan aplikasi
+3. Dilarang memalsukan data pesanan atau lokasi
+4. Wajib mematuhi peraturan lalu lintas Republik Indonesia
+5. Dilarang melakukan tindakan yang melanggar hukum, kekerasan, atau penipuan
+6. Menjaga kerahasiaan data pengguna aplikasi
+
+⚠️ PELANGGARAN:
+- Pelanggaran ringan: Peringatan tertulis
+- Pelanggaran sedang: Blokir sementara 7-30 hari
+- Pelanggaran berat/hukum: Blokir PERMANEN & dilaporkan ke pihak berwajib
+`;
+
+// Tampilkan kode etik saat dibutuhkan
+function bukaKodeEtik() {
+  alert(KODE_ETIK);
+}   
 </script>
 
 </body>
