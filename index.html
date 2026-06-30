@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKN Kuliner Nusantara - Driver</title>
+    <script src="https://cdn.xendit.co/xenpayment.js"></script>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:0; padding-top:40px;}
+
+        /* === NOTIFIKASI BERJALAN ATAS === */
+        .notif-berjalan {
+            position:fixed; top:0; left:0; right:0; background:#1976d2; color:white;
+            padding:8px 15px; text-align:center; font-size:14px; font-weight:500;
+            z-index:999; display:flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .ikon-putar {animation: putar 2s linear infinite;}
+        @keyframes putar {from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+        
+        /* === PETA UTAMA === */
+        .peta-container {
+            width:100%; height:50vh; background:#e3f2fd;
+            position:relative; border-bottom-left-radius:20px; border-bottom-right-radius:20px;
+        }
+        .tombol-daya {
+            position:absolute; left:20px; top:50%; transform:translateY(-50%);
+            width:60px; height:60px; border-radius:50%; background:#28a745;
+            display:flex; align-items:center; justify-content:center; color:white;
+            font-size:28px; font-weight:bold; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.2);
+            transition:0.3s;
+        }
+        .tombol-daya.off {background:#dc3545;}
+        .tombol-daya:hover {transform:translateY(-52%);}
+        .indikator-posisi {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:50px; height:50px; background:#0277bd; border-radius:50%;
+            border:3px solid white; box-shadow:0 0 0 3px rgba(2,119,189,0.3);
+        }
+        .tombol-samping {
+            position:absolute; right:15px; display:flex; flex-direction:column; gap:10px;
+            top:50%; transform:translateY(-50%);
+        }
+        .btn-samping {
+            width:45px; height:45px; border-radius:50%; background:white;
+            display:flex; align-items:center; justify-content:center; font-size:20px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;
+        }
+
+        /* === STATUS KERJA === */
+        .status-bawah {
+            padding:15px; background:white; margin:-20px 15px 15px; border-radius:12px;
+            box-shadow:0 -3px 10px rgba(0,0,0,0.05); position:relative; z-index:10;
+        }
+        .status-teks {font-size:18px; font-weight:bold; display:flex; align-items:center; gap:8px;}
+        .titik-merah {width:12px; height:12px; border-radius:50%; background:#dc3545;}
+        .titik-hijau {background:#28a745;}
+        .info-turbo {
+            background:#e6fffa; border-left:4px solid #00bfa5; padding:10px; margin-top:10px;
+            border-radius:6px; font-size:15px; color:#006064;
+        }
+        .info-layanan {
+            background:#fff3e0; border-left:4px solid #fb8c00; padding:10px; margin-top:8px;
+            border-radius:6px; font-size:14px; color:#e65100;
+        }
+        .info-ojk {
+            background:#f1f8e9; border-left:4px solid #7cb342; padding:8px; margin-top:8px;
+            border-radius:6px; font-size:12px; color:#33691e;
+        }
+        .info-cyber {
+            background:#e8eaf6; border-left:4px solid #3949ab; padding:8px; margin-top:8px;
+            border-radius:6px; font-size:12px; color:#1a237e; display:flex; align-items:center; gap:6px;
+        }
+
+        /* === TOMBOL PINTAS === */
+        .pintas-container {padding:15px; background:white; margin:15px; border-radius:12px; display:none;}
+        .pintas-judul {font-size:17px; font-weight:bold; margin-bottom:15px; color:#333;}
+        .grid-pintas {
+            display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; text-align:center;
+        }
+        .item-pintas {cursor:pointer; transition:0.2s; padding:8px; border-radius:8px;}
+        .item-pintas:hover {background:#f5f5f5;}
+        .ikon-pintas {
+            width:50px; height:50px; border-radius:50%; background:#e0f2f1;
+            display:flex; align-items:center; justify-content:center; margin:0 auto 6px;
+            font-size:22px; color:#00897b;
+        }
+        .item-pintas p {font-size:13px; color:#444;}
+
+        /* === MODAL === */
+        .modal {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.5); padding:20px; z-index:1000; overflow-y:auto;
+        }
+        .modal-kotak {
+            background:white; border-radius:12px; padding:20px; max-width:420px; margin:5% auto;
+        }
+        .tutup {text-align:right; font-size:22px; cursor:pointer; color:#888; margin-bottom:10px;}
+        .layanan-item {
+            padding:14px; border-bottom:1px solid #f1f1f1; cursor:pointer; display:flex; align-items:center; gap:12px;
+        }
+        .layanan-item:hover {background:#f8f9fa;}
+        .layanan-item.aktif {background:#e8f5e9; border-left:4px solid #28a745;}
+        .aturan-box {
+            background:#fafafa; border:1px solid #e0e0e0; border-radius:8px; padding:12px;
+            margin:10px 0; font-size:13px; line-height:1.6;
+        }
+        .aturan-judul {font-weight:bold; color:#333; margin-bottom:5px;}
+        .input-saldo {
+            width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; font-size:16px; margin:10px 0;
+        }
+        .pilihan-nominal {
+            display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0;
+        }
+        .nominal {
+            padding:10px; border:1px solid #ddd; border-radius:6px; text-align:center; cursor:pointer; font-size:14px;
+        }
+        .nominal:hover {border-color:#28a745; background:#f1f8e9;}
+        .btn-modal {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;}
+
+        /* === PESANAN MASUK === */
+        .pesanan-masuk {
+            position:fixed; bottom:0; left:0; right:0; background:white;
+            border-top-left-radius:20px; border-top-right-radius:20px; padding:20px;
+            box-shadow:0 -5px 15px rgba(0,0,0,0.15); display:none; z-index:99;
+        }
+        .pesanan-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+        .nama-pemesan {font-size:20px; font-weight:bold;}
+        .waktu-pesan {font-size:14px; color:#888;}
+        .alamat-pesan {font-size:16px; color:#333; margin:8px 0; line-height:1.5;}
+        .bayaran {font-size:22px; font-weight:bold; color:#28a745; margin:8px 0;}
+        .catatan {background:#fff9c4; padding:10px; border-radius:6px; font-size:14px; margin:10px 0;}
+        .info-paket {background:#e3f2fd; padding:10px; border-radius:6px; font-size:14px; margin:8px 0;}
+        .lokasi-ambil {background:#e8f5e9; border-left:4px solid #43a047; padding:8px; border-radius:6px; margin:8px 0; font-size:15px;}
+        .nomor-order {font-size:15px; color:#666; margin-bottom:15px;}
+        .tombol-pesanan {display:flex; gap:10px;}
+        .btn-terima {flex:1; padding:15px; background:#28a745; color:white; border:none; border-radius:10px; font-size:17px; font-weight:bold; cursor:pointer;}
+        .btn-tolak {width:60px; height:60px; border-radius:50%; background:#dc3545; color:white; border:none; font-size:22px; cursor:pointer;}
+
+        /* === DETAIL PESANAN === */
+        .detail-pesanan {padding:20px; display:none;}
+        .detail-header {display:flex; align-items:center; gap:12px; margin-bottom:20px;}
+        .btn-kembali {font-size:24px; cursor:pointer; color:#555;}
+        .nama-resto {font-size:16px; color:#666; margin:5px 0;}
+        .jumlah-barang {background:#e3f2fd; display:inline-block; padding:5px 12px; border-radius:20px; font-size:14px; margin:10px 0;}
+        .tombol-aksi {display:flex; gap:12px; margin:20px 0;}
+        .btn-telepon, .btn-chat {width:45px; height:45px; border-radius:50%; background:#e0e0e0; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer;}
+        .btn-diantarkan {width:100%; padding:16px; background:#28a745; color:white; border:none; border-radius:12px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:15px;}
+
+        /* === NAVIGASI BAWAH === */
+        .nav-bawah {
+            position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid #eee;
+            display:flex; justify-content:space-around; padding:10px 0; z-index:50;
+        }
+        .nav-item {text-align:center; font-size:13px; color:#666; cursor:pointer;}
+        .nav-item.aktif {color:#dc3545; font-weight:bold;}
+        .nav-ikon {font-size:22px; display:block; margin-bottom:2px;}
+
+        /* === CYBER SECURITY === */
+        .log-keamanan {background:#fafafa; padding:10px; border-radius:6px; margin:8px 0; font-size:13px;}
+        .status-sistem {display:flex; align-items:center; gap:8px; padding:6px 0;}
+        .titik-aman {width:10px; height:10px; border-radius:50%; background:#28a745; animation: kedip 1.5s infinite;}
+        @keyframes kedip {0% {opacity:1;} 50% {opacity:0.4;} 100% {opacity:1;}}
+    </style>
+</head>
+<body>
+
+<!-- 🔔 NOTIFIKASI BERJALAN -->
+<div class="notif-berjalan">
+    <span class="ikon-putar">⚙️</span>
+    <strong>KKN Kuliner Nusantara</strong> | Dilindungi Tim Cyber Keamanan
+</div>
+
+<!-- 🗺️ PETA UTAMA -->
+<div class="peta-container">
+    <div class="tombol-daya" id="tombol-daya" onclick="gantiStatus()">⏻</div>
+    <div class="indikator-posisi"></div>
+    <div class="tombol-samping">
+        <div class="btn-samping">🌧️</div>
+        <div class="btn-samping">⬜</div>
+        <div class="btn-samping" onclick="bukaPintas()">⋯</div>
+    </div>
+</div>
+
+<!-- 📊 STATUS KERJA -->
+<div class="status-bawah">
+    <div class="status-teks">
+        <span class="titik-merah" id="titik-status"></span>
+        <span id="teks-status">Anda sedang tidak aktif</span>
+    </div>
+    <div class="info-turbo" id="info-turbo">
+        ⚡ Menerima orderan turbo secara otomatis.
+    </div>
+    <div class="info-layanan" id="info-layanan" style="display:none;">
+        📦 <span id="teks-layanan"></span>
+    </div>
+    <div class="info-ojk">
+        ✅ Sistem pembayaran bekerja sama dengan Xendit & mengacu aturan OJK/Bank Indonesia
+    </div>
+    <div class="info-cyber">
+        🛡️ <strong>Tim Cyber Penjaga:</strong> Aktif Melindungi Aplikasi
+    </div>
+</div>
+
+<!-- ⚡ TOMBOL PINTAS -->
+<div class="pintas-container" id="kotak-pintas">
+    <div class="pintas-judul">Tombol Pintas</div>
+    <div class="grid-pintas">
+        <div class="item-pintas" onclick="bukaModal('layanan')">
+            <div class="ikon-pintas">🛵</div>
+            <p>Pilih Layanan</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('arah')">
+            <div class="ikon-pintas">➡️</div>
+            <p>Orderan Searah</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('turbo')">
+            <div class="ikon-pintas">⚡</div>
+            <p>Orderan Turbo</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('keselamatan')">
+            <div class="ikon-pintas">🛡️</div>
+            <p>Pusat Keselamatan</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('topup')">
+            <div class="ikon-pintas">💳</div>
+            <p>Top Up Saldo</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('bluetooth')">
+            <div class="ikon-pintas">🔵</div>
+            <p>Bluetooth</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('cyber')">
+            <div class="ikon-pintas">🔒</div>
+            <p>Pusat Cyber</p>
+        </div>
+        <div class="item-pintas">
+            <div class="ikon-pintas">ℹ️</div>
+            <p>Bantuan</p>
+        </div>
+    </div>
+</div>
+
+<!-- 🛵 MODAL PILIH LAYANAN -->
+<div class="modal" id="modal-layanan">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Pilih Jenis Layanan</h3>
+        <div class="layanan-item" onclick="pilihLayanan('makanan')">
+            <span>🍜</span> Layanan Makanan
+        </div>
+        <div class="layanan-item" onclick="pilihLayanan('kurir')">
+            <span>📦</span> Layanan Kurir Paket
+        </div>
+        <div class="aturan-box">
+            <div class="aturan-judul">📜 ATURAN KURIR PAKET (SESUI UUD & UU RI)</div>
+            ✅ <strong>UU No. 22 Tahun 2009</strong>: Helm SNI, SIM C, STNK berlaku<br>
+            ✅ <strong>UU No. 8 Tahun 1999</strong>: Barang aman, tidak rusak, jaga kerahasiaan<br>
+            ✅ <strong>Restoran/Toko Bisa Kirim</strong>: Paket dari restoran/toko diperbolehkan<br>
+            ✅ <strong>Muatan Motor</strong>: Maks 20kg, tidak melebihi lebar badan kendaraan<br>
+            ✅ <strong>Larangan</strong>: Barang berbahaya, narkoba, senjata, mudah meledak<br>
+            ✅ <strong>Pengambilan</strong>: Bisa dari rumah, toko, restoran, kantor
+        </div>
+    </div>
+</div>
+
+<!-- 💳 MODAL TOP UP SALDO -->
+<div class="modal" id="modal-topup">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Isi Saldo Dompet (via Xendit)</h3>
+        <input type="number" class="input-saldo" placeholder="Masukkan nominal" id="nominal-topup">
+        <div class="pilihan-nominal">
+            <div class="nominal" onclick="isiNominal(20000)">Rp20.000</div>
+            <div class="nominal" onclick="isiNominal(50000)">Rp50.000</div>
+            <div class="nominal" onclick="isiNominal(100000)">Rp100.000</div>
+            <div class="nominal" onclick="isiNominal(200000)">Rp200.000</div>
+            <div class="nominal" onclick="isiNominal(500000)">Rp500.000</div>
+            <div class="nominal" onclick="isiNominal(1000000)">Rp1.000.000</div>
+        </div>
+        <button class="btn-modal" onclick="prosesTopUp()">✅ Lanjutkan Top Up</button>
+        <div style="font-size:12px; color:#666; margin-top:10px; text-align:center;">
+            🔐 Transaksi aman & terenkripsi | Mode Pengujian
+        </div>
+    </div>
+</div>
+
+<!-- ➡️ MODAL ORDERAN SEARAH -->
+<div class="modal" id="modal-arah">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Orderan Searah</h3>
+        <p style="margin:10px 0; color:#666;">Terima pesanan searah tujuan perjalananmu</p>
+        <input type="text" class="input-saldo" placeholder="Masukkan tujuan perjalanan">
+        <button class="btn-modal" onclick="aturArah()">✅ Aktifkan Arah</button>
+    </div>
+</div>
+
+<!-- 🔵 MODAL BLUETOOTH -->
+<div class="modal" id="modal-bluetooth">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Pengaturan Bluetooth</h3>
+        <div class="layanan-item" onclick="aturBluetooth('nyala')">
+            <span>✅</span> Nyalakan Bluetooth
+        </div>
+        <div class="layanan-item" onclick="aturBluetooth('mati')">
+            <span>❌</span> Matikan Bluetooth
+        </div>
+        <div class="layanan-item" onclick="aturBluetooth('hubung')">
+            <span>🔗</span> Hubungkan Perangkat Baru
+        </div>
+    </div>
+</div>
+
+<!-- ⚡ MODAL ORDERAN TURBO -->
+<div class="modal" id="modal-turbo">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Orderan Turbo</h3>
+        <div class="layanan-item aktif" onclick="aturTurbo('aktif')">
+            <span>✅</span> Terima Otomatis
+        </div>
+        <div class="layanan-item" onclick="aturTurbo('nonaktif')">
+            <span>⏸️</span> Pilih Manual
+        </div>
+    </div>
+</div>
+
+<!-- 🛡️ MODAL KESELAMATAN -->
+<div class="modal" id="modal-keselamatan">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Pusat Keselamatan</h3>
+        <div class="layanan-item">📞 Darurat 110 / 112</div>
+        <div class="layanan-item">⚠️ Lapor Masalah Keamanan</div>
+        <div class="layanan-item">📍 Bagikan Lokasi Keamanan</div>
+        <div class="layanan-item">📖 Panduan Keselamatan Berkendara</div>
+    </div>
+</div>
+
+<!-- 🔒 MODAL TIM CYBER PENJAGA -->
+<div class="modal" id="modal-cyber">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>🛡️ Tim Cyber Penjaga Aplikasi</h3>
+        
+        <div class="status-sistem">
+            <span class="titik-aman"></span>
+            <strong>Sistem Keamanan: BERJALAN NORMAL & TERKUNCI</strong>
+        </div>
+
+        <div class="aturan-box">
+            <div class="aturan-judul">📋 TUGAS & PENGAWASAN TIM CYBER:</div>
+            ✅ Memantau aktivitas login mencurigakan<br>
+            ✅ Melindungi data pribadi & transaksi keuangan<br>
+            ✅ Memblokir akses peretas/serangan siber otomatis<br>
+            ✅ Mengamankan koneksi Xendit & data pembayaran<br>
+            ✅ Mencatat riwayat aktivitas aplikasi<br>
+            ✅ Siaga 24 jam non-stop melindungi sistem
+        </div>
+
+        <div class="log-keamanan">
+            <strong>📝 Log Aktivitas Terkini:</strong><br>
+            [21:15] Sistem terenkripsi berjalan lancar<br>
+            [21:16] Koneksi aman ke server Xendit<br>
+            [21:17] Tidak ada ancaman terdeteksi<br>
+            [21:18] Perlindungan data pribadi AKTIF
+        </div>
+
+        <div class="layanan-item" onclick="laporAncaman()">
+            <span>🚨</span> Laporkan Ancaman/Kejanggalan
+        </div>
+        <div class="layanan-item" onclick="cekKeamanan()">
+            <span>🔍</span> Jalankan Pemeriksaan Keamanan
+        </div>
+        <div class="layanan-item">
+            <span>📞</span> Hubungi Tim Cyber: 0812-xxxx-xxxx
+        </div>
+    </div>
+</div>
+
+<!-- 📦 PESANAN MASUK -->
+<div class="pesanan-masuk" id="pesanan-masuk">
+    <div class="pesanan-header">
+        <div>
+            <div class="nama-pemesan" id="nama-pemesan">BUDI SANTOSO</div>
+            <div class="waktu-pesan">07:45 PM</div>
+        </div>
+        <div class="bayaran" id="bayaran-pesanan">Rp 12.500 💚 Nontunai</div>
+    </div>
+    <div class="lokasi-ambil" id="lokasi-ambil">
+        📍 Ambil di: <strong>Restoran Sari Rasa - Cabang Diponegoro</strong>
+    </div>
+    <div id="info-khusus-paket" style="display:none;">
+        <div class="info-paket">
+            📦 Jenis: Barang Dagangan Restoran<br>
+            ⚖️ Berat: 2kg | 📏 Ukuran: Kecil<br>
+            ⚠️ Catatan: Kemasan rapi, jangan tertekan
+        </div>
+    </div>
+    <div class="alamat-pesan">
+        📍 Tujuan: Jalan Merdeka No.12, Semarang
+    </div>
+    <div class="catatan" id="catatan-pesanan">
+        📝 Serahkan langsung ke penerima
+    </div>
+    <div class="nomor-order">No. Orderan: PK-7892</div>
+    <div class="tombol-pesanan">
+        <button class="btn-tolak" onclick="tolakPesanan()">✕</button>
+        <button class="btn-terima" id="btn-aksi-pesanan" onclick="terimaPesanan()">Ambil & Antar Paket</button>
+    </div>
+</div>
+
+<!-- 📋 DETAIL PESANAN -->
+<div class="detail-pesanan" id="detail-pesanan">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="kembaliKePeta()">←</span>
+        <div>
+            <h2 id="no-order-detail">PK-7892</h2>
+            <p class="nama-resto" id="asal-paket">📍 Restoran Sari Rasa - Cabang Diponegoro</p>
+        </div>
+    </div>
+    <div class="jumlah-barang" id="jenis-barang">📦 Paket Barang Restoran - Berat 2kg</div>
+    <h3 id="nama-penerima">Penerima: BUDI SANTOSO <span style="background:#bbdefb; padding:2px 6px; border-radius:4px; font-size:14px;">Transfer Bank</span></h3>
+    <div style="margin:15px 0; font-size:17px;">
+        📍 Tujuan: Jalan Merdeka No.12, Semarang<br>
+        <strong>Catatan:</strong> Ambil di restoran, serahkan langsung
+    </div>
+    <div class="tombol-aksi">
+        <div class="btn-telepon" onclick="hubungiPemesan('telpon')">📞</div>
+        <div class="btn-chat" onclick="hubungiPemesan('chat')">💬</div>
+        <div style="flex:1;"></div>
+        <button class="btn-diantarkan" onclick="tandaiSampai()">✅ Paket Telah Diterima</button>
+    </div>
+</div>
+
+<!-- 🧭 NAVIGASI BAWAH -->
+<div class="nav-bawah">
+    <div class="nav-item aktif"><span class="nav-ikon">🏠</span> Beranda</div>
+    <div class="nav-item"><span class="nav-ikon">💵</span> Pendapatan</div>
+    <div class="nav-item"><span class="nav-ikon">📥</span> Kotak Masuk</div>
+    <div class="nav-item"><span class="nav-ikon">📅</span> Perencanaan</div>
+    <div class="nav-item"><span class="nav-ikon">👤</span> Profil</div>
+</div>
+
+<script>
+let statusAktif = false;
+let layananAktif = 'makanan';
+
+// 🔑 KUNCI API XENDIT (MODE TES)
+const XENDIT_PUBLIC_KEY = 'xnd_public_development_dVaqWRwdFDYoLYIfX3nKhsynI2Rg7W1gPRTPGGOWOC1XuEeVF4FQ2dYcbUNNnd80';
+
+// STATUS KERJA
+function gantiStatus(){
+    statusAktif = !statusAktif;
+    const tombol = document.getElementById('tombol-daya');
+    const titik = document.getElementById('titik-status');
+    const teks = document.getElementById('teks-status');
+
+    if(statusAktif){
+        tombol.classList.remove('off');
+        titik.classList.remove('titik-merah');
+        titik.classList.add('titik-hijau');
+        teks.textContent = layananAktif === 'makanan' ? "Siap Antar Makanan" : "Siap Antar Paket";
+        setTimeout(() => tampilkanPesananContoh(), 3000);
+    } else {
+        tombol.classList.add('off');
+        titik.classList.remove('titik-hijau');
+        titik.classList.add('titik-merah');
+        teks.textContent = "Anda sedang tidak aktif";
+        document.getElementById('pesanan-masuk').style.display = 'none';
+        document.getElementById('detail-pesanan').style.display = 'none';
+    }
+}
+
+// PILIH LAYANAN
+function pilihLayanan(jenis){
+    layananAktif = jenis;
+    const infoLayanan = document.getElementById('info-layanan');
+    const teksLayanan = document.getElementById('teks-layanan');
+
+    if(jenis === 'makanan'){
+        infoLayanan.style.display = 'block';
+        teksLayanan.textContent = "Layanan Makanan Aktif";
+    } else {
+        infoLayanan.style.display = 'block';
+        teksLayanan.textContent = "Kurir Paket: Bisa ambil dari Restoran/Toko - Patuhi Aturan UU RI";
+    }
+    tutupModal();
+}
+
+// CONTOH PESANAN
+function tampilkanPesananContoh(){
+    const infoPaket = document.getElementById('info-khusus-paket');
+    const lokasiAmbil = document.getElementById('lokasi-ambil');
+    const btnAksi = document.getElementById('btn-aksi-pesanan');
+    const jenisBarang = document.getElementById('jenis-barang');
+    const asalPaket = document.getElementById('asal-paket');
+
+    if(layananAktif === 'kurir'){
+        infoPaket.style.display = 'block';
+        lokasiAmbil.innerHTML = "📍 Ambil di: <strong>Restoran Sari Rasa / Toko Oleh-oleh</strong>";
+        btnAksi.textContent = "Ambil & Antar Paket";
+        jenisBarang.textContent = "📦 Paket Barang Restoran - Berat 2kg";
+        asalPaket.textContent = "📍 Restoran Sari Rasa - Cabang Diponegoro";
+    } else {
+        infoPaket.style.display = 'none';
+        lokasiAmbil.innerHTML = "📍 Ambil di: <strong>Mie Gacoan - Tegal</strong>";
+        btnAksi.textContent = "Ambil & Antarkan";
+        jenisBarang.textContent = "🍽️ 6 Menu Makanan";
+        asalPaket.textContent = "🍜 Mie Gacoan - Tegal";
+    }
+    document.getElementById('pesanan-masuk').style.display = 'block';
+}
+
+// TOMBOL PINTAS
+function bukaPintas(){
+    const kotak = document.getElementById('kotak-pintas');
+    kotak.style.display = kotak.style.display === 'none' ? 'block' : 'none';
+}
+
+// MODAL
+function bukaModal(jenis){
+    document.getElementById('kotak-pintas').style.display = 'none';
+    document.getElementById(`modal-${jenis}`).style.display = 'block';
+}
+function tutupModal(){
+    document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+}
+
+// TOP UP TERHUBUNG XENDIT
+function isiNominal(nilai){
+    document.getElementById('nominal-topup').value = nilai;
+}
+function prosesTopUp(){
+    const nominal = document.getElementById('nominal-topup').value;
+    if(!nominal) return alert("Masukkan nominal dulu!");
+
+    alert(`✅ [MODE TES] Mengalihkan ke Pembayaran Xendit\nNominal: Rp${Number(nominal).toLocaleString('id-ID')}\n🔒 Dilindungi Tim Cyber Penjaga`);
+    tutupModal();
+}
+
+// 🛡️ FUNGSI TIM CYBER PENJAGA
+function laporAncaman(){
+    alert("🚨 Laporan Terkirim! Tim Cyber akan segera memeriksa & menindaklanjuti.");
+    tutupModal();
+}
+function cekKeamanan(){
+    alert("🔍 Pemeriksaan Selesai!\n✅ Sistem Aman\n✅ Data Terlindungi\n✅ Tidak Ada Ancaman");
+}
+
+// FITUR LAINNYA
+function aturArah(){alert("✅ Orderan Searah AKTIF!"); tutupModal();}
+function aturBluetooth(aksi){
+    const pesan = {nyala:"Bluetooth ON", mati:"Bluetooth OFF", hubung:"Mencari perangkat..."};
+    alert(`✅ ${pesan[aksi]}`); tutupModal();
+}
+function aturTurbo(status){
+    const info = document.getElementById('info-turbo');
+    info.style.display = status==='aktif' ? 'block' : 'none';
+    alert(status==='aktif' ? "⚡ Turbo Aktif - Terima Otomatis" : "⏸️ Turbo Mati - Pilih Manual");
+    tutupModal();
+}
+
+// PESANAN
+function terimaPesanan(){
+    document.getElementById('pesanan-masuk').style.display = 'none';
+    document.getElementById('detail-pesanan').style.display = 'block';
+}
+function tolakPesanan(){
+    document.getElementById('pesanan-masuk').style.display = 'none';
+    alert(layananAktif==='kurir' ? "Menunggu paket berikutnya..." : "Menunggu pesanan makanan berikutnya...");
+}
+function kembaliKePeta(){
+    document.getElementById('detail-pesanan').style.display = 'none';
+}
+function tandaiSampai(){
+    alert(layananAktif==='kurir' ? "✅ Paket dari Restoran berhasil diterima!" : "✅ Makanan berhasil diantarkan!");
+    document.getElementById('detail-pesanan').style.display = 'none';
+}
+function hubungiPemesan(jenis){
+    alert(jenis==='telpon' ? "📞 Menghubungi..." : "💬 Buka Chat...");
+}
+</script>
+
+</body>
+</html>
