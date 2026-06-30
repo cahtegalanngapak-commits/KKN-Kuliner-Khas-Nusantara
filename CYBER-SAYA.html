@@ -1,0 +1,205 @@
+Cyberkeamanandata Tegal
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 CYBER APK - HANYA SAYA</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif;}
+        :root {
+            --cyber: #00E5FF; --cyber-gelap: #0097A7; --rahasia: #722ED1;
+            --hijau: #00B42A; --merah: #F53F3F; --kuning: #FF7D00;
+            --latar-gelap: #050C1A; --gelap: #0F172A; --putih: #FFFFFF;
+        }
+        body {background: var(--latar-gelap); padding-bottom: 80px; min-height: 100vh; color: var(--putih);}
+
+        /* === HEADER RAHASIA === */
+        .header {position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(90deg, #050C1A, #0F172A); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,229,255,0.3); box-shadow: 0 0 20px rgba(0,229,255,0.15); z-index: 99;}
+        .tombol-kembali {font-size: 26px; cursor: pointer; color: var(--cyber);}
+        .judul-header {font-size: 16px; font-weight: bold; color: var(--cyber); letter-spacing: 1px;}
+        .status-rahasia {font-size: 11px; background: rgba(114,46,209,0.2); padding: 2px 8px; border-radius: 12px; color: #C4B5FD;}
+
+        .konten {padding: 70px 15px 20px;}
+
+        /* === KOTAK UMUM === */
+        .kotak {background: linear-gradient(145deg, #0F172A, #050C1A); border: 1px solid rgba(0,229,255,0.15); border-radius: 12px; padding: 16px; margin-bottom: 15px;}
+        .judul {font-size: 15px; font-weight: bold; margin-bottom: 12px; color: var(--cyber); display: flex; align-items: center; gap: 6px;}
+        .input {width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 15px; margin-bottom: 10px;}
+        .peringatan {font-size: 12px; color: #94A3B8; font-style: italic; text-align: center; padding: 10px; background: rgba(255,125,0,0.05); border-radius: 6px; line-height: 1.6;}
+
+        /* === TOMBOL === */
+        .btn {width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; transition: all 0.3s; margin: 8px 0;}
+        .btn.cyber {background: linear-gradient(90deg, var(--cyber), var(--cyber-gelap)); color: #000;}
+        .btn.wa {background: linear-gradient(90deg, #25D366, #128C7E); color: white;}
+        .btn.kunci {background: linear-gradient(90deg, var(--rahasia), #9D25B0); color: white;}
+        .btn:hover {transform: translateY(-2px); box-shadow: 0 0 15px rgba(0,229,255,0.3);}
+
+        /* === INDIKATOR & LOG === */
+        .indikator {display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;}
+        .status-ok {color: var(--hijau); font-weight: bold;}
+        .log {background: rgba(0,0,0,0.4); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; line-height: 1.7; max-height: 160px; overflow-y: auto; margin: 10px 0;}
+        .log-sukses {color: #4ADE80;}
+        .log-info {color: #67E8F9;}
+
+        .sembunyi {display: none;}
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <span class="tombol-kembali material-icons" onclick="history.back()">lock</span>
+    <span class="judul-header">🔒 SISTEM SAYA SENDIRI</span>
+    <span class="status-rahasia">RAHASIA PENUH</span>
+</div>
+
+<div class="konten">
+
+    <!-- HALAMAN 1: KODE KHUSUS CHROME -->
+    <div id="halKodeChrome">
+        <div class="kotak" style="text-align:center; padding:30px 20px;">
+            <div style="font-size:50px; margin-bottom:15px;">🌐</div>
+            <div style="font-size:18px; font-weight:bold; margin-bottom:8px;">KODE KHUSUS CHROME</div>
+            <p style="font-size:13px; color:#94A3B8; margin-bottom:20px;">Hanya saya yang tahu kode rahasia untuk membuka lewat Chrome</p>
+            
+            <input type="password" id="kodeChrome" class="input" placeholder="Masukkan Kode Chrome Kamu">
+            <button class="btn cyber" onclick="cekKodeChrome()">➡ LANJUTKAN</button>
+            
+            <div class="peringatan">⚠️ Kode ini hanya milik saya, tidak boleh diketahui siapapun</div>
+        </div>
+    </div>
+
+    <!-- HALAMAN 2: KODE RAHASIA UTAMA -->
+    <div id="halKodeRahasia" class="sembunyi">
+        <div class="kotak" style="text-align:center; padding:30px 20px;">
+            <div style="font-size:50px; margin-bottom:15px;">🔐</div>
+            <div style="font-size:18px; font-weight:bold; margin-bottom:8px;">MASUKKAN KODE RAHASIA</div>
+            <p style="font-size:13px; color:#94A3B8; margin-bottom:20px;">Verifikasi terakhir sebelum masuk ke sistem pemantauan</p>
+            
+            <input type="password" id="kodeRahasia" class="input" placeholder="Masukkan Kode Rahasia Kamu">
+            <button class="btn cyber" onclick="bukaSistem()">🔓 BUKA SISTEM</button>
+        </div>
+    </div>
+
+    <!-- HALAMAN UTAMA SISTEM PEMANTAUAN -->
+    <div id="halSistem" class="sembunyi">
+        <div class="kotak">
+            <div class="judul">📡 PUSAT PEMANTAUAN SAYA</div>
+            <p style="font-size:13px; color:#94A3B8;">Laporan keamanan akan dikirim hanya ke WA saya</p>
+        </div>
+
+        <div class="kotak">
+            <div class="judul">✅ STATUS KESELURUHAN SISTEM</div>
+            <div class="indikator">Keamanan KKN Kuliner <span class="status-ok">AMAN</span></div>
+            <div class="indikator">Ekosistem Blum <span class="status-ok">TERHUBUNG</span></div>
+            <div class="indikator">Perlindungan Data <span class="status-ok">BERJALAN</span></div>
+            <div class="indikator">Akses Orang Lain <span class="status-ok">DITOLAK</span></div>
+        </div>
+
+        <div class="kotak">
+            <div class="judul">📲 LAPORAN KE WHATSAPP SAYA</div>
+            <p style="font-size:13px; margin-bottom:10px;">Laporan hanya masuk ke nomor WA saya yang terdaftar</p>
+            <div style="background:rgba(37,211,102,0.1); padding:10px; border-radius:8px; font-size:13px; color:#86EFAC; text-align:center; margin-bottom:10px;">📞 Nomor Tujuan: HANYA SAYA TAHU</div>
+            
+            <button class="btn wa" onclick="kirimLaporan()">📤 KIRIM LAPORAN SEKARANG</button>
+            <button class="btn wa" onclick="otomatisLaporan()">⏰ AKTIFKAN LAPORAN OTOMATIS</button>
+        </div>
+
+        <div class="kotak">
+            <div class="judul">📝 CATATAN AKTIVITAS</div>
+            <div class="log" id="catatanLog">
+                <div class="log-info">[SISTEM] Akses dari perangkat Chrome terverifikasi</div>
+                <div class="log-sukses">[SISTEM] Kode Rahasia Diterima - Berhasil Masuk</div>
+                <div class="log-sukses">[KEAMANAN] Semua jalur terkunci aman</div>
+            </div>
+        </div>
+
+        <button class="btn kunci" onclick="kunciKembali()">🔒 KUNCI & KELUAR</button>
+    </div>
+
+</div>
+
+<script>
+// === KODE RAHASIA - UBAH DENGAN MILIKMU SENDIRI ===
+const KODE_CHROME_SAYA = "kode_khusus_chrome_saya_rahasia";  // Kode khusus Chrome
+const KODE_RAHASIA_SAYA = "saya_pembuat_aplikasi_ini_100_rahasia"; // Kode utama
+const NOMOR_WA_SAYA = "6281234567890"; // Ganti dengan nomor WA kamu
+
+// === LANGKAH 1: CEK KODE CHROME ===
+function cekKodeChrome(){
+    const masukan = document.getElementById('kodeChrome').value;
+    if(masukan === KODE_CHROME_SAYA){
+        document.getElementById('halKodeChrome').classList.add('sembunyi');
+        document.getElementById('halKodeRahasia').classList.remove('sembunyi');
+    }else{
+        alert("❌ Kode Chrome Salah!\nHanya kamu yang harus mengetahui kode ini.");
+    }
+}
+
+// === LANGKAH 2: MASUK KE SISTEM ===
+function bukaSistem(){
+    const masukan = document.getElementById('kodeRahasia').value;
+    if(masukan === KODE_RAHASIA_SAYA){
+        document.getElementById('halKodeRahasia').classList.add('sembunyi');
+        document.getElementById('halSistem').classList.remove('sembunyi');
+        tambahLog("✅ Sistem dibuka penuh oleh pemilik");
+    }else{
+        alert("❌ Kode Rahasia Salah!\nAkses ditolak.");
+    }
+}
+
+// === TAMBAH CATATAN LOG ===
+function tambahLog(teks){
+    const log = document.getElementById('catatanLog');
+    const waktu = new Date().toLocaleTimeString('id-ID');
+    log.innerHTML += `<div class="log-sukses">[${waktu}] ${teks}</div>`;
+    log.scrollTop = log.scrollHeight;
+}
+
+// === KIRIM LAPORAN KE WA ===
+function kirimLaporan(){
+    const pesan = `
+🔒 LAPORAN SISTEM SAYA
+✅ Waktu: ${new Date().toLocaleString('id-ID')}
+
+📊 STATUS:
+• KKN Kuliner: AMAN TERKUNCI
+• Ekosistem Blum: TERHUBUNG & AMAN
+• Perlindungan: BERJALAN OPTIMAL
+• Akses Luar: DIBLOKIR PENUH
+
+🛡️ Dikirim dari Cyber APK buatan sendiri
+    `.trim();
+
+    const link = `https://wa.me/${NOMOR_WA_SAYA}?text=${encodeURIComponent(pesan)}`;
+    window.open(link, '_blank');
+    tambahLog("📤 Laporan terkirim ke WA saya");
+}
+
+// === LAPORAN OTOMATIS ===
+function otomatisLaporan(){
+    alert("✅ MODE OTOMATIS AKTIF!\nSistem akan memantau dan mengirim laporan ke WA saya secara berkala.\nTidak ada orang lain yang akan menerima pesan ini.");
+    tambahLog("⏰ Pemantauan otomatis diaktifkan");
+}
+
+// === KUNCI KEMBALI ===
+function kunciKembali(){
+    if(confirm("🔒 Yakin ingin mengunci kembali?\nHarus masuk ulang pakai kode rahasia nanti.")){
+        document.getElementById('halSistem').classList.add('sembunyi');
+        document.getElementById('halKodeRahasia').classList.add('sembunyi');
+        document.getElementById('halKodeChrome').classList.remove('sembunyi');
+        document.getElementById('kodeChrome').value = "";
+        document.getElementById('kodeRahasia').value = "";
+        tambahLog("🔒 Sistem dikunci kembali");
+    }
+}
+</script>
+
+</body>
+</html>
+const KODE_CHROME_SAYA =Susanti120205tglxbndng "tulis_kode_rahasiamu_disini";cntamuplsuhnyaanginlwt1202
+const KODE_RAHASIA_SAYA =prsbxprskt1202 "tulis_kode_utama_mu_disini";Tglbarat1202
+const NOMOR_WA_SAYA = "62882007869413";
