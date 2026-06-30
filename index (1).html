@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKN Kuliner Nusantara</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:15px;}
+        
+        /* === HEADER UTAMA === */
+        .header-beranda {
+            background:linear-gradient(135deg, #dc3545, #c82333);
+            color:white; padding:25px; border-radius:12px; 
+            text-align:center; margin-bottom:25px;
+            box-shadow:0 3px 10px rgba(220,53,69,0.2);
+        }
+
+        /* === KOTAK INFORMASI SALDO & PESANAN === */
+        .info-ringkas {
+            display:grid; grid-template-columns:1fr 1fr; gap:12px;
+            max-width:500px; margin:0 auto 25px;
+        }
+        .kotak-info {
+            background:white; padding:15px; border-radius:10px; text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,0.08);
+        }
+        .kotak-info .angka {font-size:22px; font-weight:bold; color:#dc3545; margin:5px 0;}
+        .kotak-info .label {font-size:14px; color:#666;}
+
+        /* === PILIHAN PERAN === */
+        .pilihan-peran {
+            display:grid; gap:15px; max-width:450px; margin:0 auto 30px;
+        }
+        .kotak-peran {
+            background:white; padding:22px; border-radius:12px; 
+            text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.1); 
+            cursor:pointer; transition:0.3s; border-left:4px solid #dc3545;
+        }
+        .kotak-peran:hover {transform:translateY(-3px); border-left-color:#ffc107;}
+
+        /* === BAGIAN UMUM === */
+        .form-box {
+            background:white; border-radius:12px; padding:20px; 
+            box-shadow:0 2px 8px rgba(0,0,0,0.08); max-width:500px; margin:0 auto 20px;
+        }
+        h3 {
+            color:#333; margin-bottom:12px; border-bottom:2px solid #f1f1f1; 
+            padding-bottom:6px; font-size:17px;
+        }
+        h4 {margin:12px 0 6px; font-size:15px; color:#444;}
+        .menu-item {
+            padding:12px; margin:8px 0; background:#f8f9fa; border-radius:8px;
+            border-left:4px solid #dc3545; transition:0.2s;
+        }
+        .menu-item:hover {background:#fff3cd; border-left-color:#ffc107;}
+        .hubung-item {display:flex; gap:8px; margin:8px 0;}
+        
+        button {
+            width:100%; padding:14px; background:#dc3545; color:white; border:none; 
+            border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; 
+            margin-top:10px; transition:0.2s;
+        }
+        button:hover {background:#c82333; transform:translateY(-1px);}
+        .btn-kecil {flex:1; padding:10px; font-size:14px; margin:0;}
+        .btn-kecil-putih {background:white; color:#333; border:1px solid #ddd;}
+        .btn-kecil-putih:hover {background:#f1f1f1;}
+        
+        .btn-bayar {background:#d63384; display:none;}
+        .btn-bayar:hover {background:#b02a6f;}
+        .btn-peta {background:#17a2b8;}
+        .btn-peta:hover {background:#138496;}
+        .btn-lapor {background:#ffc107; color:#000;}
+        .btn-lapor:hover {background:#e0a800;}
+        .btn-batal {background:#6c757d;}
+        .btn-batal:hover {background:#5a6268;}
+        .btn-telpon {background:#28a745;}
+        .btn-telpon:hover {background:#218838;}
+        .btn-wa {background:#25d366;}
+        .btn-wa:hover {background:#1da851;}
+
+        .pemisah {text-align:center; margin:25px 0; color:#888; font-weight:bold;}
+        .keterangan {font-size:14px; color:#555; margin-top:8px; text-align:center;}
+        hr {margin:15px 0; border:none; border-top:1px solid #f1f1f1;}
+        .isi-aturan {font-size:14px; line-height:1.7; color:#444;}
+        .isi-aturan ul {margin:8px 0 0 20px;}
+        .isi-aturan li {margin-bottom:4px;}
+
+        /* === MODAL POP UP === */
+        .modal {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.5); padding:20px; overflow-y:auto;
+        }
+        .modal-kotak {
+            background:white; border-radius:12px; padding:20px; max-width:500px; margin:0 auto;
+        }
+        .tutup {text-align:right; font-size:20px; cursor:pointer; color:#888;}
+    </style>
+</head>
+<body>
+
+<!-- ======================================
+    BAGIAN 1: HEADER & INFO RINGKAS
+====================================== -->
+<div class="header-beranda">
+    <h1>🍛 KKN KULINER NUSANTARA</h1>
+    <p style="color:#ffebeb;">Aplikasi Kuliner Terpercaya Sesuai Aturan Indonesia</p>
+</div>
+
+<div class="info-ringkas">
+    <div class="kotak-info">
+        <div class="label">💳 Saldo Tersedia</div>
+        <div class="angka" id="saldo">Rp 0</div>
+    </div>
+    <div class="kotak-info">
+        <div class="label">📦 Total Pesanan</div>
+        <div class="angka" id="jumlah-pesanan">0</div>
+    </div>
+</div>
+
+<!-- ======================================
+    BAGIAN 2: PILIHAN PERAN
+====================================== -->
+<div class="pilihan-peran">
+    <div class="kotak-peran" onclick="window.location.href='daftar-pelanggan.html'">
+        <h2>🛒 Saya Pembeli</h2>
+        <p>Daftar akun untuk pesan makanan</p>
+    </div>
+
+    <div class="kotak-peran" onclick="window.location.href='daftar-resto.html'">
+        <h2>🏪 Saya Pemilik Resto</h2>
+        <p>Daftarkan usaha kuliner Anda</p>
+    </div>
+
+    <div class="kotak-peran" onclick="window.location.href='daftar-driver.html'">
+        <h2>🛵 Saya Pengemudi</h2>
+        <p>Daftar untuk mengantar pesanan</p>
+    </div>
+
+    <div class="kotak-peran" onclick="window.location.href='persib.html'" style="border-left-color:#1a237e;">
+        <h2>💙 Dukung Persib Bandung</h2>
+        <p>Halaman Kolaborasi Penggemar</p>
+    </div>
+</div>
+
+<div class="pemisah">— — — — — — — — — — — — — — —</div>
+
+<!-- ======================================
+    BAGIAN 3: PEMBAYARAN E-WALLET
+====================================== -->
+<div class="form-box">
+    <h3>💳 Metode Pembayaran Tersedia</h3>
+    <p class="keterangan">Sesuai standar Bank Indonesia:</p>
+
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="DANA" onclick="tampilTombolBayar()"> 💸 DANA</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="SHOPEEPAY" onclick="tampilTombolBayar()"> 🛒 ShopeePay</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="GOPAY" onclick="tampilTombolBayar()"> 🛵 GoPay</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="OVO" onclick="tampilTombolBayar()"> 💵 OVO</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="LINKAJA" onclick="tampilTombolBayar()"> 💳 LinkAja</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="QRIS" onclick="tampilTombolBayar()"> 📱 QRIS (Standar BI)</label>
+    </div>
+
+    <button class="btn-bayar" id="btn-bayar" onclick="mulaiProsesBayar()">✅ LANJUTKAN PEMBAYARAN</button>
+</div>
+
+<!-- ======================================
+    BAGIAN 4: HUBUNGI & LAYANAN
+====================================== -->
+<div class="form-box">
+    <h3>📞 Hubungi Layanan</h3>
+    <p class="keterangan">Aktif saat akun sudah terdaftar & pesanan berjalan:</p>
+
+    <h4>🎧 Layanan Bantuan CS</h4>
+    <div class="hubung-item">
+        <!-- GANTI NOMOR DENGAN NOMOR HP KAMU SENDIRI -->
+        <button class="btn-kecil btn-telpon" onclick="window.location.href='tel:081234567890'">📞 TELEPON CS</button>
+        <button class="btn-kecil btn-wa" onclick="window.location.href='https://wa.me/6281234567890?text=Halo%20Admin%2C%20saya%20butuh%20bantuan'">💬 CHAT WA CS</button>
+    </div>
+
+    <h4>🏪 Hubungi Resto</h4>
+    <div class="hubung-item">
+        <button class="btn-kecil btn-telpon" id="telpon-resto" onclick="hubungiResto('telpon')">📞 TELEPON RESTO</button>
+        <button class="btn-kecil btn-wa" id="wa-resto" onclick="hubungiResto('wa')">💬 CHAT WA RESTO</button>
+    </div>
+
+    <h4>🛵 Hubungi Driver</h4>
+    <div class="hubung-item">
+        <button class="btn-kecil btn-telpon" id="telpon-driver" onclick="hubungiDriver('telpon')">📞 TELEPON DRIVER</button>
+        <button class="btn-kecil btn-wa" id="wa-driver" onclick="hubungiDriver('wa')">💬 CHAT WA DRIVER</button>
+    </div>
+
+    <hr>
+
+    <button class="btn-peta" onclick="bukaPetaLokasi()">🗺️ BUKA LOKASI GOOGLE MAPS</button>
+    <button class="btn-batal" style="margin-top:12px;">❌ BATALKAN PESANAN</button>
+    <button class="btn-lapor" style="margin-top:12px;">⚠️ LAPOR MASALAH / PELANGGARAN</button>
+</div>
+
+<!-- ======================================
+    BAGIAN 5: SYARAT & KETENTUAN + KEBIJAKAN
+====================================== -->
+<div class="form-box">
+    <h3>📑 Aturan Penggunaan Aplikasi</h3>
+    <p class="keterangan">Sesuai Hukum & Peraturan Republik Indonesia:</p>
+    <div class="hubung-item" style="margin-top:10px;">
+        <button class="btn-kecil btn-kecil-putih" onclick="bukaAturan('syarat')">📜 Syarat & Ketentuan</button>
+        <button class="btn-kecil btn-kecil-putih" onclick="bukaAturan('privasi')">🔒 Kebijakan Privasi</button>
+    </div>
+    <p class="keterangan" style="margin-top:10px;">
+        Dengan mendaftar & menggunakan aplikasi ini, Anda dianggap menyetujui semua aturan yang berlaku
+    </p>
+</div>
+
+<!-- ======================================
+    MODAL: SYARAT & KETENTUAN
+====================================== -->
+<div id="modal-syarat" class="modal">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>📜 SYARAT & KETENTUAN PENGGUNAAN</h3>
+        <div class="isi-aturan">
+            <p><strong>1. Umum</strong></p>
+            <ul>
+                <li>Aplikasi ini dikembangkan untuk program KKN Kuliner Nusantara</li>
+                <li>Berlaku hukum negara Republik Indonesia</li>
+                <li>Pengguna wajib berusia minimal 17 tahun atau dibimbing orang tua</li>
+            </ul>
+
+            <p><strong>2. Pendaftaran Akun</strong></p>
+            <ul>
+                <li>Wajib mendaftar dengan data asli & benar</li>
+                <li>Dilarang menyalahgunakan akun orang lain</li>
+                <li>Pengguna bertanggung jawab menjaga keamanan akunnya</li>
+            </ul>
+
+            <p><strong>3. Transaksi & Pembayaran</strong></p>
+            <ul>
+                <li>Pembayaran melalui mitra resmi berizin Bank Indonesia (Xendit)</li>
+                <li>Harga & biaya pengiriman sesuai ketentuan berlaku</li>
+                <li>Pesanan dapat dibatalkan sesuai aturan yang berlaku</li>
+            </ul>
+
+            <p><strong>4. Kewajiban Pengguna</strong></p>
+            <ul>
+                <li>Dilarang berbuat hal yang melanggar hukum, kesusilaan, atau merugikan orang lain</li>
+                <li>Dilarang mengancam, menghina, atau meminta biaya tidak wajar</li>
+                <li>Melaporkan jika menemukan indikasi penipuan atau pelanggaran</li>
+            </ul>
+
+            <p><strong>5. Layanan & Penyelesaian Masalah</strong></p>
+            <ul>
+                <li>Tersedia layanan bantuan CS setiap hari jam kerja</li>
+                <li>Laporan pelanggaran akan ditindaklanjuti paling lambat 3 hari kerja</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================
+    MODAL: KEBIJAKAN PRIVASI
+====================================== -->
+<div id="modal-privasi" class="modal">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>🔒 KEBIJAKAN PRIVASI DATA</h3>
+        <div class="isi-aturan">
+            <p>Kami sangat menjaga keamanan data pribadi Anda sesuai <strong>Perlindungan Data Pribadi Indonesia</strong>:</p>
+
+            <p><strong>1. Data yang Kami Simpan</strong></p>
+            <ul>
+                <li>Nama lengkap, nomor HP, alamat, & data pendaftaran lain yang Anda berikan</li>
+                <li>Riwayat pesanan, transaksi pembayaran, & data lokasi untuk keperluan pengiriman</li>
+            </ul>
+
+            <p><strong>2. Cara Kami Menggunakan Data</strong></p>
+            <ul>
+                <li>Hanya untuk keperluan operasional aplikasi: pemesanan, pengiriman, pembayaran, & layanan bantuan</li>
+                <li>Tidak dijual, disebarluaskan, atau diberikan kepada pihak ketiga tanpa izin tertulis Anda</li>
+                <li>Dapat diberikan jika ada perintah sah dari penegak hukum sesuai undang-undang</li>
+            </ul>
+
+            <p><strong>3. Keamanan Penyimpanan</strong></p>
+            <ul>
+                <li>Data disimpan di sistem berstandar keamanan tinggi (Firebase)</li>
+                <li>Dilindungi sistem enkripsi agar tidak diakses orang yang tidak berhak</li>
+            </ul>
+
+            <p><strong>4. Hak Pengguna</strong></p>
+            <ul>
+                <li>Anda berhak melihat, memperbaiki, atau meminta penghapusan data pribadi Anda</li>
+                <li>Hubungi CS kami untuk permintaan terkait data pribadi</li>
+            </ul>
+
+            <p><strong>5. Kontak Pengelola</strong></p>
+            <p>Untuk hal privasi data: Hubungi Admin melalui fitur layanan bantuan</p>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================
+    SISTEM KONEKSI OTOMATIS
+====================================== -->
+<script src="https://js.xendit.co/v1/xendit.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+xnd_public_development_dVaqWRwdFDYoLYIfX3nKhsynI2Rg7W1gPRTPGGOWOC1XuEeVF4FQ2dYcbUNNnd80
+
+let metodeTerpilih = "";
+let noResto = "";
+let noDriver = "";
+
+// FUNGSI MODAL ATURAN
+function bukaAturan(jenis){
+    if(jenis === 'syarat') document.getElementById('modal-syarat').style.display = 'block';
+    else document.getElementById('modal-privasi').style.display = 'block';
+}
+function tutupModal(){
+    document.getElementById('modal-syarat').style.display = 'none';
+    document.getElementById('modal-privasi').style.display = 'none';
+}
+
+// AMBIL DATA SALDO & JUMLAH PESANAN
+db.ref("DataPengguna").on("value", snap => {
+    if(snap.exists()){
+        const data = snap.val();
+        document.getElementById('saldo').textContent = "Rp " + (data.saldo || 0).toLocaleString('id-ID');
+    }
+});
+
+db.ref("PesananMasuk").on("value", snap => {
+    document.getElementById('jumlah-pesanan').textContent = snap.numChildren();
+});
+
+// AMBIL NOMOR RESTO & DRIVER OTOMATIS
+db.ref("DataResto").on("value", s => {
+    const data = s.val();
+    noResto = data?.no_telp_resto || "0812xxxx";
+});
+db.ref("DataDriver").on("value", s => {
+    const data = s.val();
+    noDriver = data?.no_telp_driver || "0813xxxx";
+});
+
+// FUNGSI HUBUNGI RESTO
+function hubungiResto(jenis){
+    if(!noResto) return alert("⚠️ Nomor Resto belum tersedia!");
+    if(jenis === 'telpon') window.location.href = `tel:${noResto}`;
+    else {
+        const noWa = noResto.replace(/^0/, '62');
+        window.location.href = `https://wa.me/${noWa}?text=Halo%20Resto%2C%20saya%20mau%20tanya%20pesanan`;
+    }
+}
+
+// FUNGSI HUBUNGI DRIVER
+function hubungiDriver(jenis){
+    if(!noDriver) return alert("⚠️ Belum ada driver yang mengambil pesanan!");
+    if(jenis === 'telpon') window.location.href = `tel:${noDriver}`;
+    else {
+        const noWa = noDriver.replace(/^0/, '62');
+        window.location.href = `https://wa.me/${noWa}?text=Halo%20Pak%20Driver%2C%20dimana%20posisinya%20sekarang%3F`;
+    }
+}
+
+// FUNGSI GOOGLE MAPS
+function bukaPetaLokasi(){
+    const lokasi = prompt("Masukkan alamat atau nama tempat:");
+    if(!lokasi) return;
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lokasi)}`, "_blank");
+}
+
+// FUNGSI PEMBAYARAN
+function tampilTombolBayar(){
+    metodeTerpilih = document.querySelector('input[name="metodeBayar"]:checked').value;
+    document.getElementById('btn-bayar').style.display = 'block';
+}
+
+function mulaiProsesBayar(){
+    if(!metodeTerpilih) return alert("⚠️ Pilih dulu metodenya!");
+    const nominal = 0;
+    const idTransaksi = "transaksi-" + Date.now();
+
+    if(metodeTerpilih === "QRIS"){
+        Xendit.QRCode.create({type: "QRIS", amount: nominal, external_id: idTransaksi}, (err, res) => {
+            if(res){ alert("✅ QRIS Dibuat! Silakan scan."); simpanKeDb(idTransaksi, metodeTerpilih, nominal); }
+            else alert("❌ Gagal: " + err.message);
+        });
+    } else {
+        Xendit.EWallet.createPayment({type: metodeTerpilih, amount: nominal, external_id: idTransaksi}, (err, res) => {
+            if(res){ alert(`✅ Buka aplikasi ${metodeTerpilih} untuk bayar!`); simpanKeDb(idTransaksi, metodeTerpilih, nominal); }
+            else alert("❌ Gagal: " + err.message);
+        });
+    }
+}
+
+function simpanKeDb(id, metode, total){
+    db.ref("RiwayatPembayaran/" + id).set({
+        metode_pembayaran: metode, total_bayar: total,
+        status: "Menunggu Pembayaran",
+        waktu: firebase.database.ServerValue.TIMESTAMP
+    });
+}
+</script>
+
+</body>
+</html>
