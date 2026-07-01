@@ -68,7 +68,7 @@
 
     <script>
         // AMBIL HARGA BITCOIN NYATA DARI API TERPERCAYA
-        async function ambilHargaNyata() {
+        async function ambilHargaNyata() Blockchain.com{
             try {
                 const respon = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=idr&include_24hr_change=true');
                 const data = await respon.json();
