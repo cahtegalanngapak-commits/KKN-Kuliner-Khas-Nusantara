@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKN Kuliner Nusantara Tegal</title>
+    <script src="https://js.xendit.co/v1/xendit.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI", sans-serif;}
+        
+        body {
+            background:linear-gradient(180deg, #fff9e6 0%, #ffe4b5 50%, #f8d7a0 100%);
+            min-height:100vh; padding:20px; position:relative;
+        }
+
+        /* === ORNAMEN KHAS TEGAL & JEPANG === */
+        .hiasan-atas {
+            position:fixed; top:0; left:0; right:0; height:12px;
+            background:repeating-linear-gradient(90deg, #c8102e, #c8102e 30px, #ffffff 30px, #ffffff 60px);
+        }
+        .hiasan-bawah {
+            position:fixed; bottom:0; left:0; right:0; height:12px;
+            background:repeating-linear-gradient(90deg, #006837, #006837 30px, #ffffff 30px, #ffffff 60px);
+        }
+        .awan-jepang {
+            position:absolute; top:60px; right:20px; font-size:80px; opacity:0.15; color:#c8102e;
+        }
+        .garis-pabrik {
+            position:absolute; top:80px; left:15px; width:3px; height:90px;
+            background:linear-gradient(#555, #888); border-radius:2px;
+        }
+        .asap-pabrik {
+            position:absolute; top:65px; left:6px; font-size:28px; color:#666; opacity:0.4;
+        }
+
+        /* === KOTAK UTAMA === */
+        .kotak-pendaftaran {
+            max-width:480px; margin:50px auto 30px; background:white;
+            border-radius:18px; padding:25px;
+            border:4px solid transparent;
+            border-image:linear-gradient(135deg, #c8102e, #ffb300, #006837) 1;
+            box-shadow:0 8px 25px rgba(139,69,19,0.2); position:relative; z-index:10;
+        }
+
+        /* === HEADER TEMA KHAS TEGAL === */
+        .header-tema {text-align:center; margin-bottom:20px;}
+        .logo-tegal {font-size:55px; margin-bottom:8px;}
+        .judul-utama {
+            font-size:22px; font-weight:900;
+            background:linear-gradient(90deg, #c8102e, #006837);
+            -webkit-background-clip:text; color:transparent;
+        }
+        .sub-judul {
+            font-size:14px; color:#8b4513; margin-top:4px; font-style:italic;
+        }
+        .slogan {
+            font-size:13px; color:#c8102e; font-weight:bold; margin-top:6px;
+            background:#fff3cd; display:inline-block; padding:4px 12px; border-radius:20px;
+        }
+
+        /* === CIRI KHAS: TEH POCI & PABRIK === */
+        .ikon-khas {
+            display:flex; justify-content:center; gap:25px; margin:15px 0; font-size:35px;
+        }
+        .label-ikon {font-size:11px; text-align:center; color:#555; margin-top:-5px;}
+
+        .pemisah {
+            display:flex; align-items:center; gap:10px; margin:18px 0; color:#8b4513; font-weight:500;
+        }
+        .garis {flex:1; height:2px; background:#e0c097;}
+
+        /* === PILIHAN PERAN === */
+        .pilihan-peran {display:grid; gap:12px; margin-bottom:20px;}
+        .kotak-peran {
+            border:2px solid #e8d5b7; border-radius:12px; padding:15px; cursor:pointer;
+            transition:0.3s; background:#fffbf5;
+            display:flex; align-items:center; gap:12px;
+        }
+        .kotak-peran:hover {
+            border-color:#c8102e; transform:translateY(-2px);
+            box-shadow:0 4px 12px rgba(200,16,46,0.15);
+            background:linear-gradient(90deg, #fff5f5, #fffbf5);
+        }
+        .kotak-peran.terpilih {border-color:#006837; background:#f0fff4;}
+        .ikon-peran {font-size:32px; width:45px; text-align:center;}
+        .teks-peran h4 {font-size:16px; color:#333;}
+        .teks-peran p {font-size:13px; color:#777;}
+
+        /* === FORM === */
+        .form-grup {margin-bottom:14px;}
+        label {
+            display:block; font-size:14px; font-weight:600; color:#5a3817; margin-bottom:5px;
+        }
+        input, select {
+            width:100%; padding:12px 15px; border:2px solid #e8d5b7; border-radius:8px;
+            font-size:15px; background:#fffdf8; transition:0.2s;
+        }
+        input:focus, select:focus {outline:none; border-color:#c8102e; background:white;}
+
+        /* === TOMBOL KHAS === */
+        .tombol-daftar {
+            width:100%; padding:14px;
+            background:linear-gradient(135deg, #c8102e, #a00020);
+            color:white; border:none; border-radius:10px; font-size:17px; font-weight:bold;
+            cursor:pointer; transition:0.3s;
+            box-shadow:0 4px 15px rgba(200,16,46,0.3);
+        }
+        .tombol-daftar:hover {
+            transform:translateY(-2px);
+            box-shadow:0 6px 20px rgba(200,16,46,0.4);
+        }
+        .tombol-kembali {
+            background:transparent; border:2px solid #888; color:#555;
+            margin-top:10px; box-shadow:none; background:white;
+        }
+
+        /* === CATATAN KHAS === */
+        .catatan-tegal {
+            margin-top:18px; padding:12px; background:#fff9e6; border-radius:8px;
+            border-left:4px solid #ffb300; font-size:13px; line-height:1.6;
+            color:#664400;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hiasan-atas"></div>
+<div class="hiasan-bawah"></div>
+
+<!-- HIASAN TEMA -->
+<div class="garis-pabrik"></div>
+<div class="asap-pabrik">💨</div>
+<div class="awan-jepang">☁️</div>
+
+<!-- ======================================
+    KOTAK PENDAFTARAN UTAMA
+====================================== -->
+<div class="kotak-pendaftaran">
+    <!-- HEADER TEMA TEGAL -->
+    <div class="header-tema">
+        <div class="logo-tegal">🏯🍵🏭</div>
+        <h1 class="judul-utama">KULINER NUSANTARA TEGAL</h1>
+        <p class="sub-judul">Kota Seribu Buruh Pabrik & Khas Teh Poci</p>
+        <div class="slogan">✨ Kelezatan Khas Kaki Lima Hingga Resto ✨</div>
+    </div>
+
+    <div class="ikon-khas">
+        <div><div>🍶</div><div class="label-ikon">Teh Poci</div></div>
+        <div><div>🏭</div><div class="label-ikon">Buruh Pabrik</div></div>
+        <div><div>⛩️</div><div class="label-ikon">Nuansa Jepang</div></div>
+        <div><div>🥘</div><div class="label-ikon">Kuliner Khas</div></div>
+    </div>
+
+    <div class="pemisah">
+        <span class="garis"></span>
+        <span>Silakan Pilih Daftar Sebagai</span>
+        <span class="garis"></span>
+    </div>
+
+    <!-- PILIHAN PERAN -->
+    <div class="pilihan-peran">
+        <div class="kotak-peran" onclick="pilihPeran(this, 'pembeli')">
+            <div class="ikon-peran">🛒</div>
+            <div class="teks-peran">
+                <h4>Pembeli / Warga</h4>
+                <p>Nikmati kuliner khas Tegal & teh poci segar</p>
+            </div>
+        </div>
+
+        <div class="kotak-peran" onclick="pilihPeran(this, 'pedagang')">
+            <div class="ikon-peran">🏪</div>
+            <div class="teks-peran">
+                <h4>Pedagang Kuliner</h4>
+                <p>Daftarkan warung, bakso, nasi ponggol, atau teh poci</p>
+            </div>
+        </div>
+
+        <div class="kotak-peran" onclick="pilihPeran(this, 'pengantar')">
+            <div class="ikon-peran">🛵</div>
+            <div class="teks-peran">
+                <h4>Tenaga Pengantar</h4>
+                <p>Bantu warga seribu pabrik dapatkan makanan cepat</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM ISIAN -->
+    <div id="form-isian" style="display:none;">
+        <div class="pemisah">
+            <span class="garis"></span>
+            <span>Formulir Pendaftaran</span>
+            <span class="garis"></span>
+        </div>
+
+        <div class="form-grup">
+            <label>Nama Lengkap :</label>
+            <input type="text" placeholder="Contoh: Budi Santoso">
+        </div>
+
+        <div class="form-grup">
+            <label>No. WhatsApp / HP :</label>
+            <input type="tel" placeholder="Contoh: 0882-xxxx-xxxx">
+        </div>
+
+        <div class="form-grup">
+            <label>Alamat Sekitar Tegal :</label>
+            <input type="text" placeholder="Contoh: Slawi, Adiwerna, atau dekat kawasan pabrik">
+        </div>
+
+        <div class="form-grup">
+            <label>Kesan tentang Kota Tegal :</label>
+            <select>
+                <option>Kota yang ramah & pekerja keras</option>
+                <option>Surga kuliner murah & enak</option>
+                <option>Kenikmatan Teh Poci yang tiada duanya</option>
+                <option>Kawasan pabrik yang maju</option>
+            </select>
+        </div>
+
+        <button class="tombol-daftar">✅ DAFTARKAN SEKARANG</button>
+        <button class="tombol-daftar tombol-kembali" onclick="kembaliPilih()">← Kembali Pilih Peran</button>
+    </div>
+
+    <div class="catatan-tegal">
+        💡 <strong>Catatan Khas Tegal:</strong> Nikmati kehangatan persaudaraan, semangat kerja keras buruh pabrik, dan kelezatan teh poci gula batu yang tak terlupakan!
+    </div>
+</div>
+
+<script>
+// KONEKSI FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let peranTerpilih = "";
+
+function pilihPeran(elemen, peran) {
+    document.querySelectorAll('.kotak-peran').forEach(e => e.classList.remove('terpilih'));
+    elemen.classList.add('terpilih');
+    peranTerpilih = peran;
+    
+    setTimeout(() => {
+        document.querySelector('.pilihan-peran').style.display = 'none';
+        document.getElementById('form-isian').style.display = 'block';
+    }, 300);
+}
+
+function kembaliPilih() {
+    document.getElementById('form-isian').style.display = 'none';
+    document.querySelector('.pilihan-peran').style.display = 'grid';
+    document.querySelectorAll('.kotak-peran').forEach(e => e.classList.remove('terpilih'));
+    peranTerpilih = "";
+}
+</script>
+
+</body>
+</html>
