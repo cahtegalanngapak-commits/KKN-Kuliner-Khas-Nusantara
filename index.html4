@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKN Kuliner Nusantara - Driver</title>
+    <script src="https://cdn.xendit.co/xenpayment.js"></script>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background:#f8f9fa; padding:0; padding-top:40px;}
+
+        /* === NOTIFIKASI BERJALAN ATAS === */
+        .notif-berjalan {
+            position:fixed; top:0; left:0; right:0; background:#1976d2; color:white;
+            padding:8px 15px; text-align:center; font-size:14px; font-weight:500;
+            z-index:999; display:flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .ikon-putar {animation: putar 2s linear infinite;}
+        @keyframes putar {from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+        
+        /* === PETA UTAMA === */
+        .peta-container {
+            width:100%; height:45vh; background:#e3f2fd;
+            position:relative; border-bottom-left-radius:20px; border-bottom-right-radius:20px;
+        }
+        .tombol-daya {
+            position:absolute; left:20px; top:50%; transform:translateY(-50%);
+            width:60px; height:60px; border-radius:50%; background:#28a745;
+            display:flex; align-items:center; justify-content:center; color:white;
+            font-size:28px; font-weight:bold; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.2);
+            transition:0.3s;
+        }
+        .tombol-daya.off {background:#dc3545;}
+        .tombol-daya:hover {transform:translateY(-52%);}
+        .indikator-posisi {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:50px; height:50px; background:#0277bd; border-radius:50%;
+            border:3px solid white; box-shadow:0 0 0 3px rgba(2,119,189,0.3);
+        }
+        .tombol-samping {
+            position:absolute; right:15px; display:flex; flex-direction:column; gap:10px;
+            top:50%; transform:translateY(-50%);
+        }
+        .btn-samping {
+            width:45px; height:45px; border-radius:50%; background:white;
+            display:flex; align-items:center; justify-content:center; font-size:20px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;
+        }
+
+        /* === POPUP STATUS ONLINE === */
+        .popup-status {
+            position:fixed; top:60px; left:50%; transform:translateX(-50%);
+            background:white; border-radius:16px; width:90%; max-width:400px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.15); padding:20px; z-index:100; display:none;
+        }
+        .judul-popup {font-size:20px; font-weight:bold; text-align:center; margin-bottom:20px;}
+        .baris-status {display:flex; justify-content:space-between; align-items:center; margin:15px 0;}
+        .nilai-status {font-weight:bold; font-size:18px; display:flex; align-items:center; gap:6px;}
+        .ceklis {color:#28a745; font-weight:bold;}
+        .tombol-tutup {text-align:center; margin-top:15px; cursor:pointer; color:#888; font-size:18px;}
+        .switch {width:50px; height:28px; background:#ddd; border-radius:14px; position:relative; cursor:pointer; transition:0.3s;}
+        .switch.aktif {background:#28a745;}
+        .switch::after {content:''; position:absolute; top:3px; left:3px; width:22px; height:22px; background:white; border-radius:50%; transition:0.3s;}
+        .switch.aktif::after {left:25px;}
+        .btn-pilih-tujuan {background:#e8f5e9; color:#28a745; border:1px solid #28a745; padding:10px 18px; border-radius:20px; font-weight:bold; cursor:pointer;}
+        .btn-atur-layanan {background:#e3f2fd; color:#1976d2; border:1px solid #1976d2; padding:8px 15px; border-radius:8px; cursor:pointer;}
+
+        /* === STATUS KERJA === */
+        .status-bawah {
+            padding:15px; background:white; margin:-20px 15px 15px; border-radius:12px;
+            box-shadow:0 -3px 10px rgba(0,0,0,0.05); position:relative; z-index:10;
+        }
+        .status-teks {font-size:18px; font-weight:bold; display:flex; align-items:center; gap:8px;}
+        .titik-merah {width:12px; height:12px; border-radius:50%; background:#dc3545;}
+        .titik-hijau {background:#28a745;}
+        .info-turbo {
+            background:#e6fffa; border-left:4px solid #00bfa5; padding:10px; margin-top:10px;
+            border-radius:6px; font-size:15px; color:#006064;
+        }
+        .info-layanan {
+            background:#fff3e0; border-left:4px solid #fb8c00; padding:10px; margin-top:8px;
+            border-radius:6px; font-size:14px; color:#e65100;
+        }
+        .info-ojk {
+            background:#f1f8e9; border-left:4px solid #7cb342; padding:8px; margin-top:8px;
+            border-radius:6px; font-size:12px; color:#33691e;
+        }
+        .info-cyber {
+            background:#e8eaf6; border-left:4px solid #3949ab; padding:8px; margin-top:8px;
+            border-radius:6px; font-size:12px; color:#1a237e; display:flex; align-items:center; gap:6px;
+        }
+
+        /* === STATISTIK PENGGUNA === */
+        .statistik-baris {
+            background:#fff; border-radius:8px; padding:12px; margin:10px 0;
+            display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+            text-align:center; font-size:13px; border:1px solid #f0f0f0;
+        }
+        .angka-stat {font-weight:bold; font-size:20px; margin-bottom:2px;}
+        .driver-warna {color:#1a237e;}
+        .resto-warna {color:#28a745;}
+        .pelanggan-warna {color:#dc3545;}
+
+        /* === TOMBOL PINTAS === */
+        .pintas-container {padding:15px; background:white; margin:15px; border-radius:12px; display:none;}
+        .pintas-judul {font-size:17px; font-weight:bold; margin-bottom:15px; color:#333;}
+        .grid-pintas {
+            display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; text-align:center;
+        }
+        .item-pintas {cursor:pointer; transition:0.2s; padding:8px; border-radius:8px;}
+        .item-pintas:hover {background:#f5f5f5;}
+        .ikon-pintas {
+            width:50px; height:50px; border-radius:50%; background:#e0f2f1;
+            display:flex; align-items:center; justify-content:center; margin:0 auto 6px;
+            font-size:22px; color:#00897b;
+        }
+        .item-pintas p {font-size:13px; color:#444;}
+
+        /* === MODAL UMUM === */
+        .modal {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.5); padding:20px; z-index:1000; overflow-y:auto;
+        }
+        .modal-kotak {
+            background:white; border-radius:12px; padding:20px; max-width:420px; margin:5% auto;
+        }
+        .tutup {text-align:right; font-size:22px; cursor:pointer; color:#888; margin-bottom:10px;}
+        .layanan-item {
+            padding:14px; border-bottom:1px solid #f1f1f1; cursor:pointer; display:flex; align-items:center; gap:12px;
+        }
+        .layanan-item:hover {background:#f8f9fa;}
+        .layanan-item.aktif {background:#e8f5e9; border-left:4px solid #28a745;}
+        .aturan-box {
+            background:#fafafa; border:1px solid #e0e0e0; border-radius:8px; padding:12px;
+            margin:10px 0; font-size:13px; line-height:1.6;
+        }
+        .aturan-judul {font-weight:bold; color:#333; margin-bottom:5px;}
+        .input-saldo {
+            width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; font-size:16px; margin:10px 0;
+        }
+        .pilihan-nominal {
+            display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0;
+        }
+        .nominal {
+            padding:10px; border:1px solid #ddd; border-radius:6px; text-align:center; cursor:pointer; font-size:14px;
+        }
+        .nominal:hover {border-color:#28a745; background:#f1f8e9;}
+        .btn-modal {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;}
+
+        /* === FITUR CHAT === */
+        .tab-chat {
+            flex:1; padding:8px; border:none; border-radius:8px; background:#f0f0f0; cursor:pointer; font-weight:500;
+        }
+        .tab-chat.aktif {background:#28a745; color:white;}
+        .area-chat {
+            flex:1; overflow-y:auto; padding:10px 0; display:flex; flex-direction:column; gap:10px; min-height:200px;
+        }
+        .pesan {
+            max-width:80%; padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.5; position:relative;
+        }
+        .pesan.terima {
+            background:#f1f1f1; color:#333; align-self:flex-start; border-bottom-left-radius:4px;
+        }
+        .pesan.kirim {
+            background:#e3f2fd; color:#1a237e; align-self:flex-end; border-bottom-right-radius:4px;
+        }
+        .waktu-pesan {
+            font-size:11px; color:#888; margin-top:4px; text-align:right;
+        }
+
+        /* === PESANAN MASUK === */
+        .pesanan-masuk {
+            position:fixed; bottom:0; left:0; right:0; background:white;
+            border-top-left-radius:20px; border-top-right-radius:20px; padding:20px;
+            box-shadow:0 -5px 15px rgba(0,0,0,0.15); display:none; z-index:99;
+            animation:munculNaik 0.5s ease-out;
+        }
+        @keyframes munculNaik {from{transform:translateY(100%);} to{transform:translateY(0);}}
+        .pesanan-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
+        .nama-pemesan {font-size:20px; font-weight:bold;}
+        .waktu-pesan {font-size:14px; color:#888;}
+        .alamat-pesan {font-size:16px; color:#333; margin:8px 0; line-height:1.5;}
+        .bayaran {font-size:22px; font-weight:bold; color:#28a745; margin:8px 0;}
+        .catatan {background:#fff9c4; padding:10px; border-radius:6px; font-size:14px; margin:10px 0;}
+        .info-paket {background:#e3f2fd; padding:10px; border-radius:6px; font-size:14px; margin:8px 0;}
+        .lokasi-ambil {background:#e8f5e9; border-left:4px solid #43a047; padding:8px; border-radius:6px; margin:8px 0; font-size:15px;}
+        .nomor-order {font-size:15px; color:#666; margin-bottom:15px;}
+        .tombol-pesanan {display:flex; gap:10px;}
+        .btn-terima {flex:1; padding:15px; background:#28a745; color:white; border:none; border-radius:10px; font-size:17px; font-weight:bold; cursor:pointer;}
+        .btn-tolak {width:60px; height:60px; border-radius:50%; background:#dc3545; color:white; border:none; font-size:22px; cursor:pointer;}
+
+        /* === DETAIL PESANAN & HALAMAN LAIN === */
+        .detail-pesanan, .hal-penyelesaian, .hal-qr, .hal-ajakmitra, .hal-bantuan, .hal-akun, .hal-pengaturan {padding:20px; display:none;}
+        .detail-header {display:flex; align-items:center; gap:12px; margin-bottom:20px;}
+        .btn-kembali {font-size:24px; cursor:pointer; color:#555;}
+        .nama-resto {font-size:16px; color:#666; margin:5px 0;}
+        .jumlah-barang {background:#e3f2fd; display:inline-block; padding:5px 12px; border-radius:20px; font-size:14px; margin:10px 0;}
+        .tombol-aksi {display:flex; gap:12px; margin:20px 0; align-items:center;}
+        .btn-telepon, .btn-chat {width:45px; height:45px; border-radius:50%; background:#e0e0e0; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer;}
+        .btn-diantarkan {width:100%; padding:16px; background:#28a745; color:white; border:none; border-radius:12px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:15px;}
+
+        /* === FITUR PENYELESAIAN & PENDAPATAN === */
+        .kotak-pendapatan {background:white; border-radius:12px; padding:18px; margin-bottom:15px; box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+        .judul-bagian {font-size:16px; font-weight:bold; margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+        .baris-rincian {display:flex; justify-content:space-between; padding:6px 0; font-size:14px;}
+        .baris-rincian.bold {font-weight:bold; font-size:15px;}
+        .baris-rincian.abu {color:#666; font-size:13px;}
+        .catatan-bawah {font-size:12px; color:#888; margin-top:10px; line-height:1.5;}
+        .btn-hijau {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:10px; font-weight:bold; margin:8px 0; cursor:pointer;}
+        .btn-putih {width:100%; padding:12px; background:white; color:#28a745; border:1px solid #28a745; border-radius:10px; font-weight:bold; margin:8px 0; cursor:pointer;}
+
+        /* === KODE QR SAYA === */
+        .kotak-qr {text-align:center; padding:30px;}
+        .gambar-qr {width:220px; height:220px; background:#f5f5f5; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:80px; border-radius:8px;}
+        .teks-qr {font-size:15px; color:#333; margin-bottom:5px;}
+        .subteks-qr {font-size:13px; color:#666;}
+
+        /* === AJAK JADI MITRA === */
+        .kotak-ajak {text-align:center; padding:20px;}
+        .ikon-ajak {font-size:60px; margin-bottom:15px;}
+        .judul-ajak {font-size:18px; font-weight:bold; margin-bottom:10px;}
+        .teks-ajak {font-size:14px; color:#666; margin-bottom:20px; line-height:1.6;}
+
+        /* === MENU AKUN & PENGATURAN === */
+        .menu-item {padding:15px 10px; border-bottom:1px solid #f1f1f1; display:flex; align-items:center; gap:12px; cursor:pointer; font-size:16px;}
+        .menu-item:hover {background:#fafafa;}
+        .menu-item .ikon {font-size:20px; width:28px; text-align:center;}
+        .bagian-judul {font-size:14px; color:#888; padding:15px 10px 5px; font-weight:500;}
+
+        /* === NAVIGASI BAWAH === */
+        .nav-bawah {
+            position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid #eee;
+            display:flex; justify-content:space-around; padding:10px 0; z-index:50;
+        }
+        .nav-item {text-align:center; font-size:13px; color:#666; cursor:pointer;}
+        .nav-item.aktif {color:#dc3545; font-weight:bold;}
+        .nav-ikon {font-size:22px; display:block; margin-bottom:2px;}
+
+        /* === CYBER SECURITY === */
+        .log-keamanan {background:#fafafa; padding:10px; border-radius:6px; margin:8px 0; font-size:13px;}
+        .status-sistem {display:flex; align-items:center; gap:8px; padding:6px 0;}
+        .titik-aman {width:10px; height:10px; border-radius:50%; background:#28a745; animation: kedip 1.5s infinite;}
+        @keyframes kedip {0% {opacity:1;} 50% {opacity:0.4;} 100% {opacity:1;}}
+    </style>
+</head>
+<body>
+
+<!-- 🔔 NOTIFIKASI BERJALAN -->
+<div class="notif-berjalan">
+    <span class="ikon-putar">⚙️</span>
+    <strong>KKN Kuliner Nusantara</strong> | Dilindungi Tim Cyber Keamanan
+</div>
+
+<!-- 📊 POPUP STATUS ONLINE -->
+<div class="popup-status" id="popupStatus">
+    <div class="judul-popup">Online ⌄</div>
+    <div style="text-align:center; color:#666; margin-bottom:15px;">Poin hari ini: <strong style="color:#333;">0</strong> <br><small>0 dari 0 trip selesai</small></div>
+    
+    <div class="baris-status">
+        <div>Penerimaan bid</div>
+        <div class="nilai-status"><span class="ceklis">✓</span> 100%</div>
+    </div>
+    <div class="baris-status">
+        <div>Penyelesaian trip</div>
+        <div class="nilai-status"><span class="ceklis">✓</span> 100%</div>
+    </div>
+
+    <div class="baris-status">
+        <div>Autobid</div>
+        <div class="switch aktif" onclick="this.classList.toggle('aktif')"></div>
+    </div>
+
+    <div class="baris-status">
+        <div>Trip searah<br><small>Kuota harian: 1</small></div>
+        <div class="btn-pilih-tujuan">Pilih tujuan</div>
+    </div>
+
+    <div class="baris-status">
+        <div>Ketersediaan layanan</div>
+        <div class="btn-atur-layanan">Atur</div>
+    </div>
+
+    <div class="tombol-tutup" onclick="tutupPopupStatus()">✕ Tutup</div>
+</div>
+
+<!-- 🗺️ PETA UTAMA -->
+<div class="peta-container" id="hal-beranda">
+    <div class="tombol-daya" id="tombol-daya" onclick="gantiStatus()">⏻</div>
+    <div class="indikator-posisi"></div>
+    <div class="tombol-samping">
+        <div class="btn-samping" onclick="bukaPopupStatus()">⚙️</div>
+        <div class="btn-samping">🌧️</div>
+        <div class="btn-samping" onclick="bukaPintas()">⋯</div>
+    </div>
+</div>
+
+<!-- 📊 STATUS KERJA & STATISTIK -->
+<div class="status-bawah" id="bagian-status">
+    <div class="status-teks">
+        <span class="titik-merah" id="titik-status"></span>
+        <span id="teks-status">Anda sedang tidak aktif</span>
+    </div>
+
+    <div class="statistik-baris">
+        <div>
+            <div class="angka-stat driver-warna">1.250</div>
+            <p>👤 Driver</p>
+        </div>
+        <div>
+            <div class="angka-stat resto-warna">380</div>
+            <p>🏪 Restoran</p>
+        </div>
+        <div>
+            <div class="angka-stat pelanggan-warna">5.700</div>
+            <p>🧑‍🤝‍🧑 Pelanggan</p>
+        </div>
+    </div>
+
+    <div class="info-turbo" id="info-turbo">
+        ⚡ Menerima orderan secara otomatis.
+    </div>
+    <div class="info-layanan" id="info-layanan" style="display:none;">
+        📦 <span id="teks-layanan"></span>
+    </div>
+    <div class="info-ojk">
+        ✅ Sistem pembayaran bekerja sama dengan Xendit & mengacu aturan OJK/Bank Indonesia
+    </div>
+    <div class="info-cyber">
+        🛡️ <strong>Tim Cyber Penjaga:</strong> Aktif Melindungi Aplikasi
+    </div>
+</div>
+
+<!-- ⚡ TOMBOL PINTAS -->
+<div class="pintas-container" id="kotak-pintas">
+    <div class="pintas-judul">Tombol Pintas</div>
+    <div class="grid-pintas">
+        <div class="item-pintas" onclick="bukaModal('layanan')">
+            <div class="ikon-pintas">🛵</div>
+            <p>Pilih Layanan</p>
+        </div>
+        <div class="item-pintas" onclick="bukaHalaman('penyelesaian')">
+            <div class="ikon-pintas">✅</div>
+            <p>Penyelesaian Trip</p>
+        </div>
+        <div class="item-pintas" onclick="bukaHalaman('qrsaya')">
+            <div class="ikon-pintas">📱</div>
+            <p>Kode QR Saya</p>
+        </div>
+        <div class="item-pintas" onclick="bukaHalaman('ajakmitra')">
+            <div class="ikon-pintas">🤝</div>
+            <p>Ajak Jadi Mitra</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('topup')">
+            <div class="ikon-pintas">💳</div>
+            <p>Top Up Saldo</p>
+        </div>
+        <div class="item-pintas" onclick="bukaModal('arah')">
+            <div class="ikon-pintas">➡️</div>
+            <p>Orderan Searah</p>
+        </div>
+        <div class="item-pintas" onclick="bukaHalaman('akun')">
+            <div class="ikon-pintas">👤</div>
+            <p>Pengaturan Akun</p>
+        </div>
+        <div class="item-pintas" onclick="bukaHalaman('bantuan')">
+            <div class="ikon-pintas">❓</div>
+            <p>Bantuan</p>
+        </div>
+    </div>
+</div>
+
+<!-- 🛵 MODAL PILIH LAYANAN -->
+<div class="modal" id="modal-layanan">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Pilih Jenis Layanan</h3>
+        <div class="layanan-item" onclick="pilihLayanan('makanan')">
+            <span>🍜</span> Layanan Makanan
+        </div>
+        <div class="layanan-item" onclick="pilihLayanan('kurir')">
+            <span>📦</span> Layanan Kurir Paket
+        </div>
+        <div class="aturan-box">
+            <div class="aturan-judul">📜 ATURAN KURIR PAKET (SESUI UUD & UU RI)</div>
+            ✅ <strong>UU No. 22 Tahun 2009</strong>: Helm SNI, SIM C, STNK berlaku<br>
+            ✅ <strong>UU No. 8 Tahun 1999</strong>: Barang aman, tidak rusak, jaga kerahasiaan<br>
+            ✅ <strong>Restoran/Toko Bisa Kirim</strong>: Paket dari restoran/toko diperbolehkan<br>
+            ✅ <strong>Muatan Motor</strong>: Maks 20kg, tidak melebihi lebar badan kendaraan<br>
+            ✅ <strong>Larangan</strong>: Barang berbahaya, narkoba, senjata, mudah meledak<br>
+            ✅ <strong>Pengambilan</strong>: Bisa dari rumah, toko, restoran, kantor
+        </div>
+    </div>
+</div>
+
+<!-- 💳 MODAL TOP UP SALDO -->
+<div class="modal" id="modal-topup">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Isi Saldo Dompet (via Xendit)</h3>
+        <input type="number" class="input-saldo" placeholder="Masukkan nominal" id="nominal-topup">
+        <div class="pilihan-nominal">
+            <div class="nominal" onclick="isiNominal(20000)">Rp20.000</div>
+            <div class="nominal" onclick="isiNominal(50000)">Rp50.000</div>
+            <div class="nominal" onclick="isiNominal(100000)">Rp100.000</div>
+            <div class="nominal" onclick="isiNominal(200000)">Rp200.000</div>
+            <div class="nominal" onclick="isiNominal(500000)">Rp500.000</div>
+            <div class="nominal" onclick="isiNominal(1000000)">Rp1.000.000</div>
+        </div>
+        <button class="btn-modal" onclick="prosesTopUp()">✅ Lanjutkan Top Up</button>
+        <div style="font-size:12px; color:#666; margin-top:10px; text-align:center;">
+            🔐 Transaksi aman & terenkripsi | Mode Pengujian
+        </div>
+    </div>
+</div>
+
+<!-- ➡️ MODAL ORDERAN SEARAH -->
+<div class="modal" id="modal-arah">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Orderan Searah</h3>
+        <p style="margin:10px 0; color:#666;">Terima pesanan searah tujuan perjalananmu</p>
+        <input type="text" class="input-saldo" placeholder="Masukkan tujuan perjalanan">
+        <button class="btn-modal" onclick="aturArah()">✅ Aktifkan Arah</button>
+    </div>
+</div>
+
+<!-- 🔵 MODAL BLUETOOTH -->
+<div class="modal" id="modal-bluetooth">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Pengaturan Bluetooth</h3>
+        <div class="layanan-item" onclick="aturBluetooth('nyala')">
+            <span>✅</span> Nyalakan Bluetooth
+        </div>
+        <div class="layanan-item" onclick="aturBluetooth('mati')">
+            <span>❌</span> Matikan Bluetooth
+        </div>
+        <div class="layanan-item" onclick="aturBluetooth('hubung')">
+            <span>🔗</span> Hubungkan Perangkat Baru
+        </div>
+    </div>
+</div>
+
+<!-- ⚡ MODAL ORDERAN TURBO -->
+<div class="modal" id="modal-turbo">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Orderan Turbo</h3>
+        <div class="layanan-item aktif" onclick="aturTurbo('aktif')">
+            <span>✅</span> Terima Otomatis
+        </div>
+        <div class="layanan-item" onclick="aturTurbo('nonaktif')">
+            <span>⏸️</span> Pilih Manual
+        </div>
+    </div>
+</div>
+
+<!-- 🛡️ MODAL KESELAMATAN -->
+<div class="modal" id="modal-keselamatan">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>Pusat Keselamatan</h3>
+        <div class="layanan-item">📞 Darurat 110 / 112</div>
+        <div class="layanan-item">⚠️ Lapor Masalah Keamanan</div>
+        <div class="layanan-item">📍 Bagikan Lokasi Keamanan</div>
+        <div class="layanan-item">📖 Panduan Keselamatan Berkendara</div>
+    </div>
+</div>
+
+<!-- 🔒 MODAL TIM CYBER PENJAGA -->
+<div class="modal" id="modal-cyber">
+    <div class="modal-kotak">
+        <div class="tutup" onclick="tutupModal()">✕</div>
+        <h3>🛡️ Tim Cyber Penjaga Aplikasi</h3>
+        <div class="status-sistem">
+            <span class="titik-aman"></span>
+            <strong>Sistem Keamanan: BERJALAN NORMAL & TERKUNCI</strong>
+        </div>
+        <div class="aturan-box">
+            <div class="aturan-judul">📋 TUGAS & PENGAWASAN TIM CYBER:</div>
+            ✅ Memantau aktivitas login mencurigakan<br>
+            ✅ Melindungi data pribadi & transaksi keuangan<br>
+            ✅ Memblokir akses peretas/serangan siber otomatis<br>
+            ✅ Mengamankan koneksi Xendit & data pembayaran<br>
+            ✅ Mencatat riwayat aktivitas aplikasi<br>
+            ✅ Siaga 24 jam non-stop melindungi sistem
+        </div>
+        <div class="log-keamanan">
+            <strong>📝 Log Aktivitas Terkini:</strong><br>
+            [21:15] Sistem terenkripsi berjalan lancar<br>
+            [21:16] Koneksi aman ke server Xendit<br>
+            [21:17] Tidak ada ancaman terdeteksi<br>
+            [21:18] Perlindungan data pribadi AKTIF
+        </div>
+        <div class="layanan-item" onclick="laporAncaman()">
+            <span>🚨</span> Laporkan Ancaman/Kejanggalan
+        </div>
+        <div class="layanan-item" onclick="cekKeamanan()">
+            <span>🔍</span> Jalankan Pemeriksaan Keamanan
+        </div>
+        <div class="layanan-item">
+            <span>📞</span> Hubungi Tim Cyber: 0812-xxxx-xxxx
+        </div>
+    </div>
+</div>
+
+<!-- 💬 MODAL CHAT -->
+<div class="modal" id="modal-chat">
+    <div class="modal-kotak" style="max-width:450px; max-height:85vh; display:flex; flex-direction:column;">
+        <div class="tutup" onclick="tutupChat()">✕</div>
+        
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <button class="tab-chat aktif" onclick="gantiTabChat('pelanggan')">🧑‍🤝‍🧑 Pelanggan</button>
+            <button class="tab-chat" onclick="gantiTabChat('restoran')">🏪 Restoran</button>
+        </div>
+
+        <div id="judul-chat" style="font-weight:bold; font-size:16px; padding:8px 0; border-bottom:1px solid #eee;">
+            💬 Budi Santoso (Pelanggan)
+        </div>
+
+        <div id="daftar-pesan" class="area-chat"></div>
+
+        <div style="display:flex; gap:8px; margin-top:10px;">
+            <input type="text" id="input-pesan" placeholder="Ketik pesan disini..." 
+                   style="flex:1; padding:12px; border:1px solid #ddd; border-radius:20px; outline:none;">
+            <button onclick="kirimPesan()" style="width:45px; height:45px; border-radius:50%; border:none; background:#28a745; color:white; font-size:18px; cursor:pointer;">➤</button>
+        </div>
+    </div>
+</div>
+
+<!-- 📝 HALAMAN PENYELESAIAN TRIP & PENDAPATAN -->
+<div class="hal-penyelesaian" id="hal-penyelesaian">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="kembaliBeranda()">←</span>
+        <h2>Detail Pendapatan & Penyelesaian</h2>
+    </div>
+
+    <div class="kotak-pendapatan">
+        <div class="judul-bagian">💳 Pendapatan Mitra <span style="color:#165DFF">GoPay</span></div>
+        <div class="baris-rincian bold">Total pendapatan <span>Rp23.000</span></div>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid #eee;">
+            <div class="baris-rincian abu">Rincian pendapatan</div>
+            <div class="baris-rincian">92% dari Biaya perjalanan <span>Rp23.000</span></div>
+        </div>
+    </div>
+
+    <div class="kotak-pendapatan">
+        <div class="judul-bagian">💳 Dibayar Pelanggan <span style="color:#165DFF">GoPay</span></div>
+        <div class="baris-rincian bold">Total pembayaran <span>Rp28.500</span></div>
+        
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid #eee;">
+            <div class="baris-rincian abu">Rincian biaya perjalanan</div>
+            <div class="baris-rincian">Biaya perjalanan <span>Rp25.000</span></div>
+            <div class="baris-rincian">→ Pendapatan Mitra (92%) <span>Rp23.000</span></div>
+            <div class="baris-rincian">→ Potongan Platform (8%) <span>Rp2.000</span></div>
+            <div style="margin:8px 0; border-bottom:1px dashed #eee;"></div>
+            <div class="baris-rincian">Dibayarkan ke Platform</div>
+            <div class="baris-rincian">Biaya jasa aplikasi <span>Rp3.500</span></div>
+        </div>
+
+        <div class="catatan-bawah">*Driver akan menerima tip lewat GoPay secara otomatis</div>
+    </div>
+
+    <button class="btn-putih">📜 Lihat di Riwayat Transaksi</button>
+    <button class="btn-hijau">❓ Butuh Bantuan?</button>
+</div>
+
+<!-- 📱 HALAMAN KODE QR SAYA -->
+<div class="hal-qr" id="hal-qrsaya">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="kembaliBeranda()">←</span>
+        <h2>Kode QR Saya</h2>
+    </div>
+    <div class="kotak-pendapatan kotak-qr">
+        <div class="gambar-qr">📱</div>
+        <div class="teks-qr"><strong>Bagikan kode ini ke pelanggan</strong></div>
+        <div class="subteks-qr">Agar pembayaran atau verifikasi lebih mudah</div>
+        <br>
+        <button class="btn-hijau">📸 Simpan Kode QR</button>
+        <button class="btn-putih">🔗 Bagikan Tautan</button>
+    </div>
+</div>
+
+<!-- 🤝 HALAMAN AJAK JADI MITRA -->
+<div class="hal-ajakmitra" id="hal-ajakmitra">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="kembaliBeranda()">←</span>
+        <h2>Ajak Teman Jadi Mitra</h2>
+    </div>
+    <div class="kotak-pendapatan kotak-ajak">
+        <div class="ikon-ajak">👥</div>
+        <div class="judul-ajak">Undang Teman & Dapat Keuntungan Bersama!</div>
+        <div class="teks-ajak">Bagikan tautan atau kode referal kamu ke calon mitra baru. Saat mereka aktif bekerja, kamu berdua bisa mendapatkan insentif.</div>
+        
+        <div class="aturan-box">
+            <div class="aturan-judul">📋 Cara Bergabung:</div>
+            1. Bagikan tautan undanganmu<br>
+            2. Calon mitra mendaftar lewat tautan tersebut<br>
+            3. Lengkapi dokumen & lakukan verifikasi<br>
+            4. Mulai bekerja & dapatkan bonus bersama
+        </div>
+
+        <button class="btn-hijau">📤 Bagikan Tautan Undangan</button>
+        <button class="btn-putih">📋 Salin Kode Referal</button>
+    </div>
+</div>
+
+<!-- 👤 HALAMAN MENU AKUN -->
+<div class="hal-akun" id="hal-akun">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="kembaliBeranda()">←</span>
+        <h2>Akun</h2>
+    </div>
+    <div class="bagian-judul">Menu Lainnya</div>
+    <div class="menu-item" onclick="bukaHalaman('pengaturan')">
+        <span class="ikon">⚙️</span> Pengaturan
+    </div>
+    <div class="menu-item">
+        <span class="ikon">⚠️</span> Status akun & sanksi
+    </div>
+    <div class="menu-item">
+        <span class="ikon">🚀</span> Cek aplikasi
+    </div>
+    <div class="menu-item">
+        <span class="ikon">📅</span> Buat janji
+    </div>
+    <div class="menu-item" onclick="bukaHalaman('bantuan')">
+        <span class="ikon">❓</span> Bantuan
+    </div>
+    <div class="menu-item" onclick="bukaHalaman('qrsaya')">
+        <span class="ikon">📱</span> Kode QR saya
+    </div>
+    <div class="menu-item">
+        <span class="ikon">📂</span> Penyerahan dokumen
+    </div>
+    <div class="menu-item" onclick="bukaHalaman('ajakmitra')">
+        <span class="ikon">👥</span> Ajak teman jadi mitra
+    </div>
+    <div class="menu-item">
+        <span class="ikon">🤝</span> Perjanjian kemitraan
+    </div>
+</div>
+
+<!-- ⚙️ HALAMAN PENGATURAN -->
+<div class="hal-pengaturan" id="hal-pengaturan">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="bukaHalaman('akun')">←</span>
+        <h2>Pengaturan</h2>
+    </div>
+    <div class="bagian-judul">Akun</div>
+    <div class="menu-item">
+        <span class="ikon">📞</span> Ganti nomor hape<br><small style="color:#666; font-size:13px;">+6288xxxxxxxxx</small>
+    </div>
+    <div class="menu-item">
+        <span class="ikon">✉️</span> Email<br><small style="color:#666; font-size:13px;">contoh@gmail.com</small>
+    </div>
+    <div class="menu-item">
+        <span class="ikon">🏍️</span> Kendaraan<br><small style="color:#666; font-size:13px;">DK 1234 AB</small>
+    </div>
+    <div class="menu-item">
+        <span class="ikon">🏦</span> Rekening bank<br><small style="color:#666; font-size:13px;">BCA ****1234</small>
+    </div>
+    <div class="bagian-judul">Layanan</div>
+    <div class="menu-item">
+        <span class="ikon">💼</span> Pemilihan layanan<br><small style="color:#666; font-size:13px;">Makanan & Kurir</small>
+    </div>
+    <div class="menu-item" style="color:#dc3545;">
+        <span class="ikon">🗑️</span> Hapus akun
+    </div>
+</div>
+
+<!-- ❓ HALAMAN BANTUAN -->
+<div class="hal-bantuan" id="hal-bantuan">
+    <div class="detail-header">
+        <span class="btn-kembali" onclick="kembaliBeranda()">←</span>
+        <h2>Bantuan</h2>
+    </div>
+    <div style="padding:10px;">
+        <input type="text" placeholder="Cari masalah yang kamu alami..." style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; margin-bottom:15px;">
+    </div>
+    <div class="menu-item">❓ Pertanyaan yang Sering Diajukan</div>
+    <div class="menu-item">ℹ️ Info Terbaru</div>
+    <div class="menu-item">⚖️ Tata Tertib Pengguna</div>
+    <div class="menu-item">⚠️ Keadaan Darurat</div>
+    <div class="menu-item">🔐 Info Seputar Login</div>
+    <div class="menu-item">📖 Panduan Menjalankan Order</div>
+    <div class="menu-item">🚫 Kendala Saat Menunggu Order</div>
+    <div class="menu-item">⚠️ Kendala Menjalankan Order</div>
+    <div class="menu-item">⚙️ Perubahan Profil Akun</div>
+    <div class="menu-item">💰 Tarif, Bid, Penyelesaian & Insentif</div>
+    <div class="menu-item">💳 Top Up, Withdraw, Transfer Saldo</div>
+    <div class="menu-item">📜 Peraturan & Kebijakan</div>
+</div>
+
+<!-- 📦 PESANAN MASUK -->
+<div class="pesanan-masuk" id="pesanan-masuk">
+    <div class="pesanan-header">
+        <div>
+            <div class="nama-pemesan" id="nama-pemesan">BUDI SANTOSO</div>
+            <div class="waktu-pesan">07:45 PM</div>
+        </div>
+        <div class="bayaran" id="bayaran-pesanan">Rp 28.500 💚 Pembayaran Otomatis</div>
+    </div>
+    <div class="lokasi-ambil" id="lokasi-ambil">
+        📍 Ambil di: <strong>Restoran Sari Rasa - Cabang Diponegoro</strong>
+    </div>
+    <div id="info-khusus-paket" style="display:none;">
+        <div class="info-paket">
+            📦 Jenis: Barang Dagangan Restoran<br>
+            ⚖️ Berat: 2kg | 📏 Ukuran: Kecil<br>
+            ⚠️ Catatan: Kemasan rapi, jangan tertekan
+        </div>
+    </div>
