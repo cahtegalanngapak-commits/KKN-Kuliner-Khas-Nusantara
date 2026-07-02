@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍛 S-Nusantara Delivery | Layanan Kuliner Nusantara</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Roboto, Arial, sans-serif;}
+        body {background:linear-gradient(180deg, #fff9f0 0%, #f8f9fa 100%); padding:15px;}
+
+        /* === HEADER === */
+        .header-beranda {
+            background:linear-gradient(135deg, #ff6b35, #f7931e, #ffc107);
+            color:white; padding:22px; border-radius:16px; 
+            text-align:center; margin-bottom:20px;
+            box-shadow:0 4px 15px rgba(255,107,53,0.3);
+        }
+        .salam {font-size:18px; font-weight:600; margin-bottom:5px;}
+        .label-akun {font-size:14px; background:rgba(255,255,255,0.25); display:inline-block; padding:4px 12px; border-radius:20px; margin-top:6px;}
+        .sub-judul {font-size:16px; margin-top:6px; font-weight:800; letter-spacing:1px;}
+        .tagline {font-size:13px; margin-top:8px; opacity:0.95;}
+
+        /* === KOTAK INFO === */
+        .info-ringkas {display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:520px; margin:0 auto 20px;}
+        .kotak-info {background:white; padding:16px; border-radius:12px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.07); border-bottom:3px solid #ff6b35;}
+        .kotak-info .angka {font-size:22px; font-weight:800; color:#ff6b35; margin:6px 0;}
+        .kotak-info .label {font-size:14px; color:#666;}
+        .peringatan-min {color:#d32f2f; font-size:13px; font-weight:600; margin-top:4px;}
+
+        /* === KOTAK PERINGATAN === */
+        .peringatan-bahaya {background:linear-gradient(135deg, #ffebee, #ffcdd2); border-left:5px solid #d32f2f; padding:15px; border-radius:10px; margin-bottom:15px; color:#b71c1c; font-weight:500;}
+        .peringatan-aman {background:linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left:5px solid #2e7d32; padding:15px; border-radius:10px; margin-bottom:15px; color:#1b5e20; font-weight:500;}
+        .peringatan-waspada {background:linear-gradient(135deg, #fff8e1, #ffecb3); border-left:5px solid #fbc02d; padding:15px; border-radius:10px; margin-bottom:15px; color:#f57f17; font-weight:500;}
+        .peringatan-resi {background:linear-gradient(135deg, #e8f0fe, #d0e1ff); border-left:5px solid #1565c0; padding:15px; border-radius:10px; margin-bottom:15px; color:#0d47a1; font-weight:500;}
+        .kotak-aturan {background:#fffdf5; border:1px solid #ffe0b2; border-radius:10px; padding:16px; margin:14px 0;}
+        .kotak-aturan h5 {font-size:15px; color:#e65100; margin-bottom:10px;}
+        .daftar-aturan {font-size:14px; line-height:1.9; margin-left:22px; color:#333;}
+        .daftar-aturan li {margin:5px 0;}
+
+        /* === FORM & KOTAK === */
+        .form-box {background:white; border-radius:14px; padding:20px; box-shadow:0 3px 12px rgba(0,0,0,0.06); max-width:520px; margin:0 auto 20px;}
+        h3 {color:#333; margin-bottom:14px; border-bottom:2px solid #fff3e0; padding-bottom:8px; font-size:18px; font-weight:700;}
+        h4 {margin:14px 0 8px; font-size:16px; color:#444; font-weight:600;}
+        input, select, textarea {width:100%; padding:10px; margin:6px 0 12px; border:1px solid #ddd; border-radius:8px; font-size:14px;}
+        textarea {min-height:80px; resize:vertical;}
+
+        /* === TOMBOL === */
+        button {width:100%; padding:13px; background:linear-gradient(135deg, #ff6b35, #f7931e); color:white; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin-top:10px; transition:0.3s;}
+        button:hover {transform:translateY(-2px); box-shadow:0 5px 12px rgba(255,107,53,0.35);}
+        button:disabled {opacity:0.6; cursor:not-allowed; transform:none;}
+        .btn-kecil {flex:1; min-width:140px; padding:12px; font-size:15px; margin:0;}
+        .btn-kecil-putih {background:white; color:#333; border:2px solid #eee; box-shadow:none;}
+        .btn-ungu {background:linear-gradient(135deg, #7b1fa2, #9c27b0);}
+        .btn-hijau {background:linear-gradient(135deg, #2e7d32, #4caf50);}
+        .btn-bahaya {background:linear-gradient(135deg, #c62828, #ef5350);}
+        .btn-peta {background:linear-gradient(135deg, #17a2b8, #20c997);}
+        .btn-wa {background:linear-gradient(135deg, #25d366, #128c7e);}
+
+        /* === ITEM MENU === */
+        .menu-item {padding:12px; margin:8px 0; background:#fafbfc; border-radius:8px; border-left:3px solid #ff6b35; cursor:pointer; transition:0.2s;}
+        .menu-item:hover {background:#fff8f0; padding-left:16px;}
+        .menu-item.terpilih {background:#fff3e0; border-left-color:#ff6b35; font-weight:600;}
+        .jenis-akun-pilih {display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
+        .label-akun {flex:1; min-width:100px; padding:10px; border:1px solid #ff6b35; border-radius:8px; text-align:center; cursor:pointer; transition:0.2s;}
+        .label-akun:has(input:checked) {background:#fff3e0; border-color:#ff6b35; font-weight:bold;}
+
+        /* === LAINNYA === */
+        .rincian {background:#fff8e1; border-radius:8px; padding:12px; margin:10px 0; font-size:14px; line-height:1.7;}
+        .info-delivery {background:linear-gradient(135deg, #fff8e1, #ffecb3); border-radius:12px; padding:16px; border-left:4px solid #ff9800; margin-bottom:20px;}
+        .kode-resi {font-size:19px; font-weight:800; color:#1565c0; text-align:center; padding:10px; background:#e3f2fd; border-radius:8px; margin:10px 0;}
+        .foto-bukti {border:2px dashed #9575cd; border-radius:10px; padding:16px; text-align:center; margin:10px 0; background:#faf5ff;}
+        .hubung-item {display:flex; gap:10px; margin:10px 0; flex-wrap:wrap;}
+        .keterangan {font-size:14px; color:#666; margin-top:10px; text-align:center; line-height:1.6;}
+        .link-masuk {color:#ff6b35; font-weight:600; cursor:pointer; text-decoration:underline;}
+        hr {margin:18px 0; border:none; border-top:1px solid #f0f0f0;}
+        .pemisah-aturan {text-align:center; color:#888; font-weight:600; margin:20px 0; letter-spacing:1px;}
+        .daftar-isi {background:#f8f9fa; padding:12px 20px; border-radius:8px; margin-bottom:15px;}
+        .daftar-isi a {color:#ff6b35; font-size:14px; text-decoration:none;}
+        .daftar-isi a:hover {text-decoration:underline;}
+        .riwayat-item {padding:10px; border-bottom:1px solid #f0f0f0; font-size:14px;}
+        .riwayat-sukses {color:#2e7d32; font-weight:600;}
+        .riwayat-pending {color:#f57f17; font-weight:600;}
+
+        /* === KONTROL TAMPILAN HALAMAN === */
+        .halaman {display:none;}
+        .halaman.aktif {display:block;}
+        .fitur {display:none;}
+    </style>
+</head>
+<body>
+
+<!-- ======================================
+    HALAMAN 1: PENDAFTARAN LENGKAP
+====================================== -->
+<div class="halaman aktif" id="halamanDaftar">
+    <div class="header-beranda">
+        <h1>🍛 S-NUSANTARA DELIVERY</h1>
+        <div class="sub-judul">DAFTAR AKUN BARU</div>
+        <p class="tagline">Layanan Pesan Antar Kuliner Khas Nusantara</p>
+    </div>
+
+    <div class="form-box">
+        <h3>📝 Lengkapi Data Pendaftaran</h3>
+
+        <h4>Pilih Jenis Akun:</h4>
+        <div class="jenis-akun-pilih">
+            <label class="label-akun">
+                <input type="radio" name="jenisAkun" value="Pelanggan" checked> 🛒 Pembeli
+            </label>
+            <label class="label-akun">
+                <input type="radio" name="jenisAkun" value="Resto"> 🏪 Pemilik Resto
+            </label>
+            <label class="label-akun">
+                <input type="radio" name="jenisAkun" value="Driver"> 🛵 Kurir Pengantar
+            </label>
+        </div>
+
+        <h4>Nama Lengkap Sesuai KTP:</h4>
+        <input type="text" id="namaLengkap" placeholder="Contoh: Budi Santoso" required>
+
+        <h4>Nomor HP Aktif:</h4>
+        <input type="tel" id="noHP" placeholder="Contoh: 0812 3456 7890" maxlength="14" required>
+
+        <h4>Alamat Lengkap Domisili:</h4>
+        <input type="text" id="alamat" placeholder="Jalan, RT/RW, Kecamatan, Kabupaten/Kota" required>
+
+        <h4>Nomor KTP (Opsional):</h4>
+        <input type="text" id="noKTP" placeholder="Untuk keamanan verifikasi akun" maxlength="16">
+
+        <h4>Buat Kata Sandi:</h4>
+        <input type="password" id="sandi" placeholder="Minimal 6 karakter campuran huruf & angka" required>
+
+        <h4>Konfirmasi Kata Sandi:</h4>
+        <input type="password" id="ulangSandi" placeholder="Ulangi kata sandi di atas" required>
+
+        <p style="font-size:13px; color:#666; margin:10px 0;">
+            ✅ Dengan mendaftar, Anda menyetujui Ketentuan Layanan yang berlaku
+        </p>
+
+        <button onclick="prosesDaftar()">✅ DAFTAR AKUN SEKARANG</button>
+        <p class="keterangan">Sudah punya akun? <span class="link-masuk" onclick="bukaHalaman('halamanBeranda')">Masuk Langsung</span></p>
+    </div>
+</div>
+
+<!-- ======================================
+    HALAMAN 2: BERANDA + PERATURAN LENGKAP
+====================================== -->
+<div class="halaman" id="halamanBeranda">
+    <div class="header-beranda">
+        <div class="salam">👋 Halo, <span id="namaPengguna"></span>!</div>
+        <div class="sub-judul">Selamat Datang di S-Nusantara Delivery</div>
+        <div class="label-akun" id="labelJenisAkun"></div>
+    </div>
+
+    <!-- INFO RINGKAS -->
+    <div class="info-ringkas">
+        <div class="kotak-info">
+            <div class="label">💳 Saldo Akun</div>
+            <div class="angka" id="saldo">Rp 0</div>
+            <div class="peringatan-min" id="peringatanSaldo"></div>
+        </div>
+        <div class="kotak-info">
+            <div class="label">📦 Pesanan Aktif</div>
+            <div class="angka" id="jumlahPesanan">0</div>
+        </div>
+    </div>
+
+    <div class="form-box info-delivery">
+        <h4>⚡ Aturan Layanan Singkat Terbaru</h4>
+        <p style="font-size:14px; line-height:1.8;">
+            ✅ Tarif dasar: 2 km pertama = Rp 5.000 | Rp 2.000 / km selanjutnya<br>
+            ✅ Potongan layanan: Restoran <strong>6,2%</strong> | Kurir <strong>9,2%</strong><br>
+            💡 Catatan: Potongan kurir turun dari 10% jadi 9,2%, selisih 0,8% dikurangi dari potongan resto<br>
+            ✅ Biaya admin isi saldo tetap: Rp 2.000 semua nominal<br>
+            ✅ <strong>SEMUA PENGGUNA BISA TARIK SALDO</strong> | Admin penarikan Rp 3.000<br>
+            ⚠️ Syarat Wajib: Saldo minimal Rp 50.000, sisa saldo tidak boleh kurang!
+        </p>
+    </div>
+
+    <!-- ======================================
+        BAGIAN PERATURAN LENGKAP PENUH
+    ====================================== -->
+    <div class="form-box">
+        <h3>📑 PERATURAN LENGKAP & KETENTUAN RESMI</h3>
+        <p class="keterangan" style="text-align:justify; margin-bottom:15px;">
+            Berikut adalah seluruh peraturan yang berlaku secara mutlak bagi seluruh pengguna S-Nusantara Delivery. Dengan mendaftar dan menggunakan layanan ini, pengguna dianggap telah membaca, mengerti, dan menyetujui seluruh isi peraturan ini tanpa pengecualian.
+        </p>
+
+        <div class="daftar-isi">
+            <strong>📋 Daftar Isi Peraturan:</strong>
+            <div style="margin-top:5px;">
+                <a href="#umum">1. Ketentuan Umum</a> •
+                <a href="#akun">2. Pengelolaan Akun</a> •
+                <a href="#transaksi">3. Saldo & Penarikan Dana</a> •
+                <a href="#tarif">4. Tarif & Biaya Layanan</a> •
+                <a href="#driver">5. Aturan Khusus Kurir</a> •
+                <a href="#resto">6. Aturan Khusus Restoran</a> •
+                <a href="#pembeli">7. Aturan Khusus Pembeli</a> •
+                <a href="#pengiriman">8. Proses Pengiriman</a> •
+                <a href="#keamanan">9. Keamanan & Pencegahan Penipuan</a> •
+                <a href="#sanksi">10. Pelanggaran & Sanksi</a> •
+                <a href="#penyelesaian">11. Penyelesaian Masalah</a> •
+                <a href="#hukum">12. Dasar Hukum Berlaku</a>
+            </div>
+        </div>
+
+        <!-- 1. KETENTUAN UMUM -->
+        <div class="pemisah-aturan" id="umum">——— 1. KETENTUAN UMUM ———</div>
+        <div class="kotak-aturan">
+            <h5>📌 1.1 Ruang Lingkup Layanan</h5>
+            <ul class="daftar-aturan">
+                <li>S-Nusantara Delivery adalah platform layanan pesan antar makanan/minuman khas Nusantara</li>
+                <li>Layanan berlaku di wilayah operasional yang ditetapkan sistem</li>
+                <li>Platform hanya berperan sebagai perantara, bukan penjual maupun pengantar langsung</li>
+                <li>Layanan dapat berubah, ditambah, atau dihentikan sewaktu-waktu dengan pemberitahuan</li>
+            </ul>
+
+            <h5>📌 1.2 Syarat Menjadi Pengguna</h5>
+            <ul class="daftar-aturan">
+                <li>Warga Negara Indonesia atau berdomisili sah di Indonesia</li>
+                <li>Usia minimal 17 tahun, atau di bawah umur di bawah pengawasan orang tua/wali sah</li>
+                <li>Memiliki data identitas asli yang masih berlaku</li>
+                <li>Memiliki nomor telepon aktif dan alamat email yang terverifikasi</li>
+                <li>Memiliki kemampuan akses perangkat & jaringan internet yang memadai</li>
+                <li>Tidak pernah tercatat melakukan pelanggaran berat di layanan ini</li>
+            </ul>
+        </div>
+
+        <!-- 2. PENGELOLAAN AKUN -->
+        <div class="pemisah-aturan" id="akun">——— 2. PENGELOLAAN AKUN ———</div>
+        <div class="kotak-aturan">
+            <h5>🔐 2.1 Pendaftaran Akun</h5>
+            <ul class="daftar-aturan">
+                <li>Setiap orang hanya diperbolehkan memiliki 1 akun aktif</li>
+                <li>Data yang dimasukkan harus benar, lengkap, dan sesuai dokumen asli</li>
+                <li>Dilarang menggunakan data orang lain, data palsu, atau identitas fiktif</li>
+                <li>Nomor HP yang didaftarkan harus milik sendiri dan dapat menerima pesan verifikasi</li>
+                <li>Admin berhak meminta dokumen pendukung untuk verifikasi kapan saja</li>
+            </ul>
+
+            <h5>🔐 2.2 Keamanan Akun</h5>
+            <ul class="daftar-aturan">
+                <li>Pengguna wajib menjaga kerahasiaan sandi dan kode OTP sendiri</li>
+                <li>Dilarang memberikan akses akun ke orang lain</li>
+                <li>Segala aktivitas yang terjadi dalam akun dianggap tanggung jawab pemilik akun</li>
+                <li>Segera hubungi admin jika akun dicuri atau digunakan pihak lain</li>
+                <li>Gunakan sandi yang kuat: kombinasi huruf besar, kecil, angka, dan simbol</li>
+            </ul>
+
+            <h5>🔐 2.3 Penonaktifan & Penghapusan Akun</h5>
+            <ul class="daftar-aturan">
+                <li>Akun tidak aktif selama 6 bulan berturut-turut dapat dinonaktifkan otomatis</li>
+                <li>Pengguna dapat meminta penghapusan akun secara tertulis ke admin</li>
+                <li>Saldo yang tersisa saat penghapusan akun dapat dicairkan secara GRATIS tanpa biaya admin</li>
+                <li>Data riwayat transaksi tetap disimpan sesuai ketentuan undang-undang</li>
+            </ul>
+        </div>
+
+        <!-- 3. SALDO & PENARIKAN DANA -->
+        <div class="pemisah-aturan" id="transaksi">——— 3. SALDO & PENARIKAN DANA ———</div>
+        <div class="kotak-aturan">
+            <h5>💰 3.1 Ketentuan Umum Saldo</h5>
+            <ul class="daftar-aturan">
+                <li>Saldo akun adalah alat pembayaran sah di dalam sistem aplikasi</li>
+                <li>Saldo minimal yang harus tersedia di akun: Rp 50.000</li>
+                <li>Sistem otomatis mencegah transaksi jika saldo kurang dari batas minimal</li>
+                <li>Dilarang melakukan upaya membuat saldo menjadi minus</li>
+                <li>Saldo tidak memiliki masa kedaluwarsa selama akun tetap aktif</li>
+                <li>Saldo hanya dapat digunakan untuk transaksi resmi layanan ini</li>
+            </ul>
+
+            <h5>💰 3.2 Isi Saldo</h5>
+            <ul class="daftar-aturan">
+                <li>Metode isi saldo: Transfer Bank, E-Wallet, Minimarket, QRIS</li>
+                <li>Biaya administrasi isi saldo: Rp 2.000 per transaksi (berlaku semua nominal)</li>
+                <li>Nominal saldo yang masuk ke akun adalah utuh sesuai yang dibayarkan</li>
+                <li>Batas minimal isi saldo: Rp 20.000</li>
+                <li>Batas maksimal isi saldo sekali transaksi: Rp 10.000.000</li>
+                <li>Maksimal akumulasi saldo: Rp 50.000.000</li>
+                <li>Transaksi isi saldo tidak dapat dibatalkan setelah pembayaran terkonfirmasi</li>
+            </ul>
+
+            <h5>💰 3.3 PENARIKAN SALDO (BERLAKU SEMUA JENIS PENGGUNA)</h5>
+            <ul class="daftar-aturan">
+                <li>✅ <strong>Semua pengguna: Pembeli, Restoran, maupun Kurir BERHAK menarik saldo</strong></li>
+                <li>Minimal jumlah penarikan: <strong>Rp 50.000</strong></li>
+                <li>Biaya administrasi penarikan seragam: <strong>Rp 3.000</strong> (dipotong otomatis)</li>
+                <li>Sisa saldo setelah penarikan WAJIB tersisa minimal Rp 50.000</li>
+                <li>Maksimal penarikan: 2 kali dalam 1 hari, total maksimal Rp 5.000.000/hari</li>
+                <li>Tujuan pencairan: Semua Bank Lokal, DANA, OVO, GoPay, ShopeePay, LinkAja</li>
+                <li>Waktu pencairan: Masuk maksimal 2 jam kerja (termasuk hari libur)</li>
+                <li>Penarikan saldo saat penutupan akun: GRATIS tanpa biaya admin apapun</li>
+            </ul>
+        </div>
+
+        <!-- 4. TARIF & BIAYA -->
+        <div class="pemisah-aturan" id="tarif">——— 4. TARIF & BIAYA LAYANAN ———</div>
+        <div class="kotak-aturan">
+            <h5>🚚 4.1 Tarif Pengiriman</h5>
+            <ul class="daftar-aturan">
+                <li>Tarif dasar: Jarak sampai 2 km = Rp 5.000</li>
+                <li>Tarif tambahan: Setiap km selanjutnya = Rp 2.000</li>
+                <li>Perhitungan jarak menggunakan rute terpendek aplikasi peta resmi</li>
+                <li>Tarif dapat berubah pada jam sibuk atau kondisi tertentu</li>
+                <li>Tarif berbeda berlaku untuk pesanan dalam jumlah besar/makanan berat</li>
+            </ul>
+
+            <h5>🚚 4.2 Potongan Layanan TERBARU</h5>
+            <ul class="daftar-aturan">
+                <li>💡 Penyesuaian agar pendapatan mitra lebih besar</li>
+                <li>Potongan pendapatan Restoran: <strong>6,2%</strong> dari total nilai pesanan (turun 0,8%)</li>
+                <li>Potongan pendapatan Kurir: <strong>9,2%</strong> dari total tarif pengiriman (turun 0,8%)</li>
+                <li>Selisih penurunan potongan 0,8% dialokasikan untuk menambah pendapatan kurir</li>
+                <li>Potongan digunakan untuk biaya operasional, pengembangan, dan pemeliharaan sistem</li>
+                <li>Potongan dipotong otomatis saat transaksi selesai</li>
+            </ul>
+        </div>
+
+        <!-- 5. ATURAN KHUSUS KURIR -->
+        <div class="pemisah-aturan" id="driver">——— 5. ATURAN KHUSUS KURIR ———</div>
+        <div class="kotak-aturan">
+            <h5>🛵 5.1 Syarat & Kewajiban</h5>
+            <ul class="daftar-aturan">
+                <li>Memiliki SIM yang masih berlaku dan kendaraan layak jalan</li>
+                <li>Memiliki STNK, pajak kendaraan hidup, dan asuransi kendaraan</li>
+                <li>Wajib menggunakan seragam atau atribut yang ditetapkan saat bertugas</li>
+                <li>Menerima pesanan maksimal 3 menit setelah muncul</li>
+                <li>Mengambil pesanan di restoran maksimal 15 menit setelah diterima</li>
+                <li>Mengantar pesanan sesuai rute dan waktu yang ditentukan</li>
+                <li>Berperilaku sopan, ramah, dan menjaga kebersihan diri</li>
+            </ul>
+
+            <h5>🛵 5.2 Pendapatan & Potongan</h5>
+            <ul class="daftar-aturan">
+                <li>Potongan layanan sekarang hanya <strong>9,2%</strong> dari tarif pengiriman</li>
+                <li>Contoh: Jika ongkir Rp 10.000 → Kurir terima Rp 9.080</li>
+                <li>Sebesar 0,8% yang tadinya dipotong, kini menjadi hak tambahan kurir</li>
+                <li>Pendapatan masuk otomatis ke saldo akun setelah pesanan selesai</li>
+            </ul>
+
+            <h5>🛵 5.3 Bukti Pengiriman</h5>
+            <ul class="daftar-aturan">
+                <li>Wajib mengambil foto bukti serah terima pesanan kepada penerima</li>
+                <li>Wajib mencatat nama lengkap penerima sesuai kartu identitas</li>
+                <li>Nomor resi pengiriman wajib dicatat dan disimpan</li>
+                <li>Pengiriman dinyatakan selesai jika bukti foto & nama penerima sudah lengkap</li>
+                <li>Tidak boleh menandai pesanan selesai sebelum barang sampai ke tangan penerima</li>
+            </ul>
+        </div>
+
+        <!-- 6. ATURAN KHUSUS RESTORAN -->
+        <div class="pemisah-aturan" id="resto">——— 6. ATURAN KHUSUS RESTORAN ———</div>
+        <div class="kotak-aturan">
+            <h5>🏪 6.1 Syarat Usaha</h5>
+            <ul class="daftar-aturan">
+                <li>Memiliki izin usaha dan surat izin layak higienis makanan</li>
+                <li>Lokasi usaha jelas dan mudah dijangkau kurir</li>
+                <li>Makanan/minuman layak konsumsi, bersih, dan segar</li>
+                <li>Bahan baku memenuhi standar kesehatan pangan</li>
+                <li>Dilarang menjual makanan yang mengandung bahan terlarang/berbahaya</li>
+            </ul>
+
+            <h5>🏪 6.2 Pendapatan & Potongan</h5>
+            <ul class="daftar-aturan">
+                <li>Potongan layanan kini turun menjadi <strong>6,2%</strong> dari penjualan</li>
+                <li>Turun sebesar 0,8% dibanding aturan lama, keuntungan resto makin besar</li>
+                <li>Contoh: Penjualan Rp 100.000 → Resto terima Rp 93.800</li>
+                <li>Pendapatan bersih masuk otomatis ke saldo akun</li>
+            </ul>
+
+            <h5>🏪 6.3 Penetapan Harga & Menu</h5>
+            <ul class="daftar-aturan">
+                <li>Harga di aplikasi harus sama persis dengan harga di tempat usaha</li>
+                <li>Dilarang menaikkan harga sembarangan tanpa pemberitahuan admin</li>
+                <li>Menu yang ditampilkan harus tersedia atau diberi keterangan habis</li>
+                <li>Gambar makanan harus sesuai dengan aslinya</li>
+                <li>Perubahan harga maksimal 1 kali dalam 1 bulan</li>
+            </ul>
+        </div>
+
+        <!-- 7. ATURAN KHUSUS PEMBELI -->
+        <div class="pemisah-aturan" id="pembeli">——— 7. ATURAN KHUSUS PEMBELI ———</div>
+        <div class="kotak-aturan">
+            <h5>🛒 7.1 Pemesanan</h5>
+            <ul class="daftar-aturan">
+                <li>Pastikan alamat tujuan lengkap dan titik lokasi akurat</li>
+                <li>Menuliskan catatan khusus dengan bahasa yang jelas dan sopan</li>
+                <li>Memastikan saldo cukup sebelum memesan</li>
+                <li>Menerima pesanan sesuai yang dipesan</li>
+            </ul>
+
+            <h5>🛒 7.2 Pembatalan Pesanan</h5>
+            <ul class="daftar-aturan">
+                <li>Bisa dibatalkan GRATIS sebelum restoran mulai menyiapkan makanan</li>
+                <li>Dibatalkan setelah dimasak: dikenakan biaya ganti rugi 50% pesanan</li>
+                <li>Dibatalkan setelah kurir berangkat: dikenakan biaya 100% + ongkir</li>
+                <li>Pembatalan sepihak berulang kali akan dibatasi aksesnya</li>
+            </ul>
+        </div>
+
+        <!-- 8. PROSES PENGIRIMAN -->
+        <div class="pemisah-aturan" id="pengiriman">——— 8. PROSES PENGIRIMAN ———</div>
+        <div class="kotak-aturan">
+            <ul class="daftar-aturan">
+                <li>Waktu pengiriman standar: Maksimal 45 menit dari pengambilan</li>
+                <li>Keterlambatan karena macet/bencana alam diluar tanggung jawab kurir</li>
+                <li>Pesanan dianggap hilang jika tidak sampai dalam waktu 2 jam</li>
+                <li>Kerusakan makanan saat pengiriman menjadi tanggung jawab kurir</li>
+                <li>Pesanan tidak diambil pembeli dalam waktu 30 menit dikembalikan ke restoran</li>
+                <li>Pengembalian biaya jika kesalahan restoran: 100% dikembalikan</li>
+            </ul>
+        </div>
+
+        <!-- 9. KEAMANAN & ANTI PENIPUAN -->
+        <div class="pemisah-aturan" id="keamanan">——— 9. KEAMANAN & PENIPUAN ———</div>
+        <div class="kotak-aturan">
+            <ul class="daftar-aturan">
+                <li>Admin TIDAK AKAN PERNAH meminta sandi, kode OTP, atau kode verifikasi</li>
+                <li>Dilarang meminta pengguna lain mentransfer uang duluan</li>
+                <li>Dilarang menyuruh kurir/pembeli belikan barang lain diluar pesanan</li>
+                <li>Saldo hasil penipuan akan dibekukan dan dikembalikan ke korban</li>
+                <li>Lapor penipuan maksimal 24 jam setelah kejadian</li>
+                <li>Sistem memantau aktivitas mencurigakan setiap waktu</li>
+                <li>Gunakan hanya fitur resmi di dalam aplikasi</li>
+            </ul>
+        </div>
+
+        <!-- 10. PELANGGARAN & SANKSI -->
+        <div class="pemisah-aturan" id="sanksi">——— 10. PELANGGARAN & SANKSI ———</div>
+        <div class="kotak-aturan">
+            <h5>⚠️ 10.1 Tingkat Pelanggaran</h5>
+            <ul class="daftar-aturan">
+                <li><strong>Ringan:</strong> Melanggar tata tertib, perilaku kurang sopan → Sanksi: Peringatan tertulis</li>
+                <li><strong>Sedang:</strong> Membatalkan berulang, data kurang benar → Sanksi: Blokir sementara 1-7 hari</li>
+                <li><strong>Berat:</strong> Data palsu, menipu, merusak barang → Sanksi: Blokir permanen</li>
+                <li><strong>Kriminal:</strong> Pencurian, penipuan, kekerasan → Sanksi: Dilaporkan ke kepolisian</li>
+            </ul>
+        </div>
+
+        <!-- 11. PENYELESAIAN MASALAH -->
+        <div class="pemisah-aturan" id="penyelesaian">——— 11. PENYELESAIAN MASALAH ———</div>
+        <div class="kotak-aturan">
+            <ul class="daftar-aturan">
+                <li>Segala perselisihan diselesaikan secara musyawarah terlebih dahulu</li>
+                <li>Laporan dikirim ke menu Pusat Bantuan atau WA resmi admin</li>
+                <li>Waktu tanggapan laporan: Maksimal 3 hari kerja</li>
+                <li>Keputusan admin bersifat mengikat dan final</li>
+                <li>Jika tidak tercapai kesepakatan, diselesaikan di Pengadilan Negeri setempat</li>
+            </ul>
+        </div>
+
+        <!-- 12. DASAR HUKUM -->
+        <div class="pemisah-aturan" id="hukum">——— 12. DASAR HUKUM BERLAKU ———</div>
+        <div class="kotak-aturan">
+            <ul class="daftar-aturan">
+                <li>Undang-Undang Dasar Negara Republik Indonesia Tahun 1945</li>
+                <li>UU No. 1 Tahun 2024 tentang Perubahan UU Nomor 19 Tahun 2016 tentang ITE</li>
+                <li>UU No. 27 Tahun 2022 tentang Perlindungan Data Pribadi</li>
+                <li>UU No. 18 Tahun 2019 tentang Perdagangan Elektronik</li>
+                <li>UU No. 7 Tahun 2014 tentang Perdagangan</li>
+                <li>UU No. 18 Tahun 2012 tentang Pangan</li>
+                <li>Peraturan Bank Indonesia tentang Sistem Pembayaran</li>
+                <li>Peraturan Daerah terkait Usaha Kuliner & Jasa Pengiriman</li>
+            </ul>
+        </div>
+
+        <div class="peringatan-waspada" style="margin-top:18px;">
+            ⚠️ <strong>PEMBARUAN PERATURAN:</strong> Peraturan ini dapat diperbarui sewaktu-waktu. Pengguna akan diberitahu melalui pengumuman resmi di aplikasi. Peraturan terbaru berlaku menggantikan ketentuan sebelumnya.
+        </div>
+    </div>
+
+    <!-- ======================================
+        FITUR PEMBELI LENGKAP
+    ====================================== -->
+    <div class="form-box fitur" id="fiturPelanggan">
+        <h3>🛒 Layanan Pembeli</h3>
+        <h4>💳 Isi Saldo Akun</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="menu-item" onclick="pilihSaldo(this, 20000)">Rp 20.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 50000)">Rp 50.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 100000)">Rp 100.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 200000)">Rp 200.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 500000)">Rp 500.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 1000000)">Rp 1.000.000</div>
+        </div>
+        <div class="rincian">
+            Nominal: <span id="nominalPilih">-</span><br>
+            Biaya Admin: Rp 2.000<br>
+            <strong>Total Bayar: <span id="totalBayar">-</span></strong><br>
+            ✅ Saldo Masuk UTUH ke akun!
+        </div>
+        <button onclick="isiSaldo()">✅ Lanjut Isi Saldo</button>
+        <hr>
+        <h4>💸 Tarik Saldo Akun</h4>
+        <div class="rincian">
+            Saldo Tersedia: <strong id="saldoTarik1">Rp 0</strong><br>
+            Biaya Admin Penarikan: Rp 3.000<br>
+            Syarat: Sisa saldo setelah penarikan ≥ Rp 50.000
+        </div>
+        <input type="number" id="jumlahTarik1" placeholder="Masukkan jumlah uang yang ditarik..." min="50000">
+        <button class="btn-hijau" onclick="prosesTarikSaldo()">💸 AJUKAN PENARIKAN SEKARANG</button>
+        <hr>
+        <h4>📜 Riwayat Transaksi</h4>
+        <div class="riwayat-item">
+            <span class="riwayat-sukses">✓ Isi Saldo</span> • Rp 100.000 • 02/07/2026
+        </div>
+        <div class="riwayat-item">
+            <span class="riwayat-pending">⏳ Tarik Saldo</span> • Rp 50.000 • 02/07/2026
+        </div>
+    </div>
+
+    <!-- ======================================
+        FITUR RESTORAN LENGKAP
+    ====================================== -->
+    <div class="form-box fitur" id="fiturResto">
+        <h3>🏪 Layanan Restoran</h3>
+        <h4>💳 Isi Saldo Operasional</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="menu-item" onclick="pilihSaldoResto(this, 50000)">Rp 50.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 100000)">Rp 100.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 250000)">Rp 250.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 500000)">Rp 500.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 1000000)">Rp 1.000.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 5000000)">Rp 5.000.000</div>
+        </div>
+        <div class="rincian">
+            Nominal: <span id="nominalPilihResto">-</span><br>
+            Biaya Admin: Rp 2.000<br>
+            <strong>Total Bayar: <span id="totalBayarResto">-</span></strong><br>
+            ✅ Saldo Masuk UTUH!
+        </div>
+        <button onclick="isiSaldoResto()">✅ Isi Saldo Sekarang</button>
+        <hr>
+        <h4>💸 Tarik Saldo Pendapatan Resto</h4>
+        <div class="rincian">
+            Saldo Tersedia: <strong id="saldoTarik2">Rp 0</strong><br>
+            Biaya Admin Penarikan: Rp 3.000<br>
+            Syarat: Sisa saldo tetap ≥ Rp 50.000<br>
+            💡 Potongan layanan hanya 6,2% → Pendapatan Anda makin besar!
+        </div>
+        <input type="number" id="jumlahTarik2" placeholder="Jumlah yang dicairkan..." min="50000">
+        <button class="btn-hijau" onclick="prosesTarikSaldoResto()">💸 CAIRKAN PENDAPATAN</button>
+        <hr>
+        <h4>📊 Laporan Penjualan</h4>
+        <p style="font-size:14px; color:#666;">Ringkasan harian, mingguan, dan bulanan</p>
+        <button class="btn-ungu">📈 Lihat Laporan Lengkap</button>
+        <hr>
+        <h4>🍽️ Kelola Menu Makanan</h4>
+        <button>Tambah Menu Baru</button>
+        <button style="background:#fff; color:#ff6b35; border:1px solid #ff6b35;">Ubah / Hapus Menu</button>
+    </div>
+
+    <!-- ======================================
+        FITUR KURIR LENGKAP
+    ====================================== -->
+    <div class="form-box fitur" id="fiturDriver">
+        <h3>🛵 Layanan Kurir Pengantar</h3>
+
+        <h4>💳 Isi Saldo Akun</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="menu-item" onclick="pilihSaldoDriver(this, 50000)">Rp 50.000</div>
+            <div class="menu-item" onclick="pilihSaldoDriver(this, 100000)">Rp 100.000</div>
+            <div class="menu-item" onclick="pilihSaldoDriver(this, 250000)">Rp 250.000</div>
+            <div class="menu-item" onclick="pilihSaldoDriver(this, 500000)">Rp 500.000</div>
+        </div>
+        <div class="rincian">
+            Nominal: <span id="nominalPilihDriver">-</span><br>
+            Biaya Admin: Rp 2.000<br>
+            <strong>Total Bayar: <span id="totalBayarDriver">-</span></strong><br>
+            ✅ Saldo Masuk UTUH!
+        </div>
+        <button onclick="isiSaldoDriver()">✅ Isi Saldo</button>
+
+        <hr>
+        <div class="peringatan-resi">
+            ✅ <strong>JAMINAN KEAMANAN:</strong> Resi Unik + Foto Bukti = Pengiriman Terjamin!
+        </div>
+
+        <h4>📄 Nomor Resi Pengiriman</h4>
+        <div class="kode-resi" id="kodeResi">SN-260702-1234-5678</div>
+        <button onclick="buatResiBaru()">🔄 Buat Resi Baru</button>
+
+        <h4>📸 Foto Bukti Serah Terima</h4>
+        <div class="foto-bukti" id="kotakFoto">Klik tombol untuk ambil foto penerima</div>
+        <button class="btn-ungu" onclick="document.getElementById('inputFoto').click()">📷 AMBIL FOTO BUKTI</button>
+        <input type="file" id="inputFoto" accept="image/*" capture="environment" style="display:none;">
+
+        <h4>Nama Lengkap Penerima:</h4>
+        <input type="text" id="namaPenerima" placeholder="Sesuai kartu identitas">
+
+        <button class="btn-hijau" onclick="konfirmasiPengiriman()">✅ KONFIRMASI SELESAI</button>
+
+        <hr>
+        <h4>💸 Tarik Saldo Penghasilan</h4>
+        <div class="rincian">
+            Saldo Tersedia: <strong id="saldoTarik3">Rp 350.000</strong><br>
+            Biaya Admin Penarikan: Rp 3.000<br>
+            Syarat: Sisa saldo tetap ≥ Rp 50.000<br>
+            💡 Potongan layanan hanya 9,2% → Penghasilan Anda makin besar!
+        </div>
+        <input type="number" id="jumlahTarik3" placeholder="Jumlah penghasilan dicairkan..." min="50000">
+        <button class="btn-hijau" onclick="prosesTarikSaldoDriver()">💸 CAIRKAN PENGHASILAN</button>
+        <hr>
+        <h4>📊 Ringkasan Penghasilan</h4>
+        <p style="font-size:14px;">Potongan hanya 9,2% → Keuntungan tambahan 0,
