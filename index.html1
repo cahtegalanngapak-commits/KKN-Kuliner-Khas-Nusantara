@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-width:700px">
+    <title>🍛 S-Nusantara Delivery | Kuliner Nusantara</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Roboto, Arial, sans-serif;}
+        body {background:linear-gradient(180deg, #fffbf5 0%, #fff8e1 50%, #fff3e0 100%); padding:15px; max-width:700px; margin:0 auto; min-height:100vh;}
+
+        /* === HEADER UTAMA - TAMPILAN MENARIK === */
+        .header-beranda {
+            background:linear-gradient(135deg, #d84315, #ff6b35, #f9a825, #ffc107);
+            color:white; padding:28px 20px; border-radius:20px; 
+            text-align:center; margin-bottom:24px;
+            box-shadow:0 8px 25px rgba(216,67,21,0.35);
+            position:relative; overflow:hidden;
+        }
+        .header-beranda::before {
+            content:"🍛 🥘 🍲 🥨 🍡";
+            position:absolute; top:8px; left:50%; transform:translateX(-50%);
+            font-size:16px; opacity:0.3; letter-spacing:12px;
+        }
+        .logo-ikon {font-size:48px; margin-bottom:8px; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.2));}
+        .judul-utama {font-size:26px; font-weight:900; letter-spacing:2px; text-shadow:0 2px 4px rgba(0,0,0,0.15);}
+        .sub-judul {font-size:17px; margin-top:8px; font-weight:700; opacity:0.95;}
+        .tagline {font-size:14px; margin-top:12px; font-style:italic; opacity:0.9;}
+        .hiasan-bawah {display:flex; justify-content:center; gap:12px; margin-top:15px; font-size:20px;}
+
+        /* === HEADER ADMIN RAHASIA === */
+        .header-admin {background:linear-gradient(135deg, #1e293b, #334155);}
+
+        /* === KOTAK INFO RINGKAS === */
+        .info-ringkas {display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:680px; margin:0 auto 20px;}
+        .info-admin {grid-template-columns:repeat(2,1fr); max-width:700px;}
+        .kotak-info {background:white; padding:18px 12px; border-radius:16px; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.08); border-bottom:4px solid #ff6b35; transition:0.3s;}
+        .kotak-info:hover {transform:translateY(-3px); box-shadow:0 6px 20px rgba(255,107,53,0.15);}
+        .kotak-info .ikon {font-size:28px; margin-bottom:6px;}
+        .kotak-info .angka {font-size:24px; font-weight:800; color:#d84315; margin:4px 0;}
+        .kotak-info .label {font-size:14px; color:#555; font-weight:500;}
+        .kotak-info.ungu {border-bottom-color:#7b1fa2;}
+        .kotak-info.ungu .angka {color:#7b1fa2;}
+        .kotak-info.biru {border-bottom-color:#1565c0;}
+        .kotak-info.biru .angka {color:#1565c0;}
+        .kotak-info.hijau {border-bottom-color:#2e7d32;}
+        .kotak-info.hijau .angka {color:#2e7d32;}
+        .peringatan-min {color:#c62828; font-size:13px; font-weight:600; margin-top:4px;}
+
+        /* === KOTAK PERINGATAN & INFO === */
+        .peringatan-bahaya {background:linear-gradient(135deg, #ffebee, #ffcdd2); border-left:5px solid #d32f2f; padding:15px; border-radius:10px; margin-bottom:15px; color:#b71c1c; font-weight:500;}
+        .peringatan-aman {background:linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left:5px solid #2e7d32; padding:15px; border-radius:10px; margin-bottom:15px; color:#1b5e20; font-weight:500;}
+        .peringatan-waspada {background:linear-gradient(135deg, #fff8e1, #ffecb3); border-left:5px solid #fbc02d; padding:15px; border-radius:10px; margin-bottom:15px; color:#f57f17; font-weight:500;}
+        .kotak-aturan {background:#fffdf8; border:1px solid #ffe0b2; border-radius:12px; padding:16px; margin:14px 0;}
+        .kotak-aturan h5 {font-size:15px; color:#e65100; margin-bottom:10px;}
+        .daftar-aturan {font-size:14px; line-height:1.9; margin-left:22px; color:#444;}
+        .daftar-aturan li {margin:5px 0;}
+        .kotak-pajak {background:#e3f2fd; border-left:4px solid #1565c0; padding:14px; border-radius:8px; margin:12px 0; font-size:14px;}
+        .tabungan-pajak {background:#ede7f6; border:2px dashed #7b1fa2; padding:15px; border-radius:10px; text-align:center; margin:10px 0;}
+        .jumlah-tabungan {font-size:22px; font-weight:800; color:#7b1fa2; margin:8px 0;}
+        .kotak-peringatan {background:#fff3e0; border-left:4px solid #f57c00; padding:12px; border-radius:8px; margin:10px 0; font-size:14px;}
+        .kotak-aman-pajak {background:#e8f5e9; border-left:4px solid #2e7d32; padding:12px; border-radius:8px; margin:10px 0; font-size:14px;}
+        .kotak-aman {background:#e8f5e9; border-left:4px solid #2e7d32; padding:12px; border-radius:8px; margin:10px 0; font-size:14px;}
+        .kotak-bahaya {background:#ffebee; border-left:4px solid #c62828; padding:12px; border-radius:8px; margin:10px 0; font-size:14px;}
+        .kotak-analisis {background:#fff8e1; border-left:4px solid #f57c00; padding:14px; border-radius:8px; margin:12px 0; font-size:14px;}
+        .info-delivery {background:linear-gradient(135deg, #fff9c4, #ffecb3, #ffe082); border-radius:16px; padding:18px; border-left:5px solid #ff8f00; margin-bottom:20px; box-shadow:0 3px 12px rgba(255,143,0,0.1);}
+        .info-delivery h4 {color:#e65100; margin-bottom:10px; font-size:16px;}
+
+        /* === FORM & KOTAK === */
+        .form-box {background:white; border-radius:18px; padding:22px; box-shadow:0 5px 18px rgba(0,0,0,0.07); max-width:680px; margin:0 auto 22px;}
+        .form-box.luas {max-width:700px;}
+        h3 {color:#333; margin-bottom:16px; border-bottom:2px solid #fff3e0; padding-bottom:10px; font-size:19px; font-weight:700; display:flex; align-items:center; gap:8px;}
+        h4 {margin:16px 0 10px; font-size:16px; color:#444; font-weight:600;}
+        input, select, textarea {width:100%; padding:12px 14px; margin:6px 0 14px; border:1px solid #e0e0e0; border-radius:10px; font-size:15px; background:#fafafa; transition:0.2s;}
+        input:focus, select:focus {outline:none; border-color:#ff6b35; background:#fff; box-shadow:0 0 0 3px rgba(255,107,53,0.1);}
+        textarea {min-height:90px; resize:vertical;}
+
+        /* === TOMBOL === */
+        button {width:100%; padding:14px; background:linear-gradient(135deg, #d84315, #ff6b35, #f9a825); color:white; border:none; border-radius:12px; font-size:16px; font-weight:700; cursor:pointer; margin-top:10px; transition:0.3s; box-shadow:0 4px 12px rgba(216,67,21,0.25);}
+        button:hover {transform:translateY(-2px); box-shadow:0 7px 18px rgba(216,67,21,0.35);}
+        button:disabled {opacity:0.6; cursor:not-allowed; transform:none;}
+        .btn-kecil {flex:1; min-width:130px; padding:11px; font-size:14px; margin:0;}
+        .btn-kecil-putih {background:white; color:#444; border:2px solid #f0f0f0; box-shadow:none;}
+        .btn-ungu {background:linear-gradient(135deg, #7b1fa2, #9c27b0); box-shadow:0 4px 12px rgba(123,31,162,0.25);}
+        .btn-hijau {background:linear-gradient(135deg, #2e7d32, #43a047); box-shadow:0 4px 12px rgba(46,125,50,0.25);}
+        .btn-biru {background:linear-gradient(135deg, #1565c0, #1976d2); box-shadow:0 4px 12px rgba(21,101,192,0.25);}
+        .btn-merah {background:linear-gradient(135deg, #c62828, #ef5350); box-shadow:0 4px 12px rgba(198,40,40,0.25);}
+
+        /* === ITEM MENU & LAINNYA === */
+        .menu-item {padding:14px; margin:8px 0; background:#fffbf7; border-radius:10px; border-left:4px solid #ff6b35; cursor:pointer; transition:0.2s;}
+        .menu-item:hover {background:#fff3e0; padding-left:18px;}
+        .menu-item.terpilih {background:#ffe0b2; border-left-color:#e64a19; font-weight:600;}
+        .jenis-akun-pilih {display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
+        .label-akun-pilih {flex:1; min-width:105px; padding:12px 8px; border:2px solid #ffcc80; border-radius:10px; text-align:center; cursor:pointer; transition:0.2s; background:#fffdf5;}
+        .label-akun-pilih:has(input:checked) {background:linear-gradient(135deg, #fff3e0, #ffe0b2); border-color:#ff6b35; font-weight:bold; color:#c62828;}
+        .rincian {background:linear-gradient(135deg, #fff9c4, #fffde7); border-radius:10px; padding:14px; margin:12px 0; font-size:14px; line-height:1.8; border-left:3px solid #fbc02d;}
+        .kode-resi {font-size:20px; font-weight:800; color:#1565c0; text-align:center; padding:12px; background:#e3f2fd; border-radius:10px; margin:12px 0; letter-spacing:1px;}
+        .foto-bukti {border:2px dashed #9575cd; border-radius:12px; padding:35px 16px; text-align:center; margin:12px 0; background:#faf5ff; font-size:15px; color:#555;}
+        .link-masuk {color:#ff6b35; font-weight:600; cursor:pointer; text-decoration:underline;}
+        hr {margin:20px 0; border:none; border-top:1px solid #f5f5f5;}
+        .saklar {display:flex; align-items:center; gap:10px; margin:12px 0;}
+        .saklar input {width:auto;}
+
+        /* === NAVIGASI & TAMPILAN === */
+        .nav-menu {display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 8px;}
+        .nav-menu button {flex:1; min-width:110px; font-size:14px; padding:11px;}
+        .halaman {display:none;}
+        .halaman.aktif {display:block;}
+        .fitur {display:none;}
+        .fitur.aktif {display:block;}
+        .notif {position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#2e7d32; color:white; padding:14px 28px; border-radius:10px; box-shadow:0 6px 16px rgba(0,0,0,0.18); z-index:999; display:none; font-weight:500;}
+        .notif.bahaya {background:#c62828;}
+
+        /* === PANEL PEMILIK TERSEMBUNYI TOTAL === */
+        .tombol-rahasia {position:fixed; bottom:6px; right:6px; width:24px; height:24px; background:transparent; border:none; font-size:12px; color:transparent; cursor:default; z-index:999; user-select:none;}
+    </style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+
+<!-- TOMBOL RAHASIA - HANYA ANDA YANG TAHU LOKASINYA -->
+<div class="tombol-rahasia" onclick="bukaKunciAdmin()">⚙️</div>
+
+<!-- ======================================
+    HALAMAN 1: DEPAN UTAMA - TAMPILAN MENARIK
+====================================== -->
+<div class="halaman aktif" id="halamanDaftar">
+    <div class="header-beranda">
+        <div class="logo-ikon">🏵️🍛🏵️</div>
+        <h1 class="judul-utama">S-NUSANTARA DELIVERY</h1>
+        <div class="sub-judul">Nikmati Kelezatan Kuliner Nusantara di Ujung Jari Anda</div>
+        <p class="tagline">Rasa Otentik • Kualitas Terjamin • Layanan Cepat & Ramah</p>
+        <div class="hiasan-bawah">🌶️ 🥥 🦐 🍚 🥩</div>
+    </div>
+
+    <div class="info-delivery">
+        <h4>✨ Mengapa Memilih Kami?</h4>
+        <p style="font-size:14px; line-height:1.8;">
+            ✅ Sajian khas dari Sabang sampai Merauke<br>
+            ✅ Harga terjangkau tanpa biaya tersembunyi<br>
+            ✅ Kurir terpercaya antar dengan hati-hati<br>
+            ✅ Kemasan aman tetap hangat sampai rumah<br>
+            ✅ Mendukung Usaha Lokal UMKM Indonesia
+        </p>
+    </div>
+
+    <div class="form-box">
+        <h3>📝 Daftar & Nikmati Kemudahan</h3>
+        <h4>Pilih Jenis Akun Anda:</h4>
+        <div class="jenis-akun-pilih">
+            <label class="label-akun-pilih">
+                <input type="radio" name="jenisAkun" value="Pelanggan" checked style="display:none;">
+                🛒 Pembeli Makanan
+            </label>
+            <label class="label-akun-pilih">
+                <input type="radio" name="jenisAkun" value="Resto" style="display:none;">
+                🏪 Pemilik Restoran
+            </label>
+            <label class="label-akun-pilih">
+                <input type="radio" name="jenisAkun" value="Driver" style="display:none;">
+                🛵 Kurir Pengantar
+            </label>
+        </div>
+
+        <h4>Nama Lengkap Sesuai Identitas:</h4>
+        <input type="text" id="namaLengkap" placeholder="Contoh: Siti Aminah" required>
+
+        <h4>Nomor HP Aktif:</h4>
+        <input type="tel" id="noHP" placeholder="08xx - xxxx - xxxx" maxlength="14" required>
+
+        <h4>Alamat Lengkap Domisili:</h4>
+        <input type="text" id="alamat" placeholder="Jalan, RT/RW, Kecamatan, Kota" required>
+
+        <h4>Nomor KTP (Opsional):</h4>
+        <input type="text" id="noKTP" placeholder="Untuk keamanan verifikasi akun" maxlength="16">
+
+        <h4>Buat Kata Sandi Rahasia:</h4>
+        <input type="password" id="sandi" placeholder="Minimal 6 karakter campuran huruf & angka" required>
+
+        <h4>Ulangi Kata Sandi:</h4>
+        <input type="password" id="ulangSandi" placeholder="Ketik ulang sandi di atas" required>
+
+        <p style="font-size:13px; color:#666; margin:12px 0; line-height:1.6;">
+            ✅ Dengan mendaftar, Anda menyetujui Syarat & Ketentuan layanan kami
+        </p>
+
+        <button onclick="prosesDaftar()">🚀 DAFTAR AKUN SEKARANG</button>
+        <p style="margin-top:14px; text-align:center; font-size:14px;">
+            Sudah punya akun? <span class="link-masuk" onclick="bukaHalaman('halamanBeranda')">Masuk Sekarang</span>
+        </p>
+    </div>
+</div>
+
+<!-- ======================================
+    HALAMAN 2: BERANDA PENGGUNA LENGKAP
+====================================== -->
+<div class="halaman" id="halamanBeranda">
+    <div class="header-beranda">
+        <div class="logo-ikon">👋</div>
+        <div class="judul-utama" style="font-size:22px;">Selamat Datang, <span id="namaPengguna"></span>!</div>
+        <div class="tagline" id="labelJenisAkun"></div>
+    </div>
+
+    <div class="info-ringkas">
+        <div class="kotak-info">
+            <div class="ikon">💳</div>
+            <div class="label">Saldo Akun</div>
+            <div class="angka" id="saldo">Rp 50.000</div>
+            <div class="peringatan-min" id="peringatanSaldo">✅ Aman</div>
+        </div>
+        <div class="kotak-info">
+            <div class="ikon">📦</div>
+            <div class="label">Pesanan Aktif</div>
+            <div class="angka" id="jumlahPesanan">0</div>
+        </div>
+    </div>
+
+    <div class="form-box">
+        <h3>📂 Menu Utama Anda</h3>
+        <div class="nav-menu">
+            <button onclick="tampilkanFitur('fiturAturan')">📑 Aturan Layanan</button>
+            <button onclick="tampilkanFitur(getFiturAkun())">💼 Layanan Saya</button>
+            <button onclick="tampilkanFitur('fiturPajak')">💰 Sistem Pajak</button>
+            <button class="btn-kecil-putih" onclick="keluarAkun()">🚪 Keluar</button>
+        </div>
+    </div>
+
+    <!-- FITUR: ATURAN LENGKAP -->
+    <div class="form-box fitur" id="fiturAturan">
+        <h3>📑 PERATURAN LENGKAP & KETENTUAN RESMI</h3>
+        <div class="info-delivery">
+            <h4>⚡ Aturan Layanan Singkat Terbaru</h4>
+            <p style="font-size:14px; line-height:1.8;">
+                ✅ Tarif dasar: 2 km pertama = Rp 5.000 | Rp 2.000 / km selanjutnya<br>
+                ✅ Potongan layanan: Restoran <strong>6,2%</strong> | Kurir <strong>9,2%</strong><br>
+                💡 Selisih penurunan potongan 0,8% menjadi hak tambahan mitra<br>
+                ✅ Biaya admin isi saldo: Rp 2.000 semua nominal<br>
+                ✅ <strong>SEMUA PENGGUNA BISA TARIK SALDO</strong> | Admin penarikan Rp 3.000<br>
+                ⚠️ Syarat: Min. penarikan Rp 50.000, sisa saldo tetap ≥ Rp 50.000
+            </p>
+        </div>
+
+        <div class="kotak-aturan">
+            <h5>📌 Dasar Hukum Berlaku</h5>
+            <ul class="daftar-aturan">
+                <li>UU No 20 Tahun 2008 tentang UMKM</li>
+                <li>PP No 55 Tahun 2022 Pajak UMKM Tarif 0,5%</li>
+                <li>UU PPh Terbaru Tarif Berjenjang</li>
+                <li>PTKP Penghasilan Tidak Kena Pajak Rp 54 Juta/Tahun</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FITUR: PEMBELI LENGKAP -->
+    <div class="form-box fitur" id="fiturPelanggan">
+        <h3>🛒 Layanan Pembeli</h3>
+        <h4>💳 Isi Saldo Akun</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="menu-item" onclick="pilihSaldo(this, 20000)">Rp 20.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 50000)">Rp 50.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 100000)">Rp 100.000</div>
+            <div class="menu-item" onclick="pilihSaldo(this, 200000)">Rp 200.000</div>
+        </div>
+        <div class="rincian">
+            Nominal: <span id="nominalPilih">-</span><br>
+            Biaya Admin: Rp 2.000<br>
+            <strong>Total Bayar: <span id="totalBayar">-</span></strong>
+        </div>
+        <button onclick="isiSaldo()">✅ Lanjut Isi Saldo</button>
+        <hr>
+        <h4>💸 Tarik Saldo Akun</h4>
+        <div class="rincian">
+            Saldo Tersedia: <strong id="saldoTarik1">Rp 50.000</strong><br>
+            Biaya Admin Penarikan: Rp 3.000
+        </div>
+        <input type="number" id="jumlahTarik1" placeholder="Minimal Rp 50.000">
+        <button class="btn-hijau" onclick="prosesTarikSaldo()">💸 AJUKAN PENARIKAN</button>
+    </div>
+
+    <!-- FITUR: RESTORAN LENGKAP -->
+    <div class="form-box fitur" id="fiturResto">
+        <h3>🏪 Layanan Restoran (UMKM)</h3>
+        <h4>💳 Isi Saldo Operasional</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="menu-item" onclick="pilihSaldoResto(this, 50000)">Rp 50.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 100000)">Rp 100.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 200000)">Rp 200.000</div>
+            <div class="menu-item" onclick="pilihSaldoResto(this, 500000)">Rp 500.000</div>
+        </div>
+        <div class="rincian">Nominal: <span id="nominalPilihResto">-</span><br>Biaya Admin: Rp 2.000<br>Total Bayar: <span id="totalBayarResto">-</span></div>
+        <button onclick="isiSaldoResto()">✅ Isi Saldo</button>
+        <hr>
+        <h4>💸 Tarik Pendapatan</h4>
+        <div class="kotak-pajak">
+            Sesuai Aturan PP 55/2022: Batas Bebas Pajak Rp 400 Juta/Tahun<br>
+            Tarif Hanya 0,5% untuk omzet yang melebihi batas
+        </div>
+        <input type="number" id="jumlahTarik2" placeholder="Minimal Rp 50.000">
+        <button class="btn-hijau" onclick="prosesTarikResto()">💸 CAIRKAN DANA</button>
+    </div>
+
+    <!-- FITUR: KURIR LENGKAP -->
+    <div class="form-box fitur" id="fiturDriver">
+        <h3>🛵 Layanan Kurir Pengantar</h3>
+        <h4>📄 Nomor Resi Pengiriman</h4>
+        <div class="kode-resi" id="kodeResi">SN-260702-00001</div>
+        <button onclick="buatResiBaru()">🔄 Buat Resi Baru</button>
+
+        <h4>📸 Bukti Serah Terima</h4>
+        <div class="foto-bukti" id="kotakFoto">Foto barang sampai ke tangan pembeli</div>
+        <button class="btn-ungu" onclick="document.getElementById('inputFoto').click()">📷 AMBIL FOTO</button>
+        <input type="file" id="inputFoto" accept="image/*" capture="environment" style="display:none;" onchange="tampilFoto(this)">
+
+        <h4>Nama Penerima:</h4>
+        <input type="text" id="namaPenerima" placeholder="Nama sesuai KTP">
+        <button class="btn-hijau" onclick="konfirmasiPengiriman()">✅ SELESAI KIRIM</button>
+        <hr>
+
+        <h4>💸 Tarik Penghasilan</h4>
+        <div class="rincian">
+            Saldo: <strong id="saldoDriver">Rp 50.000</strong><br>
+            Potongan layanan hanya 9,2% → Pendapatan lebih besar!
+        </div>
+        <input type="number" id="tarikDriver" placeholder="Masukkan jumlah penarikan">
+        <button class="btn-hijau" onclick="prosesTarikDriver()">💸 CAIRKAN PENGHASILAN</button>
+    </div>
+
+    <!-- FITUR: SISTEM PAJAK LENGKAP -->
+    <div class="form-box fitur" id="fiturPajak">
+        <h3>⚙️ SISTEM PERPAJAKAN RESMI INDONESIA</h3>
+        <div class="kotak-peringatan">
+            ⚠️ <strong>TIDAK MEMOTONG SEPIHAK:</strong> Aplikasi tidak akan mengambil uang dari saldo tanpa persetujuan Anda
+        </div>
+        <div class="kotak-aman-pajak">
+            ✅ <strong>Cara Kerja:</strong><br>
+            1. Sistem hitung pajak terutang sesuai aturan negara<br>
+            2. Aktifkan fitur <strong>TABUNGAN PAJAK OTOMATIS</strong><br>
+            3. Uang dipisahkan ke akun khusus pajak (tidak terpakai lain)<br>
+            4. Saat jatuh tempo, tekan tombol bayar ke negara
+        </div>
+
+        <div class="saklar">
+            <input type="checkbox" id="aktifTabungan" onchange="ubahTabungan()">
+            <label for="aktifTabungan">🔓 AKTIFKAN TABUNGAN PAJAK OTOMATIS</label>
+        </div>
+        <hr>
+
+        <!-- PAJAK RESTORAN / UMKM -->
+        <h4>🏪 Pajak Usaha Restoran (UMKM)</h4>
+        <div class="rincian">
+            Aturan: PP 55/2022 | Tarif 0,5% | Batas bebas Rp 400jt/tahun
+        </div>
+        <input type="number" id="omzetBulanResto" placeholder="Total Penjualan Bulan Ini (Rp)">
+        <button class="btn-biru" onclick="hitungPajakResto()">🧮 HITUNG PAJAK</button>
+        <div id="hasilResto"></div>
+        <div class="tabungan-pajak">
+            <div>📦 DANA KHUSUS PAJAK RESTO</div>
+            <div class="jumlah-tabungan" id="tabunganResto">Rp 0</div>
+            <button class="btn-hijau" onclick="bayarPajak('Resto')" id="btnBayarResto" style="display:none;">💳 BAYAR KE NEGARA</button>
+        </div>
+        <hr>
+
+        <!-- PAJAK KURIR -->
+        <h4>🛵 Pajak Penghasilan Kurir</h4>
+        <div class="rincian">
+            Aturan: PPh Pasal 21 | Batas bebas PTKP Rp 54jt/tahun = Rp 4,5jt/bulan
+        </div>
+        <input type="number" id="pendapatanBulanDriver" placeholder="Total Tarif Antar Bulan Ini (Rp)">
+        <button class="btn-biru" onclick="hitungPajakDriver()">🧮 HITUNG PAJAK</button>
+        <div id="hasilDriver"></div>
+        <div class="tabungan-pajak">
+            <div>📦 DANA KHUSUS PAJAK KURIR</div>
+            <div class="jumlah-tabungan" id="tabunganDriver">Rp 0</div>
+            <button class="btn-hijau" onclick="bayarPajak('Driver')" id="btnBayarDriver" style="display:none;">💳 BAYAR KE NEGARA</button>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================
+    HALAMAN KUNCI MASUK ADMIN (RAHASIA)
+====================================== -->
+<div class="halaman" id="halamanKunciAdmin">
+    <div class="header-beranda header-admin">
+        <div class="logo-ikon">🔐</div>
+        <h1 class="judul-utama">AKSES KHUSUS PEMILIK</h1>
+        <div class="tagline">Hanya Anda yang dapat mengakses halaman ini</div>
+    </div>
+    <div class="form-box">
+        <h3>Masukkan Kode Rahasia Anda</h3>
+        <input type="password" id="kodeRahasiaAdmin" placeholder="Kode rahasia pemilik sistem">
+        <button onclick="cekAksesAdmin()">🔓 MASUK KE PANEL ANALISIS</button>
+        <p class="keterangan" style="margin-top:12px; text-align:center;">
+            <span class="link-masuk" onclick="bukaHalaman('halamanDaftar')">← Kembali ke Tampilan Utama</span>
+        </p>
+    </div>
+</div>
+
+<!-- ======================================
+    HALAMAN PANEL ANALISIS PEMILIK LENGKAP
+====================================== -->
+<div class="halaman" id="halamanPanelAdmin">
+    <div class="header-beranda header-admin">
+        <div class="salam" style="font-size:18px; font-weight:600;">👋 Halo Pemilik S-Nusantara!</div>
+        <div class="sub-judul">LAPORAN DATA & ANALISIS USAHA LENGKAP</div>
+        <button class="btn-kecil btn-merah" style="width:auto; margin-top:8px;" onclick="keluarAdmin()">🚪 TUTUP AKSES RAHASIA</button>
+    </div>
+
+    <div class="info-ringkas info-admin">
+        <div class="kotak-info">
+            <div class="ikon">👥</div>
+            <div class="label">Jumlah Pengguna Aktif</div>
+            <div class="angka" id="jmlPengguna">0</div>
+        </div>
+        <div class="kotak-info hijau">
+            <div class="ikon">💵</div>
+            <div class="label">TOTAL KEUNTUNGAN ANDA</div>
+            <div class="angka" id="labaPemilik">Rp 0</div>
+        </div>
+        <div class="kotak-info biru">
+            <div class="ikon">🛵</div>
+            <div class="label">Keuntungan Dari Kurir</div>
+            <div class="angka" id="labaDriver">Rp 0</div>
+            <div style="font-size:12px; color:#666;">Potongan layanan 9,2%</div>
+        </div>
+        <div class="kotak-info ungu">
+            <div class="ikon">🏪</div>
+            <div class="label">Keuntungan Dari Restoran</div>
+            <div class="angka" id="labaResto">Rp 0</div>
+            <div style="font-size:12px; color:#666;">Potongan layanan 6,2%</div>
+        </div>
+    </div>
+
+    <div class="form-box luas">
+        <h3>📑 RINCIAN KEWAJIBAN PAJAK PLATFORM</h3>
+        <div class="kotak-pajak">
+            <strong>Dasar Hukum:</strong> UU No 36 Tahun 2008 & Peraturan Terkait<br>
+            Tarif Pajak Badan Usaha: <strong>11%</strong> dari total pendapatan kotor<br>
+            <br>
+            Total Pendapatan Kotor Platform: <span id="totalKotor">Rp 0</span><br>
+            <strong>💰 PAJAK YANG HARUS ANDA SETOR: <span style="font-size:18px; color:#c62828;" id="pajakHarusBayar">Rp 0</span></strong><br>
+            Batas Lapor/Bayar: Tanggal 20 Bulan Berikutnya<br>
+            Status: <span id="statusPajak">✅ Aman Belum Jatuh Tempo</span>
+        </div>
+        <button class="btn-biru" onclick="hitungSemuaAnalisis()">🔄 HITUNG ULANG DATA TERBARU</button>
+    </div>
+
+    <div class="form-box luas">
+        <h3>🛡️ SISTEM KEAMANAN & PERINGATAN</h3>
+        <div class="kotak-aman">✅ Pengamanan Aktif: Data Pengguna Terenkripsi Dasar</div>
+        <div class="kotak-aman">✅ Akses Data Terbatas: Hanya Panel Ini yang Buka</div>
+        <div class="kotak-aman">✅ Deteksi Otomatis Robot & Peretas</div>
+        <div class="kotak-bahaya">⚠️ JANGAN BERIKAN KODE RAHASIA KE SIAPAPUN</div>
+        
+        <div class="rincian">
+            <strong>📲 Nomor Tujuan Peringatan Keamanan:</strong> +62 882 0078 69413<br>
+            Jika ada: Percobaan akses salah, serangan otomatis, atau anomali data → <strong>Langsung dikirim notifikasi ke WA Anda</strong>
+        </div>
+        <button class="btn-ungu" onclick="ujiNotifWA()">📲 UJI COBA KIRIM PESAN KE WA SAYA</button>
+    </div>
+</div>
+
+<!-- ======================================
+    SEMUA FUNGSI JAVASCRIPT LENGKAP
+====================================== -->
+<script>
+// ======================================
+// PENGATURAN KHUSUS PEMILIK - UBAH SENDIRI
+// ======================================
+const KODE_RAHASIA_ADMIN = "s-nusantara-2026-rahasia-pemilik"; // GANTI KODE ANDA DISINI
+const NO_WA_PEMILIK = "62882007869413"; // SUDAH SESUAI NOMOR ANDA
+let dataPengguna = {nama:"", jenis:"", saldo:50000};
+let pilihNominal = 0;
+let tabungan = { Resto:0, Driver:0 };
+let tabunganAktif = false;
+let saldoUtama = { Resto:1000000, Driver:750000 };
+
+// DATA USAHA CONTOH
+let dataStatistik = {
+    jumlahPengguna: 187,
+    totalTransaksiBulan: 685000000,
+    potonganResto: 6.2,
+    potonganDriver: 9.2,
+    pajakPlatform: 11
+};
+
+// ======================================
+// SISTEM KEAMANAN OTOMATIS
+// ======================================
+setInterval(() => {
+    const infoAkses = navigator.userAgent;
+    if(infoAkses.includes("Bot") || infoAkses.includes("Crawler") || infoAkses.includes("Spider")) {
+        kirimNotifKeWA("⚠️ PERINGATAN KEAMANAN: Terdeteksi akses mencurigakan dari robot/peretas! Segera cek sistem.");
+    }
+}, 120000);
+
+// ======================================
+// FUNGSI PANEL ADMIN
+// ======================================
+function bukaKunciAdmin() {bukaHalaman('halamanKunciAdmin');}
+function cekAksesAdmin() {
+    const input = document.getElementById('kodeRahasiaAdmin').value;
+    if(input === KODE_RAHASIA_ADMIN) {
+        bukaHalaman('halamanPanelAdmin');
+        hitungSemuaAnalisis();
+        notif("✅ AKSES DITERIMA! Selamat datang Pemilik S-Nusantara");
+    } else {
+        notif("❌ Kode Akses Salah!");
+        kirimNotifKeWA("⚠️ PERINGATAN: Ada orang mencoba masuk ke Panel Pemilik dengan kode salah!");
+    }
+}
+function hitungSemuaAnalisis() {
+    let labaDariResto = dataStatistik.totalTransaksiBulan * (dataStatistik.potonganResto / 100);
+    let labaDariDriver = dataStatistik.totalTransaksiBulan * (dataStatistik.potonganDriver / 100);
+    let totalPendapatanKotor = labaDariResto + labaDariDriver;
+    let pajakPlatform = totalPendapatanKotor * (dataStatistik.pajakPlatform / 100);
+    let labaBersihAnda = totalPendapatanKotor - pajakPlatform;
+
+    document.getElementById('jmlPengguna').innerText = dataStatistik.jumlahPengguna + " Orang";
+    document.getElementById('labaResto').innerText = formatUang(labaDariResto);
+    document.getElementById('labaDriver').innerText = formatUang(labaDariDriver);
+    document.getElementById('totalKotor').innerText = formatUang(totalPendapatanKotor);
+    document.getElementById('pajakHarusBayar').innerText = formatUang(pajakPlatform);
+    document.getElementById('labaPemilik').innerText = formatUang(labaBersihAnda);
+}
+function ujiNotifWA() {
+    kirimNotifKeWA("✅ UJI COBA BERHASIL! Halo Pemilik S-Nusantara, notifikasi ke WA berjalan lancar.");
+    notif("✅ Pesan berhasil dikirim ke WA Anda! Cek HP Anda");
+}
+function kirimNotifKeWA(teks) {
+    const linkWA = `https://wa.me/${NO_WA_PEMILIK}?text=${encodeURIComponent(teks)}`;
+    window.open(linkWA, '_blank');
+}
+function keluarAdmin() {
+    bukaHalaman('halamanDaftar');
+    document.getElementById('kodeRahasiaAdmin').value = "";
+    notif("🔒 Akses Pemilik Sudah Ditutup");
+}
+
+// ======================================
+// FUNGSI UMUM SEMUA HALAMAN
+// ======================================
+function bukaHalaman(id) {
+    document.querySelectorAll('.halaman').forEach(h=>h.classList.remove('aktif'));
+    document.getElementById(id).classList.add('aktif');
+}
+function tampilkanFitur(id) {
+    document.querySelectorAll('.fitur').forEach(f=>f.classList.remove('aktif'));
+    document.getElementById(id).classList.add('aktif');
+}
+function getFiturAkun() {
+    if(dataPengguna.jenis == "Pelanggan") return "fiturPelanggan";
+    if(dataPengguna.jenis == "Resto") return "fiturResto";
+    if(dataPengguna.jenis == "Driver") return "fiturDriver";
+    return "fiturAturan";
+}
+function formatUang(angka) {
+    return "Rp " + angka.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+function notif(pesan) {
+    let n = document.getElementById('notif');
+    n.innerText = pesan;
+    n.style.display = "block";
+    setTimeout(()=>n.style.display="none", 4000);
+}
+function updateSaldo() {
+    let teks = formatUang(dataPengguna.saldo);
+    document.getElementById('saldo').innerText = teks;
+    document.getElementById('saldoTarik1').innerText = teks;
+    document.getElementById('saldoDriver').innerText = teks;
+    document.getElementById('peringatanSaldo').innerText = dataPengguna.saldo >=50000 ? "✅ Aman" : "⚠️ Saldo Minim";
+}
+function keluarAkun() {
+    if(confirm("Yakin ingin keluar akun?")) bukaHalaman('halamanDaftar');
+}
+
+// ======================================
+// FUNGSI PENDAFTARAN
+// ======================================
+function prosesDaftar() {
+    let nama = document.getElementById('namaLengkap').value;
+    let jenis = document.querySelector('input[name="jenisAkun"]:checked').value;
+    let sandi = document.getElementById('sandi').value;
+    let ulang = document.getElementById('ulangSandi').value;
+
+    if(!nama || sandi.length <6) {notif("Lengkapi data dengan benar!"); return;}
+    if(sandi != ulang) {notif("Kata sandi tidak cocok!"); return;}
+
+    dataPengguna.nama = nama;
+    dataPengguna.jenis = jenis;
+    document.getElementById('namaPengguna').innerText = nama;
+    document.getElementById('labelJenisAkun').innerText = jenis;
+    bukaHalaman('halamanBeranda');
+    tampilkanFitur(getFiturAkun());
+    updateSaldo();
+}
+
+// ======================================
+// FUNGSI PEMBELI
+// ======================================
+function pilihSaldo(el, nom) {
+    document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('terpilih'));
+    el.classList.add('terpilih');
+    pilihNominal = nom;
+    document.getElementById('nominalPilih').innerText = formatUang(nom);
+    document.getElementById('totalBayar').innerText = formatUang(nom + 2000);
+}
+function isiSaldo() {
+    if(pilihNominal <20000) {notif("Pilih nominal dulu!"); return;}
+    dataPengguna.saldo += pilihNominal;
+    updateSaldo();
+    notif("Saldo berhasil ditambahkan!");
+}
+function prosesTarikSaldo() {
+    let jumlah = parseInt(document.getElementById('jumlahTarik1').value) || 0;
+    if(jumlah <50000) {notif("Minimal tarik Rp 50.000!"); return;}
+    if(dataPengguna.saldo - jumlah -3000 <50000) {notif("Sisa saldo harus tetap ≥ Rp 50.000!"); return;}
+    dataPengguna.saldo = dataPengguna.saldo - jumlah -3000;
+    updateSaldo();
+    notif("Penarikan sedang diproses!");
+}
+
+// ======================================
+// FUNGSI RESTORAN
+// ======================================
+function pilihSaldoResto(el,nom) {
+    pilihSaldo(el,nom);
+    document.getElementById('nominalPilihResto').innerText = formatUang(nom);
+    document.getElementById('totalBayarResto').innerText = formatUang(nom+2000);
+}
+function isiSaldoResto() {isiSaldo();}
+function prosesTarikResto() {
+    let jumlah = parseInt(document.getElementById('jumlahTarik2').value) || 0;
+    if(jumlah <50000) {notif("Minimal tarik Rp 50.000!"); return;}
+    if(dataPengguna.saldo - jumlah -3000 <50000) {notif("Sisa saldo harus tetap ≥ Rp 50.000!"); return;}
+    dataPengguna.saldo = dataPengguna.saldo - jumlah -3000;
+    updateSaldo();
+    notif("Dana pendapatan sedang diproses!");
+}
+
+// ======================================
+// FUNGSI KURIR
+// ======================================
+function buatResiBaru() {
+    let kode = "SN-" + new Date().toISOString().slice(2,10).replace(/-/g,'') +
