@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍛 S-Nusantara Delivery | Lengkap & Aman</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Roboto, Arial, sans-serif;}
+        body {background:linear-gradient(180deg, #fff9f0 0%, #f8f9fa 100%); padding:15px;}
+        
+        /* === HEADER UTAMA === */
+        .header-beranda {
+            background:linear-gradient(135deg, #ff6b35, #f7931e, #ffc107);
+            color:white; padding:28px; border-radius:16px; 
+            text-align:center; margin-bottom:25px;
+            box-shadow:0 4px 15px rgba(255,107,53,0.3);
+        }
+        .header-beranda h1 {font-size:26px; font-weight:800; letter-spacing:1px;}
+        .tagline {font-size:15px; margin-top:8px; opacity:0.95; font-weight:500;}
+        .sub-judul {
+            font-size:16px; margin-top:6px; font-weight:800; 
+            color:#fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            letter-spacing:2px;
+        }
+
+        /* === KOTAK INFORMASI === */
+        .info-ringkas {
+            display:grid; grid-template-columns:1fr 1fr; gap:15px;
+            max-width:520px; margin:0 auto 25px;
+        }
+        .kotak-info {
+            background:white; padding:18px; border-radius:14px; text-align:center;
+            box-shadow:0 3px 12px rgba(0,0,0,0.08);
+            border-bottom:3px solid #ff6b35; transition:0.3s;
+        }
+        .kotak-info:hover {transform:translateY(-2px); box-shadow:0 6px 18px rgba(255,107,53,0.15);}
+        .kotak-info .angka {font-size:24px; font-weight:800; color:#ff6b35; margin:6px 0;}
+        .kotak-info .label {font-size:14px; color:#666; font-weight:500;}
+        .kotak-info .status {font-size:13px; margin-top:4px; font-weight:600;}
+
+        /* === KOTAK PERINGATAN === */
+        .peringatan-bahaya {
+            background:linear-gradient(135deg, #ffebee, #ffcdd2); border-left:5px solid #d32f2f;
+            padding:15px; border-radius:10px; margin-bottom:15px;
+            color:#b71c1c; font-weight:500;
+        }
+        .peringatan-aman {
+            background:linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left:5px solid #2e7d32;
+            padding:15px; border-radius:10px; margin-bottom:15px;
+            color:#1b5e20; font-weight:500;
+        }
+        .peringatan-waspada {
+            background:linear-gradient(135deg, #fff8e1, #ffecb3); border-left:5px solid #fbc02d;
+            padding:15px; border-radius:10px; margin-bottom:15px;
+            color:#f57f17; font-weight:500;
+        }
+
+        /* === PILIHAN PERAN === */
+        .pilihan-peran {
+            display:grid; gap:15px; max-width:480px; margin:0 auto 30px;
+        }
+        .kotak-peran {
+            background:white; padding:24px; border-radius:14px; 
+            text-align:center; box-shadow:0 3px 12px rgba(0,0,0,0.08); 
+            cursor:pointer; transition:0.3s; border-left:5px solid #ff6b35;
+        }
+        .kotak-peran:hover {transform:translateY(-4px); border-left-color:#ffc107; background:#fffdf5;}
+        .kotak-peran h2 {font-size:20px; margin-bottom:6px; color:#333;}
+        .kotak-peran p {color:#777; font-size:14px;}
+
+        /* === BAGIAN UMUM === */
+        .form-box {
+            background:white; border-radius:14px; padding:22px; 
+            box-shadow:0 3px 12px rgba(0,0,0,0.06); max-width:520px; margin:0 auto 20px;
+        }
+        h3 {
+            color:#333; margin-bottom:14px; border-bottom:2px solid #fff3e0; 
+            padding-bottom:8px; font-size:18px; font-weight:700;
+        }
+        h4 {margin:14px 0 8px; font-size:16px; color:#444; font-weight:600;}
+        .menu-item {
+            padding:14px; margin:10px 0; background:#fafbfc; border-radius:10px;
+            border-left:4px solid #ff6b35; transition:0.2s; cursor:pointer;
+        }
+        .menu-item:hover {background:#fff8f0; border-left-color:#f7931e;}
+        .hubung-item {display:flex; gap:10px; margin:10px 0; flex-wrap:wrap;}
+        
+        button {
+            width:100%; padding:15px; background:linear-gradient(135deg, #ff6b35, #f7931e); 
+            color:white; border:none; border-radius:10px; font-size:16px; font-weight:700; 
+            cursor:pointer; margin-top:12px; transition:0.3s;
+            box-shadow:0 3px 10px rgba(255,107,53,0.25);
+        }
+        button:hover {background:linear-gradient(135deg, #f7931e, #ff6b35); transform:translateY(-2px);}
+        button:disabled {opacity:0.6; cursor:not-allowed; transform:none;}
+
+        .btn-kecil {flex:1; min-width:140px; padding:12px; font-size:15px; margin:0;}
+        .btn-kecil-putih {background:white; color:#333; border:2px solid #eee; box-shadow:none;}
+        .btn-kecil-putih:hover {border-color:#ff6b35; background:#fff9f5;}
+        .btn-aman {background:linear-gradient(135deg, #2e7d32, #4caf50);}
+        .btn-aman:hover {background:linear-gradient(135deg, #4caf50, #2e7d32);}
+        .btn-bahaya {background:linear-gradient(135deg, #c62828, #ef5350);}
+        .btn-bahaya:hover {background:linear-gradient(135deg, #ef5350, #c62828);}
+        .btn-kuning {background:linear-gradient(135deg, #f9a825, #fbc02d); color:#000;}
+        .btn-kuning:hover {background:linear-gradient(135deg, #fbc02d, #f9a825);}
+        .btn-bayar {background:linear-gradient(135deg, #d63384, #ec4899); display:none;}
+        .btn-peta {background:linear-gradient(135deg, #17a2b8, #20c997);}
+        .btn-telpon {background:linear-gradient(135deg, #28a745, #20c997);}
+        .btn-wa {background:linear-gradient(135deg, #25d366, #128c7e);}
+        .btn-admin {background:linear-gradient(135deg, #6f42c1, #9561e2); margin-top:10px;}
+
+        .pemisah {text-align:center; margin:28px 0; color:#aaa; font-weight:700; letter-spacing:2px;}
+        .keterangan {font-size:14px; color:#666; margin-top:10px; text-align:center; line-height:1.6;}
+        hr {margin:18px 0; border:none; border-top:1px solid #f0f0f0;}
+        .isi-aturan {font-size:15px; line-height:1.8; color:#444;}
+        .isi-aturan ul {margin:10px 0 0 24px;}
+        .isi-aturan li {margin-bottom:6px;}
+
+        .info-delivery {
+            background:linear-gradient(135deg, #fff8e1, #ffecb3); border-radius:12px; padding:16px;
+            border-left:4px solid #ff9800; margin-bottom:20px;
+        }
+        .info-delivery h4 {color:#e65100; margin-top:0;}
+        .rincian-transaksi {background:#fff3cd; border-radius:8px; padding:14px; margin:15px 0; line-height:1.8;}
+        .status-keamanan {padding:10px 12px; border-radius:8px; font-size:14px; font-weight:600; margin:8px 0;}
+        .status-ok {background:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9;}
+        .status-tunggu {background:#fff3e0; color:#ef6c00; border:1px solid #ffe0b2;}
+        .status-blokir {background:#ffebee; color:#c62828; border:1px solid #ffcdd2;}
+        .jenis-akun-pilih {display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
+        .label-akun {flex:1; min-width:100px; padding:10px; border:1px solid #ff6b35; border-radius:8px; text-align:center; cursor:pointer;}
+        .label-akun:has(input:checked) {background:#fff3e0; border-color:#ff6b35; font-weight:bold;}
+
+        /* === MODAL POP UP === */
+        .modal {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.55); padding:20px; overflow-y:auto; backdrop-filter: blur(2px);
+        }
+        .modal-kotak {
+            background:white; border-radius:14px; padding:24px; max-width:520px; margin:0 auto;
+            box-shadow:0 10px 30px rgba(0,0,0,0.15);
+        }
+        .tutup {text-align:right; font-size:24px; cursor:pointer; color:#888; transition:0.2s;}
+        .tutup:hover {color:#ff3333;}
+    </style>
+</head>
+<body>
+
+<!-- ======================================
+    HEADER UTAMA
+====================================== -->
+<div class="header-beranda">
+    <h1>🍛 S-NUSANTARA DELIVERY</h1>
+    <div class="sub-judul">✨ Sistem Terlengkap & Paling Aman ✨</div>
+    <p class="tagline">Rasakan Kelezatan Nusantara, Hemat Ongkir, Saldo Terjamin Aman</p>
+</div>
+
+<div class="peringatan-aman">
+    🛡️ <strong>SISTEM KEAMANAN AKTIF:</strong> Melindungi dari penipuan, saldo otomatis cair jika sah!
+</div>
+
+<div class="info-ringkas">
+    <div class="kotak-info">
+        <div class="label">💳 Saldo Tersedia</div>
+        <div class="angka" id="saldo">Rp 0</div>
+        <div class="status" id="status-saldo">--</div>
+    </div>
+    <div class="kotak-info">
+        <div class="label">📦 Total Pesanan</div>
+        <div class="angka" id="jumlah-pesanan">0</div>
+        <div class="status">Terproses Aman</div>
+    </div>
+</div>
+
+<!-- ======================================
+    ATURAN SISTEM PENGIRIMAN
+====================================== -->
+<div class="form-box info-delivery">
+    <h4>⚡ SISTEM LAYANAN RESMI</h4>
+    <p style="font-size:14px; line-height:1.7;">
+        ✅ Jarak dasar 2km pertama | Tarif tambahan hanya Rp 2.000/km<br>
+        ✅ Potongan Resto: <strong>hanya 7%</strong> | Potongan Driver: <strong>10%</strong> dari pendapatan<br>
+        ✅ Biaya Admin Isi Saldo: Seragam Rp 2.000 semua nominal<br>
+        ✅ Saldo masuk UTUH ke akunmu, tidak dipotong!
+    </p>
+</div>
+
+<!-- ======================================
+    SISTEM DETEKSI PENIPUAN & KEAMANAN
+====================================== -->
+<div class="form-box">
+    <h3>🔒 PUSAT KEAMANAN & PENGECEKAN SALDO</h3>
+
+    <div class="peringatan-bahaya">
+        ⚠️ <strong>DAFTAR MODUS YANG TERDETEKSI OTOMATIS:</strong><br>
+        ❌ Disuruh belikan barang di Alfamart/Indomaret/Minimarket<br>
+        ❌ Disuruh transfer dulu dengan alasan verifikasi/kode<br>
+        ❌ Disuruh berikan kode OTP atau kata sandi<br>
+        ❌ Pesanan tidak sesuai menu makanan kuliner<br>
+        ❌ Meminta nomor rekening/data pribadi diluar aplikasi
+    </div>
+
+    <div class="menu-item">
+        <h4>🔍 Hasil Pemeriksaan Otomatis</h4>
+        <div class="status-keamanan" id="hasil-cek">
+            Sedang memindai riwayat transaksi & keaslian saldo...
+        </div>
+    </div>
+
+    <div class="rincian-transaksi">
+        <strong>💳 Rekening Tujuan Pencairan Otomatis:</strong><br>
+        Nama Pemilik: <span id="nama-pemilik">Budi Santoso</span><br>
+        E-Wallet Terdaftar: <span id="jenis-ewallet">DANA</span><br>
+        Nomor Tujuan: <span id="nomor-tujuan">0812-xxxx-7890</span><br>
+        Status Verifikasi: <span style="color:#2e7d32; font-weight:bold;">✅ SUDAH TERDAFTAR & AMAN</span>
+    </div>
+
+    <div class="menu-item">
+        <h4>📜 Aturan Pencairan Otomatis Saldo:</h4>
+        <ul style="margin:8px 0 0 20px; line-height:1.7; font-size:14px;">
+            <li>✅ Saldo dinyatakan <strong>AMAN</strong> jika tidak ada riwayat mencurigakan</li>
+            <li>✅ Minimal pencairan otomatis: Rp 10.000</li>
+            <li>✅ Potongan admin pencairan: <strong>Rp 3.000</strong> (hanya saat cair)</li>
+            <li>✅ Waktu proses: <strong>Maksimal 1x24 jam</strong>, biasanya hitungan menit</li>
+            <li>❌ Saldo mencurigakan <strong>DITAHAN</strong> sampai konfirmasi pemilik & pihak berwajib</li>
+            <li>❌ Saldo hasil penipuan akan dikembalikan ke pemilik asli atau dilaporkan</li>
+        </ul>
+    </div>
+
+    <button class="btn-aman" id="btn-cairkan" onclick="prosesPencairan()" style="display:none;">
+        💸 CAIRKAN SALDO AMAN KE E-WALLET
+    </button>
+    <button class="btn-kuning" id="btn-cek-ulang" onclick="cekUlangKeamanan()" style="display:none;">
+        🔄 CEK ULANG STATUS SALDO
+    </button>
+    <button class="btn-bahaya" onclick="laporkanMasalah()">🚨 LAPORKAN MODUS PENIPUAN</button>
+</div>
+
+<!-- ======================================
+    FITUR ISI SALDO
+====================================== -->
+<div class="form-box">
+    <h3>💳 Isi Saldo Akun</h3>
+    <p class="keterangan">Biaya admin Rp 2.000 ke aplikasi, <strong>Saldo Masuk UTUH!</strong></p>
+
+    <h4>Pilih Jenis Akun:</h4>
+    <div class="jenis-akun-pilih">
+        <label class="label-akun">
+            <input type="radio" name="jenisAkun" value="Pelanggan" checked> 🛒 Pembeli
+        </label>
+        <label class="label-akun">
+            <input type="radio" name="jenisAkun" value="Resto"> 🏪 Resto
+        </label>
+        <label class="label-akun">
+            <input type="radio" name="jenisAkun" value="Driver"> 🛵 Driver
+        </label>
+    </div>
+
+    <h4>Pilih Nominal Isi Saldo:</h4>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0;">
+        <div class="menu-item" onclick="pilihNominal(20000)"><strong>Rp 20.000</strong></div>
+        <div class="menu-item" onclick="pilihNominal(50000)"><strong>Rp 50.000</strong></div>
+        <div class="menu-item" onclick="pilihNominal(100000)"><strong>Rp 100.000</strong></div>
+        <div class="menu-item" onclick="pilihNominal(200000)"><strong>Rp 200.000</strong></div>
+        <div class="menu-item" onclick="pilihNominal(550000)"><strong>Rp 550.000</strong></div>
+        <div class="menu-item" onclick="pilihNominal(1000000)"><strong>Rp 1.000.000</strong></div>
+    </div>
+
+    <div class="rincian-transaksi">
+        <strong>📊 RINCIAN ISI SALDO:</strong><br>
+        Jenis Akun: <span id="jenisAkunTampil">Pembeli</span><br>
+        Nominal Saldo: <span id="nominalPilih">-</span><br>
+        Biaya Admin: <span style="color:#28a745; font-weight:bold;">Rp 2.000</span><br>
+        <hr style="margin:8px 0; border-color:#ffe0b2;">
+        <strong>Total Bayar: <span id="totalBayar" style="color:#d32f2f;">-</span></strong><br>
+        <strong>✅ Saldo Diterima: <span id="saldoMasuk" style="color:#1565c0;">-</span> (UTUH!)</strong>
+    </div>
+
+    <button class="btn-bayar" id="btnIsiSaldo" onclick="prosesIsiSaldo()">✅ PROSES ISI SALDO</button>
+</div>
+
+<!-- ======================================
+    PILIHAN PERAN PENGGUNA
+====================================== -->
+<div class="pilihan-peran">
+    <div class="kotak-peran" onclick="window.location.href='daftar-pelanggan.html'">
+        <h2>🛒 Saya Pembeli</h2>
+        <p>Pesan makanan enak, diantar cepat & aman</p>
+    </div>
+    <div class="kotak-peran" onclick="window.location.href='daftar-resto.html'">
+        <h2>🏪 Saya Pemilik Resto</h2>
+        <p>Jangkau pelanggan luas, potongan ringan cuan maksimal</p>
+    </div>
+    <div class="kotak-peran" onclick="window.location.href='daftar-driver.html'">
+        <h2>🛵 Saya Pengemudi</h2>
+        <p>Penghasilan besar, sistem adil, insentif melimpah!</p>
+    </div>
+</div>
+
+<div class="pemisah">— ✦ — ✦ — ✦ — ✦ — ✦ —</div>
+
+<!-- ======================================
+    METODE PEMBAYARAN
+====================================== -->
+<div class="form-box">
+    <h3>💳 Metode Pembayaran Resmi</h3>
+    <p class="keterangan">Bekerja sama dengan mitra berizin Bank Indonesia:</p>
+
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="DANA" onclick="tampilTombolBayar()"> 💸 DANA</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="SHOPEEPAY" onclick="tampilTombolBayar()"> 🛒 ShopeePay</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="GOPAY" onclick="tampilTombolBayar()"> 🛵 GoPay</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="OVO" onclick="tampilTombolBayar()"> 💵 OVO</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="LINKAJA" onclick="tampilTombolBayar()"> 💳 LinkAja</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="QRIS" onclick="tampilTombolBayar()"> 📱 QRIS Nasional</label>
+    </div>
+    <div class="menu-item">
+        <label><input type="radio" name="metodeBayar" value="Transfer Bank" onclick="tampilTombolBayar()"> 🏦 Transfer Bank</label>
+    </div>
+
+    <button class="btn-bayar" id="btn-bayar" onclick="mulaiProsesBayar()">✅ LANJUTKAN PEMBAYARAN</button>
+</div>
+
+<!-- ======================================
+    LAYANAN BANTUAN LENGKAP
+====================================== -->
+<div class="form-box">
+    <h3>📞 Pusat Bantuan 24 Jam</h3>
+    <p class="keterangan">Siap bantu kapan pun kamu butuh!</p>
+
+    <h4>🎧 Layanan Bantuan CS</h4>
+    <div class="hubung-item">
+        <button class="btn-kecil btn-telpon" onclick="window.location.href='tel:081234567890'">📞 TELEPON CS</button>
+        <button class="btn-kecil btn-wa" onclick="window.location.href='https://wa.me/6281234567890?text=Halo%20Admin%2C%20saya%20butuh%20bantuan'">💬 CHAT WA CS</button>
+    </div>
+
+    <h4>🏪 Hubungi Resto</h4>
+    <div class="hubung-item">
+        <button class="btn-kecil btn-telpon" id="telpon-resto" onclick="hubungiResto('telpon')">📞 TELEPON RESTO</button>
+        <button class="btn-kecil btn-wa" id="wa-resto" onclick="hubungiResto('wa')">💬 CHAT WA RESTO</button>
+    </div>
+
+    <h4>🛵 Hubungi Driver</h4>
+    <div class="hubung-item">
+        <button class="btn-kecil btn-telpon" id="telpon-driver" onclick="hubungiDriver('telpon')">📞 TELEPON DRIVER</button>
+        <button class="btn-kecil btn-wa" id="wa-driver" onclick="hubungiDriver('wa')">💬 CHAT WA DRIVER</button>
+    </div>
+
+    <hr>
+    <button class="btn-peta" onclick="bukaPetaLokasi()">🗺️ BUKA LOKASI DI GOOGLE MAPS</button>
+    <button class="btn-kecil btn-kecil-putih" onclick="bukaFAQ()">❓ PERTANYAAN UMUM</button>
+    <button class="btn-kecil btn-kecil-putih" onclick="bukaPanduan()">📖 PANDUAN PENGGUNA</button>
+    <button class="btn-admin" onclick="window.location.href='admin-laporan.html'">🔐 MASUK HALAMAN ADMIN</button>
+</div>
+
+<!-- ======================================
+    ATURAN & SYARAT LENGKAP
+====================================== -->
+<div class="form-box">
+    <h3>📑 Aturan Penggunaan Resmi</h3>
+    <p class="keterangan">Sesuai Hukum & Peraturan Republik Indonesia:</p>
+    <div class="hubung-item">
+        <button class="btn-kecil btn-kecil-putih" onclick="bukaAturan('syarat')">📜 Syarat & Ketentuan</button>
+        <button class="btn-kecil btn-kecil-putih" onclick="bukaAturan('privasi')">🔒 Kebijakan Privasi</button>
+        <button class="btn-kecil btn-kecil-putih" onclick="bukaKodeEtik()">📖 Kode Etik</button>
+        <button class="btn-kecil btn-kecil-putih" onclick="bukaDasarHukum()">⚖️ Dasar Hukum</button>
+    </div>
+    <p class="keterangan" style="margin-top:12px;">
+        Dengan menggunakan aplikasi ini, kamu setuju semua aturan yang berlaku.
+    </p>
+</div>
+
+<!-- ======================================
+    MODAL SEMUA JENIS
+====================================== -->
+<div id="modal-syarat" class="modal"><div class="modal-kotak"><div class="tutup" onclick="tutupModal()">✕</div>
+<h3>📜 SYARAT & KETENTUAN LENGKAP</h3><div class="isi-aturan">
+<p><strong>1. Umum</strong></p>
+<ul><li>Aplikasi layanan pesan antar kuliner Nusantara resmi</li><li>Berlaku hukum negara Republik Indonesia</li><li>Pengguna minimal 17 tahun atau dibimbing orang tua</li><li>Menggunakan sistem S-Nusantara Delivery</li></ul>
+<p><strong>2. Transaksi & Keamanan</strong></p>
+<ul><li>Pembayaran lewat mitra berizin resmi</li><li>Saldo yang dianggap mencurigakan akan ditahan</li><li>Dilarang memanipulasi data atau menipu</li></ul>
+</div></div></div>
+
+<div id="modal-privasi" class="modal"><div class="modal-kotak"><div class="tutup" onclick="tutupModal()">✕</div>
+<h3>🔒 KEBIJAKAN PRIVASI DATA</h3><div class="isi-aturan">
+<p>Data dijaga ketat sesuai UU Perlindungan Data Pribadi:</p>
+<ul><li>Data hanya dipakai untuk operasional layanan</li><li>Tidak dijual/disebar tanpa izin pemilik</li><li>Data disimpan dengan sistem keamanan tinggi</li></ul>
+</div></div></div>
+
+<div id="modal-hukum" class="modal"><div class="modal-kotak"><div class="tutup" onclick="tutupModal()">✕</div>
+<h3>⚖️ DASAR HUKUM</h3><div class="isi-aturan">
+<p>Berlandaskan pada: UUD 1945, UU ITE, UU Perlindungan Data Pribadi, dan peraturan terkait lainnya.</p>
+</div></div></div>
+
+<div id="modal-faq" class="modal"><div class="modal-kotak"><div class="tutup" onclick="tutupModal()">✕</div>
+<h3>❓ PERTANYAAN UMUM</h3><div class="isi-aturan">
+<p><strong>Q: Saldo tidak masuk?</strong><br>A: Tunggu 15 menit, hubungi CS jika belum masuk.</p>
+<p><strong>Q: Bisa tarik saldo kapan saja?</strong><br>A: Bisa jika saldo aman & memenuhi syarat minimal.</p>
+</div></div></div>
+
+<!-- ======================================
+    SISTEM KONEKSI & FUNGSI LENGKAP
+====================================== -->
+<script src="https://js.xendit.co/v1/xendit.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lMH2uHFtuNsLinSZN-r2xxxxxx",
+  authDomain: "kkn-kuliner-khas-nusantara.firebaseapp.com",
+  databaseURL: "https://kkn-kuliner-khas-nusantara-default-rtdb.firebaseio.com",
+  projectId: "kkn-kuliner-khas-nusantara",
+  storageBucket: "kkn-kuliner-khas-nusantara.appspot.com",
+  messagingSenderId: "121728270775",
+  appId: "1:121728270775:web:3a3f8b5ad73xxxxxx"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+Xendit.setPublishableKey('xnd_public_development_dVaqWRwdFDYoLYIfX3nKhsynI2Rg7W1gPRTPGGOWOC1XuEeVF4FQ2dYcbUNNnd80');
+
+// === VARIABEL UTAMA ===
+const BIAYA_ADMIN_CAIR = 3000;
+let saldoSaatIni = 0;
+let statusKeamanan = "";
+let nominalTerpilih = 0;
+let jenisAkun = "Pelanggan";
+let metodeTerpilih = "";
+let noResto = "0812xxxx5678";
+let noDriver = "";
+
+// === DATA PENGGUNA TERDAFTAR ===
+const dataPengguna = { nama: "Budi Santoso", ewallet: "DANA", nomor: "0812xxxx7890" };
+
+// === FUNGSI KEAMANAN & PENCAIRAN ===
+function cekKeamananSaldo(){
+    document.getElementById('hasil-cek').textContent = "Sedang memindai riwayat transaksi...";
+    document.getElementById('hasil-cek').className = "status-keamanan status-tunggu";
+
+    setTimeout(() => {
+        // SIMULASI HASIL: SALDO AMAN
+        statusKeamanan = "AMAN";
+        saldoSaatIni = 125000;
+
+        document.getElementById('saldo').textContent = "Rp " + saldoSaatIni.toLocaleString('id-ID');
+        document.getElementById('status-saldo').textContent = "✅ AMAN & TERPERCAYA";
+        document.getElementById('status-saldo').style.color = "#2e7d32";
+
+        document.getElementById('hasil-cek').innerHTML = `
+        ✅ <strong>AMAN & TERPERCAYA</strong><br>
+        Tidak ditemukan indikasi penipuan, pencurian, atau transaksi mencurigakan.
+        `;
+        document.getElementById('hasil-cek').className = "status-keamanan status-ok";
+
+        if(saldoSaatIni >= 10000) document.getElementById('btn-cairkan').style.display = 'block';
+        document.getElementById('btn-cek-ulang').style.display = 'block';
+
+    }, 2500);
+}
+
+function prosesPencairan(){
+    if(statusKeamanan !== "AMAN") return alert("❌ Saldo tidak aman, tidak bisa dicairkan!");
+    const totalDiterima = saldoSaatIni - BIAYA_ADMIN_CAIR;
+    if(totalDiterima < 0) return alert("❌ Saldo tidak cukup biaya admin!");
+
+    const konfirmasi = confirm(`
+📊 RINCIAN PENCAIRAN:
+Saldo Asli: Rp ${saldoSaatIni.toLocaleString('id-ID')}
+Potongan Admin: Rp ${BIAYA_ADMIN_CAIR.toLocaleString('id-ID')}
+---------------------------------------
+Diterima: Rp ${totalDiterima.toLocaleString('id-ID')}
+Tujuan: ${dataPengguna.ewallet} a.n ${dataPengguna.nama}
+Nomor: ${dataPengguna.nomor}
+
+Lanjutkan?
+    `);
+    if(!konfirmasi) return;
+
+    document.getElementById('btn-cairkan').disabled = true;
+    document.getElementById('hasil-cek').innerHTML = "⏳ Sedang memproses transfer...";
+
+    setTimeout(() => {
+        db.ref("RiwayatPencairan/" + Date.now()).set({
+            jumlah: saldoSaatIni, diterima: totalDiterima, admin: BIAYA_ADMIN_CAIR,
+            tujuan: dataPengguna.ewallet + " - " + dataPengguna.nomor, status: "BERHASIL",
+            waktu: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        db.ref("DataPengguna").update({ saldo: 0 });
+
+        alert(`✅ BERHASIL! Uang masuk ke ${dataPengguna.ewallet} maksimal 24 jam!`);
+        saldoSaatIni = 0;
+        document.getElementById('saldo').textContent = "Rp 0";
+        document.getElementById('btn-cairkan').style.display = 'none';
+        document.getElementById('hasil-cek').innerHTML = "💰 Saldo sudah cair, akun kembali aman.";
+
+    }, 3000);
+}
+
+function cekUlangKeamanan(){ document.getElementById('btn-cek-ulang').style.display = 'none'; cekKeamananSaldo(); }
+function laporkanMasalah(){ window.location.href = `https://wa.me/6281234567890?text=SAYA%20MELAPORKAN%20MODUS%20PENIPUAN%20PADA%20APLIKASI%20S-NUSANTARA`; }
+
+// === FUNGSI ISI SALDO ===
+document.querySelectorAll('input[name="jenisAkun"]').forEach(r => {
+    r.addEventListener('change', () => { jenisAkun = r.value; document.getElementById('jenisAkunTampil').textContent = jenisAkun; });
+});
+
+function pilihNominal(nominal){
+    nominalTerpilih = nominal;
+    document.getElementById('nominalPilih').textContent = "Rp " + nominal.toLocaleString('id-ID');
+    document.getElementById('totalBayar').textContent = "Rp " + (nominal+2000).toLocaleString('id-ID');
+    document.getElementById('saldoMasuk').textContent = "Rp " + nominal.toLocaleString('id-ID');
+    document.getElementById('btnIsiSaldo').style.display = 'block';
+}
+
+function prosesIsiSaldo(){
+    if(!nominalTerpilih) return alert("Pilih nominal dulu!");
+    alert(`✅ Berhasil! Bayar Rp ${(nominalTerpilih+2000).toLocaleString()}, Saldo Masuk Rp ${nominalTerpilih.toLocaleString()}`);
+    
+    db.ref(`Data${jenisAkun}`).once("value", s => {
+        const saldo = s.val()?.saldo || 0;
+        db.ref(`Data${jenisAkun}`).update({ saldo: saldo + nominalTerpilih });
+    });
+
+    db.ref("RiwayatIsiSaldo/isi-" + Date.now()).set({
+        jenis: jenisAkun, nominal: nominalTerpilih, admin: 2000, waktu: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    nominalTerpilih = 0;
+    document.getElementById('btnIsiSaldo').style.display = 'none';
+}
+
+// === FUNGSI LAINNYA ===
+function bukaAturan(j) { tutupModal(); document.getElementById(`modal-${j}`).style.display = 'block'; }
+function bukaDasarHukum() { tutupModal(); document.getElementById('modal-hukum').style.display = 'block'; }
+function bukaFAQ() { tutupModal(); document.getElementById('modal-faq').style.display = 'block'; }
+function bukaPanduan() { alert("📖 Panduan: Pilih peran > Isi saldo > Pesan > Tunggu antar"); }
+function tutupModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+function bukaKodeEtik() { alert("📖 Kode Etik: Jujur, Adil, Amanah, Sesuai Pancasila"); }
+
+function hubungiResto(jenis){
+    if(!noResto) return alert("Nomor Resto belum tersedia!");
+    if(jenis === 'telpon') window.location.href = `tel:${noResto}`;
+    else window.location.href = `https://wa.me/${noResto.replace(/^0/, '62')}?text=Halo%20Resto%2C%20tanya%20pesanan`;
+}
+
+function hubungiDriver(jenis){
+    if(!noDriver) return alert("Belum ada driver yang mengambil pesanan!");
+    if(jenis === 'telpon') window.location.href = `tel:${noDriver}`;
+    else window.location.href = `https://wa.me/${noDriver.replace(/^0/, '62')}?text=Halo%20Pak%20Driver%2C%20dimana%20posisinya%3F`;
+}
+
+function bukaPetaLokasi(){ const l = prompt("Masukkan alamat:"); if(l) window.open(`https://google.com/maps?q=${encodeURIComponent(l)}`, "_blank"); }
+function tampilTombolBayar(){ document.getElementById('btn-bayar').style.display = 'block'; }
+function mulaiProsesBayar(){ alert("Lanjut pembayaran lewat metode terpilih"); }
+
+// === JALANKAN OTOMATIS SAAT DIBUKA ===
+cekKeamananSaldo();
+
+db.ref("DataPengguna").on("value", s => {
+    document.getElementById('saldo').textContent = "Rp " + (s.val()?.saldo||0).toLocaleString('id-ID');
+});
+db.ref("PesananMasuk").on("value", s => document.getElementById('jumlah-pesanan').textContent = s.numChildren());
+</script>
+
+</body>
+</html>
