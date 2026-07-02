@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="S-Nusantara - Platform Pemesanan Kuliner Khas Daerah Seluruh Indonesia">
+    <meta name="author" content="S-Nusantara Team">
+    <title>S-Nusantara | Pemesanan Kuliner Nusantara</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B71C1C',
+                        secondary: '#FF9800',
+                        accent: '#FFEB3B',
+                        cream: '#FFFDF8',
+                        soft: '#F5F5DC',
+                        border: '#E64A19',
+                        gelap: '#212121',
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+            .scroll-smooth {
+                scroll-behavior: smooth;
+            }
+        }
+    </style>
+</head>
+<body class="bg-cream font-sans scroll-smooth text-gelap">
+
+    <!-- NAVIGASI UTAMA -->
+    <nav class="sticky top-0 z-50 bg-primary text-white shadow-xl">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa fa-shopping-basket text-2xl"></i>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">S-Nusantara</h1>
+                </div>
+
+                <div class="hidden md:flex gap-6 font-medium">
+                    <a href="#beranda" class="hover:text-accent transition">Beranda</a>
+                    <a href="#kategori" class="hover:text-accent transition">Kuliner</a>
+                    <a href="#cara-pesan" class="hover:text-accent transition">Cara Pesan</a>
+                    <a href="#tentang" class="hover:text-accent transition">Tentang Kami</a>
+                    <a href="#kontak" class="hover:text-accent transition">Kontak</a>
+                </div>
+
+                <button class="md:hidden text-xl" id="btnMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MENU HP -->
+        <div id="menuMobile" class="hidden md:hidden bg-red-800 px-4 py-3 space-y-2">
+            <a href="#beranda" class="block py-1 hover:text-accent">Beranda</a>
+            <a href="#kategori" class="block py-1 hover:text-accent">Kuliner</a>
+            <a href="#cara-pesan" class="block py-1 hover:text-accent">Cara Pesan</a>
+            <a href="#tentang" class="block py-1 hover:text-accent">Tentang Kami</a>
+            <a href="#kontak" class="block py-1 hover:text-accent">Kontak</a>
+        </div>
+    </nav>
+
+
+    <!-- BAGIAN BERANDA -->
+    <section id="beranda" class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            <div class="flex items-center gap-2 mb-4 border-b border-amber-200 pb-3">
+                <i class="fa fa-shopping-cart text-primary text-xl"></i>
+                <h2 class="text-xl md:text-2xl font-bold">Pemesanan Kuliner Nusantara</h2>
+            </div>
+
+            <!-- INFORMASI PEMBAYARAN -->
+            <div class="bg-yellow-50 border-l-4 border-secondary p-5 rounded-r-xl mb-6">
+                <p class="text-lg font-semibold mb-3 text-gray-800">💳 Informasi Pembayaran</p>
+                <p class="text-gray-700 leading-relaxed mb-3">
+                    Pembayaran dapat dilakukan dengan cara:
+                </p>
+                <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start gap-2">
+                        <i class="fa fa-money text-green-600 mt-1"></i>
+                        <span><strong>Tunai:</strong> Langsung bayar saat barang diterima dari kurir</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa fa-bank text-primary mt-1"></i>
+                        <span><strong>Transfer Bank:</strong> Ke rekening resmi kami:</span>
+                    </li>
+                </ul>
+                <div class="mt-3 pl-6 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <p class="font-bold text-lg text-primary">Bank BCA</p>
+                    <p class="text-xl font-mono font-bold">No. Rekening: 0472050522</p>
+                    <p class="text-gray-600 a.n. S-Nusantara Food</p>
+                </div>
+            </div>
+
+
+            <!-- FITUR PENCARIAN -->
+            <div class="mb-8">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fa fa-map-pin text-primary text-lg"></i>
+                    <h3 class="text-lg font-semibold">Cari Kuliner Nusantara:</h3>
+                </div>
+                <div class="relative">
+                    <input type="text" placeholder="Contoh: Rendang Padang, Gudeg Jogja, Pempek Palembang..." 
+                        class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary">
+                        <i class="fa fa-search text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- KATEGORI KULINER LENGKAP -->
+            <div id="kategori">
+                <h3 class="text-xl font-bold mb-4">📂 Kategori Kuliner Populer</h3>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍛</span>
+                        <span class="font-medium">Masakan Padang</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍜</span>
+                        <span class="font-medium">Masakan Jawa</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍲</span>
+                        <span class="font-medium">Masakan Sunda</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍝</span>
+                        <span class="font-medium">Masakan Bali</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🦐</span>
+                        <span class="font-medium">Masakan Manado</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍄</span>
+                        <span class="font-medium">Masakan Kalimantan</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🥥</span>
+                        <span class="font-medium">Masakan Sulawesi</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍮</span>
+                        <span class="font-medium">Jajanan Tradisional</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🐟</span>
+                        <span class="font-medium">Masakan Maluku</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🥩</span>
+                        <span class="font-medium">Masakan Aceh</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🍯</span>
+                        <span class="font-medium">Kue Khas Daerah</span>
+                    </div>
+                    <div class="bg-soft rounded-xl border-2 border-border p-4 flex items-center gap-3 shadow-sm card-hover">
+                        <span class="text-3xl">🥤</span>
+                        <span class="font-medium">Minuman Tradisional</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CARA PEMESANAN -->
+    <section id="cara-pesan" class="max-w-4xl mx-auto px-4 py-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-5 text-center">📝 Cara Mudah Memesan</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shrink-0">1</div>
+                        <div>
+                            <p class="font-semibold">Pilih Kuliner</p>
+                            <p class="text-gray-600 text-sm">Cari makanan kesukaan dari berbagai daerah di seluruh Indonesia</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shrink-0">2</div>
+                        <div>
+                            <p class="font-semibold">Masukkan Keranjang</p>
+                            <p class="text-gray-600 text-sm">Tentukan jumlah pesanan yang diinginkan</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold shrink-0">3</div>
+                        <div>
+                            <p class="font-semibold">Konfirmasi Alamat</p>
+                            <p class="text-gray-600 text-sm">Tulis alamat lengkap agar kurir mudah menemukan lokasi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold shrink-0">4</div>
+                        <div>
+                            <p class="font-semibold">Pilih Metode Bayar</p>
+                            <p class="text-gray-600 text-sm">Tunai saat terima atau transfer ke BCA 0472050522</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold shrink-0">5</div>
+                        <div>
+                            <p class="font-semibold">Pesanan Diproses</p>
+                            <p class="text-gray-600 text-sm">Penjual menyiapkan makanan segar dan lezat</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold shrink-0">6</div>
+                        <div>
+                            <p class="font-semibold">Makanan Sampai Tangan</p>
+                            <p class="text-gray-600 text-sm">Kurir antar ke rumah, silakan nikmati hidangan khas Nusantara!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SIMULASI BIAYA -->
+    <section class="max-w-4xl mx-auto px-4 py-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-5 text-center">🧮 Simulasi Biaya Pesanan</h2>
+
+            <div class="space-y-5 mb-6">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Harga Makanan (Rp)</label>
+                    <input type="number" id="hargaMakanan" min="0" placeholder="Contoh: 50000" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Jarak Pengiriman (km)</label>
+                    <input type="number" id="jarak" min="0" step="0.01" placeholder="Contoh: 2.98" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <button onclick="hitungBiaya()" 
+                    class="w-full bg-primary hover:bg-red-700 text-white font-bold py-3 rounded-lg transition">
+                    Hitung Rincian Biaya
+                </button>
+            </div>
+
+            <div id="hasilSimulasi" class="hidden border-t pt-5 space-y-3">
+                <h3 class="font-bold text-lg">Rincian Lengkap</h3>
+                <div class="bg-gray-50 p-4 rounded-lg space-y-2">
+                    <div class="flex justify-between">
+                        <span>Harga Makanan</span>
+                        <span id="hMakanan" class="font-medium">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Tarif Ongkir</span>
+                        <span id="ongkir" class="font-medium">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Biaya Jasa Layanan</span>
+                        <span class="font-medium">Rp 2.000</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg text-primary pt-2 border-t">
+                        <span>Total Bayar</span>
+                        <span id="totalBayar">-</span>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-lg space-y-2">
+                    <p class="font-medium">Pembagian Hasil:</p>
+                    <div class="flex justify-between">
+                        <span>✅ Pendapatan Platform (15% + Jasa)</span>
+                        <span id="pendapatanKamu" class="font-bold text-blue-700">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🏪 Diterima Penjual</span>
+                        <span id="diterimaPenjual" class="font-medium">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🛵 Diterima Kurir (Ongkir Utuh)</span>
+                        <span id="diterimaKurir" class="font-medium">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 bg-yellow-50 p-4 rounded-lg text-sm text-gray-600">
+                <p class="font-medium mb-1">Ketentuan Tarif:</p>
+                <ul class="list-disc list-inside space-y-0.5">
+                    <li>Jarak ≤ 2,98 km = Rp 7.000</li>
+                    <li>Jarak 3,0 - 5,4 km = Rp 9.000 - 12.000</li>
+                    <li>Jarak ≥ 5,5 km = Rp 13.000</li>
+                    <li>Komisi penjual 15%, kurir dapat ongkir penuh tanpa potongan</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- TENTANG KAMI -->
+    <section id="tentang" class="max-w-4xl mx-auto px-4 py-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-4">🏷️ Tentang S-Nusantara</h2>
+            <p class="text-gray-700 leading-relaxed mb-3">
+                S-Nusantara adalah platform pemesanan makanan yang berfokus melestarikan dan mempromosikan kekayaan kuliner asli dari seluruh pelosok Indonesia. Kami menghubungkan Anda langsung dengan penjual makanan khas daerah, mulai dari Sabang sampai Merauke.
+            </p>
+            <p class="text-gray-700 leading-relaxed mb-3">
+                Tujuan kami adalah agar setiap orang bisa menikmati kelezatan kuliner tradisional tanpa harus pergi jauh ke daerah asalnya. Kami bekerja sama dengan para pengrajin makanan asli yang menjaga resep turun-temurun agar rasanya tetap otentik.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+                Dengan layanan pengiriman yang aman, cepat, dan terpercaya, serta pembayaran yang mudah, kami berharap kuliner Nusantara semakin dicintai dan dikenal luas.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- KONTAK KAMI -->
+    <section id="kontak" class="max-w-4xl mx-auto px-4 py-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-5">📞 Hubungi Kami</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fa fa-whatsapp text-green-600 text-xl"></i>
+                        <span>WhatsApp: 0812-3456-7890</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa fa-envelope text-primary text-xl"></i>
+                        <span>Email: info@snusantara.id</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa fa-instagram text-pink-600 text-xl"></i>
+                        <span>Instagram: @S_Nusantara</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa fa-map-marker text-red-600 text-xl"></i>
+                        <span>Kantor Pusat: Surabaya, Jawa Timur</span>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="font-medium mb-3">Kirim Pesan Kepada Kami:</p>
+                    <textarea rows="4" placeholder="Tulis pesan atau pertanyaan Anda..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary mb-3"></textarea>
+                    <button class="w-full bg-secondary hover:bg-orange-500 text-white font-bold py-2 rounded-lg transition">
+                        Kirim Pesan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- KAKI HALAMAN -->
+    <footer class="bg-gelap text-white py-8 mt-10">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div>
+                    <h3 class="text-lg font-bold mb-3">S-Nusantara</h3>
+                    <p class="text-gray-400 text-sm">Melestarikan dan membagikan kelezatan kuliner asli Indonesia ke seluruh penjuru negeri.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-3">Layanan</h3>
+                    <ul class="text-gray-400 text-sm space-y-1">
+                        <li>Pemesanan Makanan</li>
+                        <li>Pengiriman Cepat</li>
+                        <li>Kerjasama Mitra</li>
+                        <li>Daftar Kurir</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-3">Informasi</h3>
+                    <ul class="text-gray-400 text-sm space-y-1">
+                        <li>Syarat & Ketentuan</li>
+                        <li>Kebijakan Privasi</li>
+                        <li>Pusat Bantuan</li>
+                        <li>Cara Pembayaran</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-5 text-center text-gray-400 text-sm">
+                <p>&copy; 2026 S-Nusantara. Semua Hak Dilindungi Undang-Undang.</p>
+                <p class="mt-1">Pembayaran Transfer BCA: 0472050522 a.n S-Nusantara Food</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- TOMBOL KEMBALI KE ATAS -->
+    <button id="btnKembali" class="fixed bottom-6 right-6 w-12 h-12 bg-primary text-white rounded-full shadow-lg flex items-center justify-center text-xl opacity-0 invisible transition-all">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+
+    <script>
+        // MENU HP
+        const btnMenu = document.getElementById('btnMenu');
+        const menuMobile = document.getElementById('menuMobile');
+        btnMenu.addEventListener('click', () => {
+            menuMobile.classList.toggle('hidden');
+        });
+
+
+        // SIMULASI BIAYA
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function hitungBiaya() {
+            const hargaMakanan = parseFloat(document.getElementById('hargaMakanan').value) || 0;
+            const jarak = parseFloat(document.getElementById('jarak').value) || 0;
+
+            let tarifOngkir;
+            if (jarak <= 2.98) {
+                tarifOngkir = 7000;
+            } else if (jarak >= 5.5) {
+                tarifOngkir = 13000;
+            } else {
+                tarifOngkir = 10000;
+            }
+
+            const komisi = hargaMakanan * 15 / 100;
+            const jasaLayanan = 2000;
+            const totalPendapatan = komisi + jasaLayanan;
+            const diterimaPenjual = hargaMakanan - komisi;
+            const diterimaKurir = tarifOngkir;
+            const totalBayar = hargaMakanan + tarifOngkir + jasaLayanan;
+
+            document.getElementById('hMakanan').textContent = formatRupiah(hargaMakanan);
+            document.getElementById('ongkir').textContent = formatRupiah(tarifOngkir);
+            document.getElementById('totalBayar').textContent = formatRupiah(totalBayar);
+            document.getElementById('pendapatanKamu').textContent = formatRupiah(totalPendapatan);
+            document.getElementById('diterimaPenjual').textContent = formatRupiah(diterimaPenjual);
+            document.getElementById('diterimaKurir').textContent = formatRupiah(diterimaKurir);
+
+            document.getElementById('hasilSimulasi').classList.remove('hidden');
+        }
+
+
+        // TOMBOL KEMBALI KE ATAS
+        const btnKembali = document.getElementById('btnKembali');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                btnKembali.classList.remove('opacity-0', 'invisible');
+                btnKembali.classList.add('opacity-100', 'visible');
+            } else {
+                btnKembali.classList.remove('opacity-100', 'visible');
+                btnKembali.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        btnKembali.addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+    </script>
+</body>
+</html>
