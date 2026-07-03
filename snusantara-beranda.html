@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-width:720px">
+    <title>🍛 S-Nusantara Delivery | Kuliner Lokal Tegal & Sekitar</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Roboto, Arial, sans-serif;}
+        body {
+            background:linear-gradient(180deg, #fffdf9 0%, #fff9f0 50%, #fff5e6 100%);
+            padding:16px; max-width:720px; margin:0 auto; min-height:100vh;
+        }
+
+        :root {
+            --utama:#d97706; --sekunder:#f59e0b; --aksen:#fbbf24;
+            --hijau:#059669; --biru:#2563eb; --ungu:#7c3aed;
+            --merah:#dc2626; --abu-tua:#374151; --abu-muda:#d1d5db; --putih:#ffffff;
+            --coklat-muda:#fef3c7; --coklat-tua:#92400e;
+        }
+
+        .header-utama {
+            background:linear-gradient(135deg, var(--utama), var(--sekunder), var(--aksen));
+            color:white; padding:24px 18px; border-radius:20px; text-align:center; margin-bottom:20px;
+            box-shadow:0 6px 18px rgba(217,119,6,0.2); position:relative; overflow:hidden;
+            border-bottom:3px solid rgba(255,255,255,0.3);
+        }
+        .header-utama::before {content:"🍚 🥕 🥩 🍜 🍲"; position:absolute; top:10px; left:50%; transform:translateX(-50%); font-size:14px; opacity:0.25; letter-spacing:6px;}
+        .logo-ikon {font-size:42px; margin-bottom:4px;}
+        .judul-utama {font-size:24px; font-weight:700; letter-spacing:0.3px;}
+        .sub-judul {font-size:14px; margin-top:6px; opacity:0.95; font-weight:500;}
+        .tagline {font-size:12px; margin-top:8px; font-weight:400; opacity:0.9;}
+        .header-qris {background:linear-gradient(135deg, var(--biru), #3b82f6);}
+        .header-admin {background:linear-gradient(135deg, #1e293b, #334155);}
+
+        .kotak-bagian {
+            background:var(--putih); border-radius:16px; padding:18px; margin-bottom:18px;
+            box-shadow:0 3px 10px rgba(0,0,0,0.03); border:1px solid rgba(217,119,6,0.1);
+        }
+        .judul-bagian {
+            font-size:18px; font-weight:700; color:#1f2937; margin-bottom:14px; display:flex; align-items:center; gap:8px;
+        }
+
+        /* === PILIH WILAYAH LAYANAN === */
+        .pilihan-wilayah {display:none !important;}
+        .tombol-wilayah {
+            padding:12px 10px; border:1px solid var(--abu-muda); border-radius:12px; background:var(--putih);
+            font-size:14px; font-weight:600; color:var(--abu-tua); cursor:pointer; transition:all 0.2s ease;
+            text-align:center;
+        }
+        .tombol-wilayah.aktif {
+            border-color:var(--utama); background:var(--utama);
+            color:var(--putih); font-weight:700;
+            box-shadow:0 2px 8px rgba(217,119,6,0.25);
+        }
+        .tombol-wilayah:hover:not(.aktif) {border-color:var(--sekunder); background:#fffbeb;}
+
+        .kotak-peringatan {display:none !important;}
+        .ikon-peringatan {font-size:18px; margin-top:2px; flex-shrink:0;}
+        .isi-peringatan h4 {font-size:14px; font-weight:700; color:var(--coklat-tua); margin-bottom:4px;}
+        .isi-peringatan p {font-size:13px; color:#b45309; line-height:1.5;}
+
+        /* === TABEL RINCIAN BIAYA (SEMBUNYIKAN TAMPILAN, DATA TETAP ADA) === */
+        .kotak-rincian-biaya {display:none !important;}
+        .tabel-biaya {width:100%; border-collapse:separate; border-spacing:0; border-radius:14px; overflow:hidden; margin-top:8px;}
+        .tabel-biaya th, .tabel-biaya td {padding:12px 10px; text-align:left; font-size:13px;}
+        .tabel-biaya th {
+            background:linear-gradient(135deg, #fff7ed, #ffedd5); font-weight:700; color:#9a3412;
+            font-size:13px;
+        }
+        .tabel-biaya td {background:var(--putih); color:#374151; border-bottom:1px solid #f3f4f6;}
+        .tabel-biaya tr:last-child td {border-bottom:none;}
+        .tabel-biaya tr:nth-child(even) td {background:#fffbf8;}
+
+        /* === PANDUAN KHUSUS === */
+        .menu-panduan {display:flex; flex-direction:column; gap:10px; margin-bottom:14px;}
+        .item-panduan {
+            padding:14px; border:1px solid var(--abu-muda); border-radius:12px; cursor:pointer;
+            display:flex; align-items:center; gap:12px; transition:0.2s; background:#fefefe;
+        }
+        .item-panduan:hover {border-color:var(--utama); background:#fff7ed; transform:translateX(3px);}
+        .ikon-panduan {font-size:24px; flex-shrink:0;}
+        .isi-panduan h4 {font-size:15px; font-weight:700; color:#1f2937; margin-bottom:2px;}
+        .isi-panduan p {font-size:12px; color:#6b7280;}
+
+        .tab-panduan {display:none; padding-top:10px;}
+        .tab-panduan.aktif {display:block;}
+        .daftar-panduan {font-size:13px; line-height:1.7; margin-left:18px; color:#4b5563;}
+        .daftar-panduan li {margin:5px 0;}
+        .catatan-panduan {background:#f0fdf4; border-left:3px solid var(--hijau); padding:10px; border-radius:8px; margin:8px 0; font-size:12px;}
+
+        /* === ELEMEN UMUM === */
+        .btn-utama {
+            width:100%; padding:13px; background:linear-gradient(135deg, var(--utama), var(--sekunder));
+            color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer;
+            transition:all 0.25s ease; margin-top:8px;
+        }
+        .btn-utama:hover {transform:translateY(-1px); box-shadow:0 4px 12px rgba(217,119,6,0.25);}
+        .btn-kecil {width:auto; padding:10px 16px; font-size:13px; margin:0;}
+        .btn-hijau {background:linear-gradient(135deg, var(--hijau), #10b981);}
+        .btn-biru {background:linear-gradient(135deg, var(--biru), #3b82f6);}
+        .btn-ungu {background:linear-gradient(135deg, var(--ungu), #8b5cf6);}
+        .btn-merah {background:linear-gradient(135deg, var(--merah), #ef4444);}
+        .btn-abu {background:var(--abu-muda); color:#374151;}
+        .btn-kuning {background:linear-gradient(135deg, var(--sekunder), var(--aksen)); color:#1f2937;}
+
+        .peringatan {padding:14px; border-radius:12px; margin-bottom:12px; font-size:13px; line-height:1.6;}
+        .peringatan.aman {background:#ecfdf5; border-left:4px solid var(--hijau); color:#065f46;}
+        .peringatan.info {background:#eff6ff; border-left:4px solid var(--biru); color:#1e40af;}
+        .peringatan.promo {background:#fffbeb; border-left:4px solid var(--sekunder); color:var(--coklat-tua); font-weight:600;}
+
+        .info-ringkas {display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin:16px 0;}
+        .kotak-info {background:var(--putih); padding:16px; border-radius:14px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,0.03); border-bottom:3px solid var(--utama); transition:0.25s;}
+        .kotak-info:hover {transform:translateY(-2px);}
+        .kotak-info.hijau {border-bottom-color:var(--hijau);}
+        .kotak-info.biru {border-bottom-color:var(--biru);}
+        .kotak-info.ungu {border-bottom-color:var(--ungu);}
+        .kotak-info.kuning {border-bottom-color:var(--sekunder);}
+        .kotak-info .ikon {font-size:24px; margin-bottom:4px;}
+        .kotak-info .angka {font-size:22px; font-weight:800; margin:4px 0;}
+        .kotak-info .label {font-size:13px; color:#6b7280; font-weight:500;}
+
+        .form-box {background:var(--putih); border-radius:16px; padding:18px; box-shadow:0 3px 10px rgba(0,0,0,0.03); margin-bottom:16px; border:1px solid rgba(217,119,6,0.1);}
+        h3 {font-size:17px; font-weight:700; color:#1f2937; margin-bottom:14px; border-bottom:2px solid #fef3c7; padding-bottom:8px; display:flex; align-items:center; gap:8px;}
+        h4 {margin:14px 0 8px; font-size:15px; color:#374151; font-weight:600;}
+        input, select, textarea {width:100%; padding:11px 12px; margin:6px 0 12px; border:1px solid var(--abu-muda); border-radius:10px; font-size:14px; background:#fefefe;}
+        input:focus, select:focus, textarea:focus {outline:none; border-color:var(--utama); background:#fff; box-shadow:0 0 0 3px rgba(217,119,6,0.1);}
+        input[type="file"] {padding:6px; background:#fff;}
+
+        .pemisah {text-align:center; margin:18px 0; color:#9ca3af; font-size:13px; position:relative;}
+        .pemisah::before, .pemisah::after {content:""; position:absolute; top:50%; width:38%; height:1px solid var(--abu-muda);}
+        .pemisah::before {left:0;}
+        .pemisah::after {right:0;}
+
+        .btn-google {
+            background:var(--putih); color:#374151; border:1px solid var(--abu-muda); display:flex; align-items:center; justify-content:center;
+            gap:8px; font-weight:600; font-size:15px; border-radius:12px;
+        }
+        .btn-google:hover {border-color:var(--biru); box-shadow:0 3px 10px rgba(37,99,235,0.1);}
+        .ikon-google {font-size:18px;}
+
+        .kotak-pilih-akun {background:var(--putih); border-radius:18px; padding:20px; box-shadow:0 3px 10px rgba(0,0,0,0.03); margin-bottom:16px; border:1px solid rgba(217,119,6,0.1);}
+        .judul-pilih {font-size:18px; font-weight:700; color:#1f2937; margin-bottom:16px; text-align:center;}
+        .daftar-akun {display:flex; flex-direction:column; gap:10px;}
+        .pilihan-akun {
+            padding:14px; border:1px solid var(--abu-muda); border-radius:12px; cursor:pointer;
+            display:flex; align-items:center; gap:12px; font-size:15px; font-weight:600; transition:0.25s;
+            background:#fefefe;
+        }
+        .pilihan-akun.terpilih {
+            border-color:var(--utama); background:linear-gradient(135deg, #fff7ed, #ffedd5);
+            color:#92400e; transform:scale(1.01);
+        }
+        .ikon-akun {font-size:24px;}
+
+        .rincian {background:linear-gradient(135deg, #fffbeb, #fef3c7); border-radius:12px; padding:12px; margin:10px 0; font-size:13px; line-height:1.6; border-left:3px solid var(--sekunder);}
+        .rincian-biasa {background:#f9fafb; border-radius:10px; padding:12px; margin:10px 0; font-size:13px; line-height:1.6; border-left:3px solid var(--abu-tua);}
+        .kotak-catatan {background:#f8fafc; border-radius:10px; padding:12px; margin:8px 0; border-left:3px solid var(--abu-muda); font-size:13px; line-height:1.6;}
+        .kode-resi {font-size:18px; font-weight:bold; color:var(--biru); text-align:center; padding:10px; background:#eff6ff; border-radius:10px; margin:10px 0; letter-spacing:1px;}
+        .nav-menu {display:flex; gap:8px; flex-wrap:wrap; margin:16px 0;}
+        .nav-menu button {flex:1; min-width:100px; font-size:13px; padding:10px;}
+        .halaman {display:none;}
+        .halaman.aktif {display:block;}
+        .fitur {display:none;}
+        .fitur.aktif {display:block;}
+        .daftar-riwayat {max-height:240px; overflow-y:auto; margin:8px 0;}
+        .item-riwayat {padding:10px; border-bottom:1px solid #f3f4f6; font-size:13px; transition:0.2s;}
+        .item-riwayat:hover {background:#fffbeb;}
+        .item-riwayat:last-child {border:none;}
+        .item-riwayat .tanggal {color:#9ca3af; font-size:12px;}
+        .item-riwayat .nominal {font-weight:600;}
+        .minus {color:var(--merah);}
+        .plus {color:var(--hijau);}
+        .link-kembali {color:var(--utama); font-weight:600; cursor:pointer; text-decoration:underline; display:inline-block; margin-top:8px;}
+        .notif {position:fixed; top:16px; left:50%; transform:translateX(-50%); background:#1f2937; color:white; padding:12px 24px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.2); z-index:9999; display:none; font-size:14px; max-width:92%; text-align:center;}
+        .notif.aman {background:var(--hijau);}
+        .notif.bahaya {background:var(--merah);}
+        .notif.info {background:var(--biru);}
+        .notif.promo {background:var(--aksen); color:#1f2937; font-weight:600;}
+        .tombol-rahasia {position:fixed; bottom:8px; right:8px; width:28px; height:28px; background:transparent; border:none; font-size:14px; color:transparent; cursor:default; z-index:999; user-select:none;}
+        .menu-kategori {display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:8px 0;}
+        .item-kategori {padding:10px; background:#fffbf7; border-radius:10px; border-left:3px solid var(--utama); cursor:pointer; transition:0.2s;}
+        .item-kategori:hover {transform:translateX(3px); background:#fff3e0;}
+        .rumus-resmi {background:#fff3e0; border:1px solid #fcd34d; border-radius:10px; padding:14px; margin:14px 0; font-size:13px; line-height:1.8;}
+        .rumus-resmi strong {color:#b45309;}
+        .input-km {width:110px; display:inline-block; margin:0 6px; text-align:center;}
+        .kotak-promo {background:linear-gradient(135deg, #fffbeb, #fef3c7); border:1px solid #fde68a; border-radius:10px; padding:14px; margin:10px 0;}
+        .diskon-label {background:var(--merah); color:white; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; margin-left:6px;}
+        .progres {width:100%; height:8px; background:#e5e7eb; border-radius:4px; overflow:hidden; margin:6px 0;}
+        .progres-bar {height:100%; background:linear-gradient(90deg, var(--hijau), #34d399); width:0%; transition:0.4s;}
+        .tab-menu {display:flex; gap:6px; margin:8px 0; border-bottom:1px solid var(--abu-muda); padding-bottom:6px;}
+        .tab-item {padding:7px 10px; font-size:13px; border-radius:8px; cursor:pointer; transition:0.2s;}
+        .tab-item.aktif {background:#fff7ed; color:var(--utama); font-weight:600;}
+        .tab-konten {display:none; padding:8px 0;}
+        .tab-konten.aktif {display:block;}
+        .kotak-qris {width:250px; height:250px; margin:18px auto; padding:12px; background:white; border-radius:14px; border:2px solid var(--biru); box-shadow:0 3px 12px rgba(37,99,235,0.12); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;}
+        .kotak-qris img {width:100%; height:100%; border-radius:6px;}
+    </style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+<div class="tombol-rahasia" onclick="bukaKunciAdmin()">⚙️</div>
+
+<!-- ====================================== HALAMAN AWAL ====================================== -->
+<div class="halaman aktif" id="halamanAwal">
+    <div class="header-utama">
+        <div class="logo-ikon">🏵️🍛🏵️</div>
+        <h1 class="judul-utama">S-NUSANTARA DELIVERY</h1>
+        <div class="sub-judul">Layanan Antar Kuliner Khas Daerah • KHUSUS WILAYAH TEGAL & SEKITAR</div>
+        <p class="tagline">Berlaku: Kota Tegal, Kab. Tegal, Brebes, Pemalang • Tarif Seragam Rp 3.000/km • Tanpa Biaya Tersembunyi</p>
+    </div>
+
+    <div class="peringatan info">
+        ℹ️ <strong>Potongan Layanan Aplikasi: 14%</strong> dari harga makanan • Ongkir sepenuhnya milik pengantar tanpa potongan
+    </div>
+    <div class="peringatan aman">
+        ✅ <strong>TARIF RESMI SERAGAM:</strong> Ongkir <strong>Rp 3.000 per Kilometer</strong> berlaku sama rata untuk seluruh wilayah layanan, 100% diterima penuh oleh pengantar tanpa potongan apapun!
+    </div>
+    <div class="peringatan promo">
+        🎉 <strong>PROMO JULI 2026:</strong> Diskon Rp 5.000 untuk pesanan pertama! Gunakan kode: <strong>SNUSANTARA5</strong>
+    </div>
+
+    <!-- 📚 FITUR PANDUAN KHUSUS -->
+    <div class="kotak-bagian">
+        <h2 class="judul-bagian">📚 Panduan Lengkap Layanan</h2>
+        <p style="font-size:13px; color:#6b7280; margin-bottom:12px;">Pilih panduan sesuai peran Anda di S-Nusantara</p>
+        <div class="menu-panduan">
+            <div class="item-panduan" onclick="bukaPanduan('panduanPelanggan')">
+                <span class="ikon-panduan">🛒</span>
+                <div class="isi-panduan">
+                    <h4>Panduan Khusus Pelanggan</h4>
+                    <p>Cara pesan, pembayaran, hak & kewajiban</p>
+                </div>
+            </div>
+            <div class="item-panduan" onclick="bukaPanduan('panduanResto')">
+                <span class="ikon-panduan">🏪</span>
+                <div class="isi-panduan">
+                    <h4>Panduan Khusus Mitra Resto</h4>
+                    <p>Cara bergabung, perhitungan pendapatan & pajak</p>
+                </div>
+            </div>
+            <div class="item-panduan" onclick="bukaPanduan('panduanDriver')">
+                <span class="ikon-panduan">🛵</span>
+                <div class="isi-panduan">
+                    <h4>Panduan Khusus Pengantar</h4>
+                    <p>Syarat daftar, penghasilan, hak & kewajiban</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ISI PANDUAN PELANGGAN -->
+        <div id="panduanPelanggan" class="tab-panduan aktif">
+            <h4>🛒 Panduan Pelanggan</h4>
+            <ul class="daftar-panduan">
+                <li><strong>Cara Pesan:</strong> Pilih menu, masukkan jarak alamat, hitung total, lalu bayar lewat QRIS/Xendit/Transfer Bank ke rekening resto.</li>
+                <li><strong>Wilayah Layanan:</strong> Hanya Kota Tegal, Kab. Tegal, Brebes, Pemalang. Pesan di luar wilayah tidak dapat diproses.</li>
+                <li><strong>Tarif Ongkir:</strong> Seragam Rp 3.000/km, dibayar penuh oleh Anda dan diterima penuh oleh pengantar tanpa potongan.</li>
+                <li><strong>Pembayaran:</strong> Tidak ada dompet saldo, bayar langsung ke rekening resto. Tidak terima tunai demi keamanan.</li>
+                <li><strong>Diskon:</strong> Gunakan kode <strong>SNUSANTARA5</strong> untuk potongan Rp 5.000 pesanan pertama.</li>
+                <li><strong>Komplain:</strong> Hubungi admin jika makanan tidak sesuai atau pengantaran terlambat.</li>
+            </ul>
+            <div class="catatan-panduan">
+                ✅ Catatan: Potongan aplikasi 14% sudah termasuk dalam harga menu, tidak ada biaya tambahan lain.
+            </div>
+        </div>
+
+        <!-- ISI PANDUAN RESTO -->
+        <div id="panduanResto" class="tab-panduan">
+            <h4>🏪 Panduan Mitra Resto</h4>
+            <ul class="daftar-panduan">
+                <li><strong>Cara Bergabung:</strong> Daftar lengkapi data usaha, NIB/izin usaha, dan nomor rekening. Gratis biaya pendaftaran.</li>
+                <li><strong>Potongan Layanan:</strong> Dipotong <strong>14%</strong> dari harga makanan untuk biaya operasional & pengembangan sistem.</li>
+                <li><strong>Pajak UMKM:</strong> 0,5% hanya jika omzet Anda di atas Rp 400 Juta/tahun. Di bawah itu bebas pajak sesuai aturan pemerintah.</li>
+                <li><strong>Pembayaran:</strong> Uang masuk langsung ke rekening Anda maksimal 1x24 jam setelah pesanan selesai. Tidak ditahan di sistem.</li>
+                <li><strong>Menu:</strong> Prioritas untuk kuliner khas Tegal, Brebes, Pemalang & Nusantara asli.</li>
+                <li><strong>Izin Usaha:</strong> Bantu daftar NIB gratis di oss.go.id sesuai UU UMKM No.20/2008.</li>
+            </ul>
+            <div class="catatan-panduan">
+                ✅ Catatan: Ongkir Rp 3.000/km sepenuhnya milik pengantar, tidak dipotong dari pendapatan Anda.
+            </div>
+        </div>
+
+        <!-- ISI PANDUAN PENGANTAR -->
+        <div id="panduanDriver" class="tab-panduan">
+            <h4>🛵 Panduan Mitra Pengantar</h4>
+            <ul class="daftar-panduan">
+                <li><strong>Syarat Daftar:</strong> KTP asli, SIM aktif, kendaraan layak jalan, dan domisili di wilayah layanan. Gratis tanpa biaya apapun.</li>
+                <li><strong>Penghasilan:</strong> Tarif resmi <strong>Rp 3.000 per Kilometer</strong> jarak tempuh. 100% milik Anda tanpa potongan biaya admin/layanan.</li>
+                <li><strong>Contoh Hitung:</strong> Jarak 4 km = 4 × Rp 3.000 = <strong>Rp 12.000</strong> diterima penuh oleh Anda.</li>
+                <li><strong>Pencairan:</strong> Ditransfer langsung ke rekening Anda maksimal 1x24 jam setelah pesanan selesai.</li>
+                <li><strong>Jam Kerja:</strong> Bebas, tidak ada target harian atau kewajiban jam masuk.</li>
+                <li><strong>Kewajiban:</strong> Mengantar makanan dengan aman, menjaga kebersihan, dan menghubungi pelanggan jika ada kendala.</li>
+            </ul>
+            <div class="catatan-panduan">
+                ✅ Catatan: Tidak ada biaya seragam, biaya pendaftaran, atau potongan lain dari penghasilan ongkir Anda.
+            </div>
+        </div>
+    </div>
+
+    <div class="kotak-pilih-akun">
+        <h2 class="judul-pilih">👋 Silakan Pilih Jenis Akun Anda</h2>
+        <div class="daftar-akun">
+            <div class="pilihan-akun terpilih" data-jenis="Pelanggan" onclick="pilihAkun(this)">
+                <span class="ikon-akun">🛒</span>
+                <div>
+                    <div>Pelanggan</div>
+                    <small style="font-size:12px; color:#6b7280;">Pesan makanan ke rumah/kantor/kampus</small>
+                </div>
+            </div>
+            <div class="pilihan-akun" data-jenis="Merchant" onclick="pilihAkun(this)">
+                <span class="ikon-akun">🏪</span>
+                <div>
+                    <div>Mitra Usaha / Merchant</div>
+                    <small style="font-size:12px; color:#6b7280;">Jual kuliner khas Tegal & Nusantara</small>
+                </div>
+            </div>
+            <div class="pilihan-akun" data-jenis="Driver" onclick="pilihAkun(this)">
+                <span class="ikon-akun">🛵</span>
+                <div>
+                    <div>Mitra Pengantar</div>
+                    <small style="font-size:12px; color:#6b7280;">Dapat penghasilan penuh tanpa potongan</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-utama" onclick="lanjutKeMasukDaftar()">➡️ Lanjutkan Sebagai <span id="namaJenisAkun">Pelanggan</span></button>
+
+    <div class="pemisah">atau masuk dengan cepat</div>
+
+    <button class="btn-google" onclick="tampilkanNotif('Fitur masuk Google sedang dalam pengembangan, silakan daftar manual', 'info')">
+        <span class="ikon-google">🔵</span> Masuk dengan Akun Google
+    </button>
+
+    <div class="form-box">
+        <h3>📞 Informasi Resmi & Kontak</h3>
+        <p style="margin:6px 0; font-size:13px;">📍 <strong>WILAYAN LAYANAN KHUSUS:</strong> Kota Tegal, Kabupaten Tegal, Brebes, Pemalang</p>
+        <p style="margin:6px 0; font-size:13px;">🚚 Tarif Ongkir: <strong>Rp 3.000 / Kilometer</strong> (Sama rata seluruh wilayah)</p>
+        <p style="margin:6px 0; font-size:13px;">✅ Ongkir diterima penuh 100% oleh pengantar tanpa potongan apapun</p>
+        <p style="margin:6px 0; font-size:13px;">🎬 TikTok: <strong>S-NusantaraNgapak</strong></p>
+        <p style="margin:6px 0; font-size:13px;">🏦 Pembayaran: Langsung ke akun masing-masing lewat QRIS/Xendit</p>
+        <button class="btn-biru" style="margin-top:10px;" onclick="bukaHalaman('halamanQris')">💳 Lihat Cara Pembayaran Resmi</button>
+        <button class="btn-kuning" style="margin-top:6px;" onclick="bukaHalaman('halamanXendit')">🔗 Tautan Pembayaran Xendit</button>
+    </div>
+
+    <!-- KONFIRMASI WILAYAH (SEMBUNYIKAN) -->
+    <div class="kotak-bagian" style="display:none !important;">
+        <h2 class="judul-bagian">
+            <span>🗺️</span> Konfirmasi Wilayah Layanan
+        </h2>
+        <div class="pilihan-wilayah">
+            <button class="tombol-wilayah aktif" onclick="pilihWilayah(this)">Kota Tegal</button>
+            <button class="tombol-wilayah" onclick="pilihWilayah(this)">Kabupaten Tegal</button>
+            <button class="tombol-wilayah" onclick="pilihWilayah(this)">Brebes</button>
+            <button class="tombol-wilayah" onclick="pilihWilayah(this)">Pemalang</button>
+        </div>
+        <div class="kotak-peringatan">
+            <span class="ikon-peringatan">⚠️</span>
+            <div class="isi-peringatan">
+                <h4>PERINGATAN</h4>
+                <p>Layanan saat ini <strong>BELUM TERSEDIA</strong> di luar wilayah di atas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RINCIAN BIAYA (TAMPILAN DISEMBUNYIKAN, DATA TETAP UTUH) -->
+    <div class="kotak-bagian kotak-rincian-biaya">
+        <h2 class="judul-bagian">
+            <span>📊</span> Rincian Biaya Resmi
+        </h2>
+        <table class="tabel-biaya">
+            <thead>
+                <tr>
+                    <th>Uraian</th>
+                    <th>Persentase</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Potongan Layanan Aplikasi</td>
+                    <td>14%</td>
+                    <td>Biaya operasional & pengembangan sistem</td>
+                </tr>
+                <tr>
+                    <td>Pajak UMKM</td>
+                    <td>0,5%</td>
+                    <td>Omzet di atas Rp 400 Juta/tahun</td>
+                </tr>
+                <tr>
+                    <td>Ongkir Pengantar</td>
+                    <td>100%</td>
+                    <td>@Rp 3.000/km, sepenuhnya milik kurir</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ====================================== HALAMAN LAINNYA & SCRIPT ====================================== -->
+<div class="halaman" id="halamanQris">
+    <div class="header-utama header-qris">
+        <h2>💳 PEMBAYARAN QRIS RESMI</h2>
+        <p style="font-size:13px; opacity:0.9;">S-Nusantara Delivery</p>
+    </div>
+    <div class="peringatan aman">
+        ✅ <strong>TANPA BIAYA TAMBAHAN KE PIHAK KETIGA</strong> • Uang langsung masuk rekening tujuan tanpa ditahan
+    </div>
+    <div class="kotak-qris">
+        <div style="text-align:center; padding:18px;">
+            <div style="font-size:36px; margin-bottom:8px;">📷</div>
+            <p>Tempel QRIS Resmi Mitra di sini</p>
+            <p style="font-size:11px; margin-top:6px; color:#6b7280;">Setiap mitra menggunakan akun masing-masing</p>
+        </div>
+    </div>
+    <div class="form-box">
+        <h3>📋 Aturan Pembayaran</h3>
+        <p style="font-size:13px; margin:6px 0;">🏦 Semua pembayaran masuk langsung ke akun mitra</p>
+        <p style="font-size:13px; margin:6px 0;">🔢 Tidak ada penampungan dana di sistem aplikasi</p>
+        <p style="font-size:13px; margin:6px 0;">💰 Biaya admin: <strong>0,7% standar Bank Indonesia</strong></p>
+        <p style="font-size:13px; margin:6px 0;">🛡️ Sesuai aturan Kominfo & UU Perlindungan Data Pribadi</p>
+    </div>
+    <button class="btn-biru" onclick="bukaHalaman('halamanAwal')">← Kembali ke Halaman Utama</button>
+</div>
+
+<div class="halaman" id="halamanXendit">
+    <div class="header-utama">
+        <h2>🔗 PEMBAYARAN LEWAT TAUTAN</h2>
+        <p style="font-size:13px; opacity:0.9;">Diproses aman melalui Xendit</p>
+    </div>
+    <div class="peringatan info">
+        ℹ️ <strong>CARA PAKAI:</strong> Klik tautan di bawah ini, lalu selesaikan pembayaran sesuai instruksi. Uang akan masuk langsung ke akun Xendit masing-masing mitra.
+    </div>
+    <div class="form-box">
+        <h3>📋 Tautan Pembayaran Anda</h3>
+        <p style="margin:8px 0; word-break:break-all; background:#f8fafc; padding:12px; border-radius:10px; font-size:13px;">
+            https://dev.xen.to/0ftKYs3C
+        </p>
+        <button class="btn-hijau" onclick="window.open('https://dev.xen.to/0ftKYs3C', '_blank')">🔗 Buka Tautan Pembayaran</button>
+    </div>
+    <div class="form-box">
+        <h3>⚠️ CATATAN PENTING</h3>
+        <p style="font-size:13px; margin:6px 0;">• Saat ini masih dalam <strong>Mode Tes</strong> sampai verifikasi bisnis selesai.</p>
+        <p style="font-size:13px; margin:6px 0;">• Mendukung pembayaran QRIS, Transfer Bank, E-Wallet, dan Pembayaran Tunai.</p>
+        <p style="font-size:13px; margin:6px 0;">• Biaya transaksi sesuai ketentuan Xendit (QRIS 0,7% + PPN).</p>
+        <p style="font-size:13px; margin:6px 0;">• Tidak ada syarat modal besar, hanya sebagai fasilitator pesan antar.</p>
+        <p style="font-size:13px; margin:6px 0;">• Tidak memerlukan izin OJK karena bukan layanan keuangan/penyimpanan dana.</p>
+    </div>
+    <button class="btn-biru" onclick="bukaHalaman('halamanAwal')">← Kembali ke Halaman Utama</button>
+</div>
+
+<div class="halaman" id="halamanMasukDaftar">
+    <div class="header-utama" style="padding:18px;">
+        <h2 style="font-size:20px;">Akun <span id="jenisAkunJudul">Pelanggan</span></h2>
+        <p style="font-size:13px; margin-top:4px;">Lengkapi data dengan benar untuk bergabung</p>
+    </div>
+    <div class="peringatan info">
+        ℹ️ <strong>WILAYAN LAYANAN:</strong> Hanya berlaku untuk Kota Tegal, Kabupaten Tegal, Brebes, dan Pemalang.
+    </div>
+    <div class="peringatan aman">
+        ✅ <strong>TARIF SERAGAM:</strong> Ongkir Rp 3.000/km berlaku sama untuk semua wilayah, diterima penuh kurir tanpa potongan.
+    </div>
+    <div class="peringatan info">
+        ℹ️ <strong>PEMBAYARAN:</strong> Wajib lewat QRIS atau Transfer Bank ke rekening resmi mitra. Pembayaran tunai tidak diterima untuk keamanan kedua belah pihak.
+    </div>
+    <div class="form-box">
+        <h3>📝 Data Diri Lengkap</h3>
+        <input type="text" id="nama" placeholder="Nama Lengkap Sesuai KTP" required>
+        <input type="tel" id="hp" placeholder="Nomor HP Aktif (Contoh: 0812xxxx)" maxlength="15" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <input type="text" id="alamat" placeholder="Alamat Lengkap (Wajib di wilayah Tegal/Brebes/Pemalang)">
+        <input type="text" id="noktp" placeholder="Nomor KTP (16 Digit)" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <input type="password" id="sandi" placeholder="Kata Sandi (Minimal 6 Karakter)" required>
+        <input type="password" id="ulangsandi" placeholder="Ulangi Kata Sandi" required>
+        <div style="margin:12px 0;">
+            <label style="font-size:13px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" id="setujuSyarat" style="width:auto;">
+                Saya menyetujui <span class="link-kembali" onclick="tampilkanSyarat()">Syarat & Ketentuan</span> serta <span class="link-kembali" onclick="tampilkanPrivasi()">Kebijakan Privasi</span>
+            </label>
+        </div>
+        <button onclick="prosesMasukDaftar()">✅ Daftar / Masuk Sekarang</button>
+        <span class="link-kembali" onclick="bukaHalaman('halamanAwal')">← Kembali Memilih Jenis Akun</span>
+    </div>
+</div>
+
+<div class="halaman" id="halamanUtama">
+    <div class="header-utama">
+        <div class="logo-ikon">👋</div>
+        <h2 style="font-size:20px;">Selamat Datang, <span id="namaPengguna">Pengguna</span>!</h2>
+        <p style="margin-top:4px;">Status Keanggotaan: <strong id="labelJenis">Pelanggan</strong></p>
+        <p class="tagline">Layanan Khusus Wilayah Tegal, Brebes, Pemalang • Ongkir Rp 3.000/km</p>
+    </div>
+    <div class="peringatan aman">
+        ✅ <strong>SISTEM KHUSUS:</strong> Hanya pencatatan transaksi, tidak berfungsi dompet elektronik. Tanpa penahanan dana. Uang diselesaikan langsung antar pihak.
+    </div>
+    <div class="peringatan aman">
+        🚚 <strong>TARIF RESMI:</strong> Ongkir <strong>Rp 3.000 / Kilometer</strong> berlaku sama rata seluruh wilayah layanan, 100% milik pengantar tanpa potongan!
+    </div>
+
+    <div class="info-ringkas" id="ringkasPelanggan">
+        <div class="kotak-info">
+            <div class="ikon">🍽️</div>
+            <div class="label">Pesanan Aktif</div>
+            <div class="angka" style="color:var(--utama);">2</div>
+        </div>
+        <div class="kotak-info hijau">
+            <div class="ikon">✅</div>
+            <div class="label">Pesanan Selesai</div>
+            <div class="angka" style="color:var(--hijau);">18</div>
+        </div>
+        <div class="kotak-info biru">
+            <div class="ikon">⭐</div>
+            <div class="label">Poin Penilaian</div>
+            <div class="angka" style="color:var(--biru);">245</div>
+        </div>
+        <div class="kotak-info kuning">
+            <div class="ikon">🎁</div>
+            <div class="label">Kupon Diskon</div>
+            <div class="angka" style="color:var(--sekunder);">3</div>
+        </div>
+    </div>
+
+    <div class="info-ringkas" id="ringkasMerchant" style="display:none;">
+        <div class="kotak-info">
+            <div class="ikon">💰</div>
+            <div class="label">Pendapatan Hari Ini</div>
+            <div class="angka" style="color:var(--utama);">Rp 925.000</div>
+        </div>
+        <div class="kotak-info hijau">
+            <div class="ikon">📦</div>
+            <div class="label">Pesanan Masuk</div>
+            <div class="angka" style="color:var(--hijau);">12</div>
+        </div>
+        <div class="kotak-info biru">
+            <div class="ikon">📋</div>
+            <div class="label">Jumlah Menu</div>
+            <div class="angka" style="color:var(--biru);">28</div>
+        </div>
+        <div class="kotak-info ungu">
+            <div class="ikon">📊</div>
+            <div class="label">Total Transaksi</div>
+            <div class="angka" style="color:var(--ungu);">Rp 12,8 Juta</div>
+        </div>
+    </div>
+
+    <div class="info-ringkas" id="ringkasDriver" style="display:none;">
+        <div class="kotak-info">
+            <div class="ikon">📝</div>
+            <div class="label">Catatan Saldo</div>
+            <div class="angka" style="color:var(--utama);">Rp 127.680</div>
+        </div>
+        <div class="kotak-info hijau">
+            <div class="ikon">🛵</div>
+            <div class="label">Pengantaran Selesai</div>
+            <div class="angka" style="color:var(--hijau);">42</div>
+        </div>
+        <div class="kotak-info biru">
+            <div class="ikon">📈</div>
+            <div class="label">Penghasilan Bulan Ini</div>
+            <div class="angka" style="color:var(--biru);">Rp 3.422.160</div>
+            <div style="font-size:11px; margin-top:4px;">@Rp 3.000/km • Tanpa potongan</div>
+        </div>
+        <div class="kotak-info ungu">
+            <div class="ikon">📜</div>
+            <div class="label">Riwayat Transaksi</div>
+            <div class="angka" style="color:var(--ungu);">18</div>
+        </div>
+    </div>
+
+    <div class="form-box">
+        <h3>📂 Menu Layanan Utama</h3>
+        <div class="nav-menu">
+            <button onclick="tampilkanFitur('fiturLayanan')">💼 Layanan Saya</button>
+            <button onclick="tampilkanFitur('fiturRiwayat')">📋 Riwayat Catatan</button>
+            <button onclick="tampilkanFitur('fiturAturan')">⚖️ Aturan & Hukum</button>
+            <button class="btn-kecil btn-abu" onclick="keluar()">🚪 Keluar Akun</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// FUNGSI TAMBAHAN (TETAP UTUH)
+let jenisAkunSekarang = "Pelanggan";
+
+function pilihAkun(el) {
+    document.querySelectorAll('.pilihan-akun').forEach(e => e.classList.remove('terpilih'));
+    el.classList.add('terpilih');
+    jenisAkunSekarang = el.dataset.jenis;
+    document.getElementById('namaJenisAkun').textContent = jenisAkunSekarang
