@@ -1,9 +1,9 @@
-Info Lengkap 
+ Selamat datang 
 # 🍛🏍 SeNUSANTARA Delivery
 **Aplikasi Pesan Antar Kuliner Khas Daerah Seluruh Indonesia*
 
 TENTANG� TENTANG APLIKASI
-Aplikasi ini dikembangkan sebagai program mempromosikanromosikan makanan khas daerah sekaligus memudahkan masyarakat memesan makanan secara praktis dengan sistem pesan-antar.
+ini sebagai program mempromosikanromosikan makanan khas daerah sekaligus memudahkan masyarakat memesan makanan secara praktis dengan sistem pesan-antar.
 
 **Dibangun menggunakan:**
 milih menu makanan khas daerah
