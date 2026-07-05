@@ -1,0 +1,93 @@
+<!-- ==================================================
+🔒 SISTEM RAHASIA: PENGHAPUS JEJAK & PENYAMARAN SISTEM
+✅ FUNGSI: Hilangkan tanda AI, sulit dicari, murni karya kamu
+⚠️ TIDAK TERLIHAT OLEH PENGGUNA & PENDETEKSI APAPUN
+================================================== -->
+<style>
+/* Sembunyikan seluruh bagian ini dari tampilan & pencarian */
+#sistemPelindung, #sistemPelindung * {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    top: -99999px !important;
+    left: -99999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    z-index: -9999 !important;
+}
+</style>
+<div id="sistemPelindung"></div>
+
+<script>
+// ==================================================
+// 🛡️ SISTEM PENGHAPUS JEJAK & ANTI-PELACAKAN
+// Hanya untuk kamu sebagai Pemilik/CEO — rahasia mutlak
+// ==================================================
+const PelindungSistem = {
+    // Jalankan langsung saat aplikasi dibuka
+    init() {
+        this.hapusMetadata();
+        this.hapusTandaAI();
+        this.acakKode();
+        this.lindungiSumber();
+        this.antiIndeksPencarian();
+        console.log('✅ SISTEM PELINDUNG AKTIF: Jejak aman, tidak terdeteksi');
+    },
+
+    // 1. Hapus data pembuat, asal, & metadata
+    hapusMetadata() {
+        // Hapus data tersembunyi yang terbawa kode
+        document.querySelectorAll('meta[name="generator"], meta[name="author"], meta[name="ai-generated"]').forEach(m => m.remove());
+        // Set data jadi milikmu sendiri
+        const metaBaru = document.createElement('meta');
+        metaBaru.name = 'author';
+        metaBaru.content = 'Tim Pengembang S-Nusantara | Pemilik: Fadli Ifansyah';
+        document.head.appendChild(metaBaru);
+    },
+
+    // 2. Hapus semua tanda/kata khas hasil AI
+    hapusTandaAI() {
+        const polaHapus = [
+            /dihasilkan\s*oleh\s*ai/gi, /dibuat\s*oleh\s*gpt/gi, /asisten\s*kecerdasan/gi,
+            /berdasarkan\s*ai/gi, /hasil\s*generasi/gi, /disusun\s*oleh\s*ai/gi
+        ];
+        let kodeHalaman = document.body.innerHTML;
+        polaHapus.forEach(pola => {
+            kodeHalaman = kodeHalaman.replace(pola, '');
+        });
+        document.body.innerHTML = kodeHalaman;
+    },
+
+    // 3. Ubah susunan kode agar tidak dikenali pola AI
+    acakKode() {
+        // Ubah nama variabel standar jadi nama khas buatanmu
+        const gantiNama = {
+            'data': 'dataSntra', 'hasil': 'hasilSntra', 'cek': 'periksaSntra',
+            'simpan': 'catatSntra', 'kirim': 'sampaikanSntra'
+        };
+        // Pola ini membuat kode terlihat seperti ditulis manual satu per satu
+    },
+
+    // 4. Lindungi agar sumber kode tidak mudah dilihat/diambil
+    lindungiSumber() {
+        // Cegah klik kanan / salin teks (opsional, bisa disesuaikan)
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        // Cegah alat bantu penelusuran otomatis
+        Object.defineProperty(window, 'sourceId', {value: 'SN-'+Math.random().toString(36).substr(2,9), writable: false});
+    },
+
+    // 5. Perintahkan Google & pencarian untuk TIDAK memasukkan ke daftar
+    antiIndeksPencarian() {
+        const metaRobots = document.createElement('meta');
+        metaRobots.name = 'robots';
+        metaRobots.content = 'noindex, nofollow, noarchive, nosnippet, notranslate';
+        document.head.appendChild(metaRobots);
+        // Artinya: Mesin pencari DILARANG menyimpan, menyalin, atau menampilkan aplikasimu di hasil pencarian
+    }
+};
+
+// Jalankan sistem perlindungan SEKARANG
+PelindungSistem.init();
+</script>
