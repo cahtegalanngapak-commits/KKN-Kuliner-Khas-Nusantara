@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Resto S-Nusantara Pantura</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+        body {background: #fff9f0; min-height:100vh; padding:15px;}
+        .header {background: linear-gradient(90deg, #c62828, #ef5350); color:white; padding:18px; text-align:center; border-radius:12px;}
+        .container {max-width:600px; margin:20px auto;}
+        .syarat-box {background:#ffebee; padding:15px; border-radius:10px; border-left:4px solid #ef5350; margin-bottom:20px;}
+        .syarat-box p {margin:8px 0; font-size:15px; display:flex; gap:8px; align-items:flex-start;}
+        .syarat-box p::before {content:"✅"; flex-shrink:0;}
+        .kotak-form {background:white; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.08);}
+        label {display:block; margin:12px 0 5px; font-weight:bold; color:#333;}
+        input, select, textarea {width:100%; padding:12px; border:1px solid #ef9a9a; border-radius:8px; font-size:16px;}
+        .cekbox {display:flex; align-items:flex-start; gap:10px; margin:15px 0;}
+        .cekbox input {width:auto; margin-top:3px;}
+        .btn-kirim {background: linear-gradient(90deg, #b71c1c, #c62828); color:white; border:none; padding:15px; border-radius:10px; width:100%; font-weight:bold; font-size:17px; cursor:pointer; margin-top:10px;}
+        .btn-kirim:disabled {background:#ef9a9a; cursor:not-allowed;}
+        .info {font-size:14px; color:#666; margin-top:15px; text-align:center;}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Daftar Resto / Warung 🍽️</h1>
+    <p>S-Nusantara Pantura | Tegal • Brebes • Pemalang</p>
+</div>
+
+<div class="container">
+    <div class="syarat-box">
+        <p>Berlokasi di Tegal, Brebes, atau Pemalang</p>
+        <p>Makanan halal & higienis, harga wajar</p>
+        <p>Memiliki izin usaha / surat keterangan usaha</p>
+        <p>Buka minimal jam operasional yang ditentukan</p>
+        <p>Mau melayani pesanan lewat aplikasi S-Nusantara</p>
+        <p>Siap kerja sama & aturan pembayaran disepakati</p>
+    </div>
+
+    <div class="kotak-form">
+        <h3>Isi Data Usaha</h3>
+
+        <label>Nama Resto / Warung</label>
+        <input type="text" id="namaResto" required>
+
+        <label>Nama Pemilik</label>
+        <input type="text" id="namaPemilik" required>
+
+        <label>Nomor HP / WhatsApp Aktif</label>
+        <input type="tel" id="hp" pattern="[0-9]{10,13}" required placeholder="08xx-xxxx-xxxx">
+
+        <label>Alamat Lengkap Tempat Usaha</label>
+        <textarea id="alamat" rows="2" required></textarea>
+
+        <label>Wilayah</label>
+        <select id="wilayah" required>
+            <option value="">-- Pilih Salah Satu --</option>
+            <option>Tegal Kota</option>
+            <option>Tegal Kabupaten</option>
+            <option>Brebes</option>
+            <option>Pemalang</option>
+        </select>
+
+        <label>Jenis Makanan Utama</label>
+        <input type="text" id="jenis" placeholder="Contoh: Soto, Sate, Nasi Pindang" required>
+
+        <div class="cekbox">
+            <input type="checkbox" id="setuju1" required>
+            <label for="setuju1">Saya memenuhi semua syarat di atas & data benar</label>
+        </div>
+
+        <div class="cekbox">
+            <input type="checkbox" id="setuju2" required>
+            <label for="setuju2">Saya menyetujui Syarat & Ketentuan kerja sama S-Nusantara</label>
+        </div>
+
+        <button class="btn-kirim" onclick="kirimData()">Kirim Data Usaha 📤</button>
+
+        <p class="info">Akun aktif setelah verifikasi 1-3 hari kerja. Dihubungi lewat WA.</p>
+    </div>
+</div>
+
+<script>
+// 🔒 Pengaman teks
+function amanKanTeks(teks) {
+    return String(teks).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// 📲 NOMOR WA KAMU SUDAH TERPASANG!
+const NO_WA_PEMILIK = "62882007869413";
+
+function kirimData() {
+    const namaResto = amanKanTeks(document.getElementById('namaResto').value.trim());
+    const namaPemilik = amanKanTeks(document.getElementById('namaPemilik').value.trim());
+    const hp = amanKanTeks(document.getElementById('hp').value.trim());
+    const alamat = amanKanTeks(document.getElementById('alamat').value.trim());
+    const wilayah = amanKanTeks(document.getElementById('wilayah').value);
+    const jenis = amanKanTeks(document.getElementById('jenis').value.trim());
+
+    // Cek data
+    if (!namaResto || !namaPemilik || !hp || !alamat || !wilayah || !jenis) {
+        alert("❌ Lengkapi semua data dulu!");
+        return;
+    }
+    if (!/^[0-9]{10,13}$/.test(hp)) {
+        alert("❌ Nomor HP harus angka 10-13 digit!");
+        return;
+    }
+
+    // ✅ Pesan masuk ke WA kamu
+    const pesan = `🔔 PENDAFTARAN RESTO BARU!
+
+Nama Resto: ${namaResto}
+Pemilik: ${namaPemilik}
+No HP: ${hp}
+Alamat: ${alamat}
+Wilayah: ${wilayah}
+Jenis Makanan: ${jenis}
+
+✅ Syarat disetujui, siap diverifikasi!`;
+
+    const urlWA = `https://wa.me/${NO_WA_PEMILIK}?text=${encodeURIComponent(pesan)}`;
+    window.open(urlWA, '_blank');
+
+    alert("✅ Terima kasih! Data terkirim, kami hubungi segera.");
+    document.querySelector('.kotak-form').reset();
+}
+</script>
+
+</body>
+</html>
